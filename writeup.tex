@@ -1,0 +1,86 @@
+\documentclass{article}
+\usepackage{geometry}
+\newgeometry{vmargin={18mm}, hmargin={20mm,20mm}}
+\usepackage[export]{adjustbox}[2011/08/13]
+\usepackage{subcaption}
+\usepackage{placeins}
+\usepackage[backend=biber]{biblatex}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{siunitx} %This is currently a prealpha version that I got by accident
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{latexsym}
+\usepackage{bm}
+\usepackage{multirow}
+\usepackage{cancel}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{rotating}
+
+% make table
+\definecolor{tableHeader}{gray}{0.5}
+\definecolor{tableShade}{gray}{0.9}
+\usepackage{tabularx}
+\usepackage[table]{xcolor}
+\newcolumntype{R}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+\let\vec\mathbf
+\newcommand{\homejet}{\lstinline{Traditional}}
+\newcommand{\fastjet}{\lstinline{FastJet}}
+\newcommand{\spectralmeanjet}{\lstinline{SpectralMeanJet}}
+\newcommand{\spectralfulljet}{\lstinline{SpectralFullJet}}
+\newcommand{\splittingjet}{\lstinline{SplittingJet}}
+\newcommand{\indicatorjet}{\lstinline{IndicatorJet}}
+\newcommand{\stoppingdeltar}{\ensuremath{\Delta R}}
+\newcommand{\distancedeltar}{\ensuremath{\Delta R'}}
+\newcommand{\beau}{\ensuremath{b}}
+\newcommand{\bbar}{\ensuremath{\bar{b}}}
+\newcommand{\bthing}[1]{\ensuremath{b\text{-#1}}}
+\def\AZH{\(A \rightarrow ZH\)}
+\def\Hbb{\(H \rightarrow b\bar{b}\)}
+\def\Abb{\(A \rightarrow b\bar{b}\)}
+\def\HZA{\(H \rightarrow ZA\)}
+\bibliography{writeup}
+\graphicspath{{./graphics/}}
+\begin{document}
+\title{Spectral clustering for jets}
+	
+	\maketitle
+	
+    %\begin{abstract}
+    %    Stuff
+	%\end{abstract}
+     
+    \FloatBarrier
+    \input{introduction}
+    \FloatBarrier
+    \input{problem_statement}
+    \FloatBarrier
+    \input{parameter_investigation}
+    \FloatBarrier
+    \input{spectral_introduction}
+    \FloatBarrier
+    \input{spectral_theory}
+    \FloatBarrier
+    \input{spectral_method}
+    \FloatBarrier
+    \input{spectral_results}
+    \FloatBarrier
+    \input{spectral_conclusions}
+    \FloatBarrier
+    \input{rtnn_plans}
+    %\section{Acknowledgements}
+    %I would like to thank Professor Stefano Moretti, Professor Claire Shepherd-Themistocleous, Professor Srinandan Dasmahapatra and Dr Emmanuel Olaiya for their excellent supervision and advice.
+    %I would also like to thank Dr Mauro Verzetti for assistance with the data. 
+    %The IRIDIS High Performance Computing Facility was used for this work,
+    %and I am grateful for the assistance of associated support services at
+    %the University of Southampton.
+    \printbibliography	
+\end{document}

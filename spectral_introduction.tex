@@ -1,0 +1,29 @@
+\section{Jet Clustering}
+This section exhibits a possible alternative method for jet clustering.
+
+The default choice for jet clustering tends to be one of there algorithms;
+the anti-kt algorithm~\cite{Cacciari2008akt}, the Cambridge-Aachen algorithm~\cite{Wobisch1998caJet} and the kt algorithm~\cite{Ellis1993ktJet}.
+They have been the default choice for some time because they have a number of desirable properties.
+They are infrared safe, excellent implementations of them are available (see \fastjet{}~\cite{Cacciari2011FastJet})
+and it is flexible enough to capture many signals with minimal parameter change.
+These algorithms are recursive and agglomerative.
+A recursive algorithm is well suited to clustering objects when the number of groups is not known at outset.
+Agglomerative algorithms are easier to design in a manner that is infrared safe,
+as they can recombine soft and collinear emissions in early steps.
+
+Finding a clustering method that compares favourably to these algorithms is challenging.
+Spectral clustering is a candidate that has had considerable success in other studies.
+In fluid dynamics spectral clustering has been used to identify the motion
+of vortices~\cite{hadjighasem2016votex}, finding that it is possible
+to successfully identify the vortex structures in cases with less data available.
+It was also seen that spectral clustering was proficient at determining the correct number
+of clusters to be found in the fluid.
+To reduce the risk of blackouts, power grids may be subdivided into `islands'.
+The ideal allocation is found by minimising power flow between islands,
+and it was shown in~\cite{fennelly2014power} that spectral clustering
+can produce a good solution in less time than other algorithms commonly used for this problem.
+
+%Adaptive spectral clustering with application to tripeptide conformation analysis~\cite{haack2013AdaptiveSC}.  %TODO
+
+To the authors knowledge this clustering algorithm has not yet been applied to jet physics, %TODO - double check.
+however, given its recursive, agglomerative form it could be a good fit.
