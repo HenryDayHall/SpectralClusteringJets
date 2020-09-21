@@ -4,7 +4,7 @@
 \usepackage[export]{adjustbox}[2011/08/13]
 \usepackage{subcaption}
 \usepackage{placeins}
-\usepackage[backend=biber]{biblatex}
+\usepackage[backend=biber, giveninits=true]{biblatex}
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage{listings}
@@ -50,11 +50,13 @@
 \bibliography{writeup}
 \graphicspath{{./graphics/}}
 \begin{document}
-\title{Spectral clustering for jets}
+\title{Machine learning on High Energy Physics}
 \author{Henry Day-Hall}
 	
 	\maketitle
 	
+	\tableofcontents
+    \FloatBarrier
     %\begin{abstract}
     %    Stuff
 	%\end{abstract}

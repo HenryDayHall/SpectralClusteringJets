@@ -1,7 +1,7 @@
 \subsection{Method}
 \subsubsection{Particle data}
 The dataset used for the majority of this work is a simulated Higgs cascade decay.
-One Standard Model (SM) Higgs at \(125\)GeV decays to two light higgs at \(40\)GeV,
+One Standard Model (SM) Higgs at \(125\)GeV decays to two light Higgs at \(40\)GeV,
 which in turn decay to \beau{}-\bbar{} quark pairs.
 That is \(H_{125\text{GeV}} \rightarrow h_{40\text{GeV}} h_{40\text{GeV}} \rightarrow \beau \bbar \beau \bbar\).
 
@@ -9,7 +9,6 @@ That is \(H_{125\text{GeV}} \rightarrow h_{40\text{GeV}} h_{40\text{GeV}} \right
 This dataset has the desirable property of creating \bthing{jets} with a range of geometries
 owing to the boost provided by large mass of the SM Higgs and
 the high chance of overlap with 4 \bthing{quarks} in the event.
-
 Other radiation from the protons is also included.  % TODO clarify exactly what background is in here!
 
 
@@ -31,11 +30,13 @@ This is to mimic restrictions from reconstruction accuracy.
             After the cuts have been applied most events are left with around \(50\) particles.
                  The percentage of particles that are descendant from a \bthing{quark} varies,
                  it is at it's highest in events with \(50\) particles,
-             and most variable in events will small multiplicity.}
+             and most variable in events will small multiplicity.}\label{fig:bdecendantpercent}
     \end{minipage}
 \end{figure}    
 
+A particle is considered a \bthing{descendant} if is found in the chain of decays from a \bthing{quark}.
 After cuts, \(72\%\) of events have at least \(5\) \bthing{descendants} and \(5\) non \bthing{descendants} available.
+Exactly how the percentage of \bthing{descendants} changes with event size is visualised in figure~\ref{fig:bdecendantpercent}.
 
 \subsubsection{Clustering algorithm}\label{sec:spectralmethodalgo}
 Now the implementation of the theory described in section~\ref{sec:spectral_theory} will be specified.

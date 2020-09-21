@@ -1,4 +1,28 @@
 \FloatBarrier
+\section{Jet Classification}\label{sec:jetclasification}
+Jet classification attempts to identify the signal jets,
+commonly those containing quark descendants,
+and further identify the flavour of the quark.
+Typically this begins with a process known as expert feature selection \cite{CMS_CSVDeepCSV13TeV, Schramm:2291608}.
+Expert feature selection, also sometimes called handcrafted features, is the process of defining variables on jets of tracks inspired by physics knowledge.
+These features hope to provide good discriminating power between different types of jet.
+The most successful example of this is perhaps the n-subjettiness, others include jet \(p_T\) and jet area.
+
+Expert features are often criticised for requiring redesigning for each problem, and for potential information loss \cite{cheng_recursive_2018, radovic_machine_2018}.
+Others have come out in favour of expert feature selection, however. In \cite{Lin_boostingbbH2018} expert feature selection is compared to a neural network approach that retains all information and the author reports that ``the most power is gained from a Neural Network, although we have shown that a large fraction of this information can be obtained through simple observables.".
+
+There are a number of systematic ways for generating features akin to expert features for jets;
+The Lund Plane~\cite{Dreyer_LundPlane2018} generates new features in a way that is easy to visualise and can create a linear sequence for a jet.
+This involves plotting tracks that split from the central track on the relative \(p_T\) - relative angle plane to generate density maps.
+Cuts can be used to impose IR and collinear safety.
+This feature should lend itself to visualisation of trends.
+Another such system has been dubbed energy flow polynomials~ \cite{Komiske_flowPolynomials2018}.
+Energy flow polynomials (EFP) constitute a complete basis for all IR collinear safe features for a jet.
+The author of \cite{Komiske_flowPolynomials2018} emphasises that commonly chosen expert features are found by combing only a few terms in the EFP.
+
+Machine learning tools are capable of fitting highly non-linear signals,
+so it might be possible to use them to bypass expert feature selection all together.
+
 \subsection{Recursive Neural Tensor Networks}
 % pros and cons of each method considered
 There are many possible forms for a neural network that classifies jets;
