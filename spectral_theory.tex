@@ -314,7 +314,6 @@ There are \(10\) distance measures that were tried in Physical space.
 A comparison of the two scoring criteria over two thousand events can be seen in figure~\ref{fig:eigenspace_distance_comparison}.
 \begin{figure}[htp]
     \includegraphics[width=1.\textwidth]{graphics/physspace_distance_comparison}
-    \label{fig:physspace_distance_comparison}
     \caption{
             Along the y axis there are jets with varying \(p_T\) exponents, going
             from kt jets at the top, Cambridge Aachen in the middle row and anti-kt
@@ -326,7 +325,7 @@ A comparison of the two scoring criteria over two thousand events can be seen in
             Cosine-Luclus, which works will for anti-kt jets.
             Taxicab performs best overall, but there is not
             a great distinction.
-             }
+             }\label{fig:physspace_distance_comparison}
 \end{figure}    
 
 \FloatBarrier
@@ -369,7 +368,6 @@ This creates \(20\) possible ways to measure distance in Eigenspace.
 A comparison of the two scoring criteria over two thousand events can be seen in figure~\ref{fig:eigenspace_distance_comparison}.
 \begin{figure}[htp]
     \includegraphics[width=1.\textwidth]{graphics/eigenspace_distance_comparison}
-    \label{fig:eigenspace_distance_comparison}
     \caption{
         The plots are heatmaps with various jet clustering approaches on
         the y axis and different ways to measure the distance in eigenspace on the
@@ -379,5 +377,5 @@ A comparison of the two scoring criteria over two thousand events can be seen in
         Both plots are in strong agreement.
         It is clearly important to norm the eigenstate, and either Euclidean or Taxicab distance
         are equally acceptable with Euclidean results being marginally stronger.
-             }
+             }\label{fig:eigenspace_distance_comparison}
 \end{figure}    
