@@ -55,7 +55,7 @@ current experimental data exclude heavy neutral Higgses with masses up to about 
 depending on the BSM Higgs spectrum and the value of \(\tan(\beta)\), 
 the ratio of the Vacuum Expectation Values (VEVs) of the aforementioned two Higgs doublets.
 These findings are broadly in line with previous phenomenological results obtained in 
-Ref.~\cite{Coleppa:2014hxa}, which had forecast the LHC scope in accessing both \(A\to ZH\) and \(H\to ZA\) decays in a variety of final states. 
+Ref.~\cite{Coleppa2014ExoticHZA}, which had forecast the LHC scope in accessing both \(A\to ZH\) and \(H\to ZA\) decays in a variety of final states. 
 
 Here, we consider the final state \( l^+l^- b\bar b\) and start from the results of~\cite{Aaboud2018AZHbbll}
 for the \(A\to ZH\) decay in order to obtain the corresponding ones for the complementary channel \(H\to ZA\),
@@ -85,10 +85,10 @@ We scan over the following parameter range:
 \label{eq1}
 \end{gathered}
 \end{equation}
-The set of values chosen for \(\tan(\beta)\), and the masses, align with the choices in~\cite{Aaboud:2018eoy}.
+The set of values chosen for \(\tan(\beta)\), and the masses, align with the choices in~\cite{Aaboud2018AZHbbll}.
 \begin{itemize}
-    \item[\textbullet] For the process mediated by \AZH, we choose \(m_X~= m_A\), \(m_Y~= m_H\)  and \(m_{H^\pm} = m_A\). (Note that this choice is consistent with Ref.~\cite{Aaboud:2018eoy}.)
-    \item[\textbullet] For the process mediated by \HZA, we choose \(m_X~= m_H\), \(m_Y~= m_A\)  and \(m_{H^\pm} = m_H\). (Note this choice is specular to that in Ref.~\cite{Aaboud:2018eoy}.) 
+    \item[\textbullet] For the process mediated by \AZH, we choose \(m_X~= m_A\), \(m_Y~= m_H\)  and \(m_{H^\pm} = m_A\). (Note that this choice is consistent with Ref.~\cite{Aaboud2018AZHbbll}.)
+    \item[\textbullet] For the process mediated by \HZA, we choose \(m_X~= m_H\), \(m_Y~= m_A\)  and \(m_{H^\pm} = m_H\). (Note this choice is specular to that in Ref.~\cite{Aaboud2018AZHbbll}.) 
 \end{itemize}
 
 
@@ -100,7 +100,7 @@ However, in the alignment limit used here these decay channels are closed.
 Within these ranges there are several theoretical and experimental constraints for the parameter points of the 2HDM to pass, discussed below.	
 \begin{itemize}
 	\item Unitarity: various scattering processes  require that unitarity is conserved at the tree-level at high energy.
-    The unitarity requirements in the 2HDM have been studied in~\cite{Kanemura:1993hm, Akeroyd:2000wc, Arhrib:2000is}.
+    The unitarity requirements in the 2HDM have been studied in~\cite{Kanemura1993LeeQuiggThacker, Akeroyd2000TreeLevel, arhrib2000unitarity}.
 	Sets of eigenvalues $e_i$ ($i-1, ... 12$) for the scattering  matrix of all Higgs and Goldstone bosons of the 2HDM are obtained as follows:
 	\begin{eqnarray}
 	&& e_{1,2} =  \lambda_3+2\lambda_4\pm 3 | \lambda_5| , \quad  \quad  e_{3,4} = \lambda_3\pm\lambda_4 , \quad e_{5,6} =  \lambda_3\pm|\lambda_5|,  \nonumber \\
@@ -112,9 +112,9 @@ Within these ranges there are several theoretical and experimental constraints f
 	e_{11,12}  = \lambda_1+\lambda_2\pm\sqrt{(\lambda_1-\lambda_2)^2+4|\lambda_5|^2}.
 	\end{eqnarray}
     We require all \(e_i\)'s to be less than 16\(\pi\) for each \(i=1,...12\).
-\item Perturbativity constraints \cite{Kanemura:1993hm,Branco:2011iw} implies that all that the quartic couplings of the scalar potential satisfy the condition \(|\lambda_i| \leqslant 8 \pi\) for each \(i=1,...5\).
+\item Perturbativity constraints \cite{Kanemura1993LeeQuiggThacker,Branco_2HDMreview2011} implies that all that the quartic couplings of the scalar potential satisfy the condition \(|\lambda_i| \leqslant 8 \pi\) for each \(i=1,...5\).
 	
-	\item Vacuum stability requires the scalar potential to be bounded from below~\cite{Gunion:2002zf} by satisfying the following inequalities:
+	\item Vacuum stability requires the scalar potential to be bounded from below~\cite{Gunion2003decouple} by satisfying the following inequalities:
 	\begin{eqnarray}
 	\lambda_{1,2}>0,  \,\,
 	\lambda_3>- \sqrt{\lambda_1\lambda_2}, \,\,
@@ -122,7 +122,7 @@ Within these ranges there are several theoretical and experimental constraints f
 	\end{eqnarray}
 	
 \end{itemize}
-In practice the theoretical constraints are automatically checked by the program 2HDMC~\cite{Eriksson:2009ws}.
+In practice the theoretical constraints are automatically checked by the program 2HDMC~\cite{Eriksson20102HDMC}.
 The program will tell us if a selected parameter combination is valid,
 however owing to the range of possible values in \(m_{12}^2\) some level of curve fitting to the valid points
 is required to augment the MC sampling.
@@ -133,21 +133,21 @@ The objective is to locate values that are permitted by all theory constraints.
 \subsubsection{Experimental constraints}
 In addition to theoretical constraints experimental constrains need to be accounted for.
 \begin{itemize}
-	\item EW Precision Observables (EWPOs) \cite{Haller:2018nnx}, such as the oblique parameters $S$ and $T$ \cite{Peskin:1991sw, Grimus:2008nb}, require a level of degeneracy between the charged Higgs boson state and one of the heavier neutral Higgs bosons. Here, we assume $m_{H^\pm} = m_{A}$  or $m_H$, as appropriate (see below), so that the $T$ parameter exactly vanishes in the alignment limit. 
-    \item Exclusion limits at 95\% Confidence Level (CL) from Higgs searches at colliders (LEP, Tevatron and LHC) via HiggsBounds, version 5.3.2~\cite{Bechtle:2008jh, Bechtle:2011sb, Bechtle:2013wla} are enforced.
-    Furthermore, the ATLAS Collaboration has set an upper limit at 95\% CL on the production cross section $\sigma$ of the $A$ state times its decay BR into $ZH\to l^+l^-b\bar b$, i.e., \(\sigma(A)\times {\rm BR}(A\rightarrow ZH \rightarrow l^+l^-b\bar b)\)~\cite{Aaboud:2018eoy}, that is not included in this tool, hence we have accounted for it separately.
+	\item EW Precision Observables (EWPOs) \cite{Haller2018EWUpdate}, such as the oblique parameters $S$ and $T$ \cite{Peskin:1991sw, Grimus2008Oblique}, require a level of degeneracy between the charged Higgs boson state and one of the heavier neutral Higgs bosons. Here, we assume $m_{H^\pm} = m_{A}$  or $m_H$, as appropriate (see below), so that the $T$ parameter exactly vanishes in the alignment limit. 
+    \item Exclusion limits at 95\% Confidence Level (CL) from Higgs searches at colliders (LEP, Tevatron and LHC) via HiggsBounds, version 5.3.2~\cite{Bechtle2009higgsbounds, Bechtle2011higgsbounds2, Bechtle2014higgsbounds4} are enforced.
+    Furthermore, the ATLAS Collaboration has set an upper limit at 95\% CL on the production cross section $\sigma$ of the $A$ state times its decay BR into $ZH\to l^+l^-b\bar b$, i.e., \(\sigma(A)\times {\rm BR}(A\rightarrow ZH \rightarrow l^+l^-b\bar b)\)~\cite{Aaboud2018AZHbbll}, that is not included in this tool, hence we have accounted for it separately.
 	
 \item Constraints from the Higgs boson signal strength measurements are automatically satisfied as we assume $\sin(\beta-\alpha) =1$.	
 	
-\item Constraints of {flavour physics observables,} namely, \(B \rightarrow X_s \gamma,~ B_{s,d} \rightarrow \mu^+\mu^-\) and \(\Delta m_{s,d}\)~\cite{Haller:2018nnx}.		
+\item Constraints of {flavour physics observables,} namely, \(B \rightarrow X_s \gamma,~ B_{s,d} \rightarrow \mu^+\mu^-\) and \(\Delta m_{s,d}\)~\cite{Haller2018EWUpdate}.		
 \end{itemize}
 
 Comparing to observed and expected exclusion limits requires obtaining branching ratios and production cross sections.
-The relevant branching ratios, \AZH{}, \HZA{}, \Abb{} and \Hbb{} are calculated with 2HDMC~\cite{Eriksson:2009ws}.
+The relevant branching ratios, \AZH{}, \HZA{}, \Abb{} and \Hbb{} are calculated with 2HDMC~\cite{Eriksson20102HDMC}.
 The production cross sections of the heavy CP-even ($H$) and CP-odd ($A$) Higgs bosons,
 at Next-to-Next-to-Leading Order (NNLO) in QCD, 
 for both $gg\to H,A$ and $b\bar b\to A,H$, at the Centre-of-Mass (CM) energies of 13 TeV and 14 TeV,
-are calculated using SusHi~\cite{Harlander:2012pb, Harlander:2016hcx, Harlander:2002wh, Harlander:2003ai}. 
+are calculated using SusHi~\cite{Harlander2013SusHi, Harlander2017Bento, Harlander2002nexttonext, Harlander:2003ai}. 
 
 2HDMC code also includes an interface to HiggsBounds, which is used to apply the aforementioned exclusion limits at 95\% CL from Higgs searches at LEP, Tevatron and LHC.
 
@@ -221,13 +221,13 @@ Entries in red indicate that the combination has little or no mass combinations 
 \label{tab:summary}
 \end{table}
 
-After performing a scan over the parameter space delimited by Eq.~(\ref{eq1}), we compare the prediction of the model with the observed and expected limits given in Ref.~\cite{Aaboud:2018eoy}.
+After performing a scan over the parameter space delimited by Eq.~(\ref{eq1}), we compare the prediction of the model with the observed and expected limits given in Ref.~\cite{Aaboud2018AZHbbll}.
 If the prediction exceeds the observed limit, then the parameter combination is excluded.
 When the prediction exceeds the expected limit, we anticipate that the signal would be visible above background given the energies and luminosities available, hence,  {the experiment is sensitive to these parameters.} %these parameters are testable.
 
 
 
-The choice of \(m^2_{12} = m_A^2 \tan(\beta) / (1 + \tan(\beta))^2\) enables us to reconstruct the exclusion limits at 95\%  CL given in Ref~\cite{Aaboud:2018eoy}.
+The choice of \(m^2_{12} = m_A^2 \tan(\beta) / (1 + \tan(\beta))^2\) enables us to reconstruct the exclusion limits at 95\%  CL given in Ref~\cite{Aaboud2018AZHbbll}.
 However, this choice does not actually allow to satisfy theoretical constraints in all four types of 2HDM.
 Therefore, we have dismissed it in our analysis.
 In contrast, our choice of \(m_{12}^2\) above aims to simultaneously satisfy as many theoretical constraints as possible while affording one with significant parameter space amenable to experimental investigation.
