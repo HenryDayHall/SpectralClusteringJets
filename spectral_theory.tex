@@ -1,6 +1,5 @@
-\section{Theory of spectral clustering}\label{sec:spectral_theory}
+\subsection{Theory of spectral clustering}\label{sec:spectral_theory}
 
-\textcolor{red}{Add a short outline of how spectral clustering should work}
 
 Spectral clustering is the result of relaxing the criteria that would precisely
 to identify infinitely separated groups to estimate the members  groups that may have some connection.
@@ -34,8 +33,18 @@ matrix with as many rows and columns as there are points.
 On \(i\)th diagonal it holds the value \(\sum_j a_{i, j}\),
 which is the degree of the vertex \(i\).
 Off the diagonal it has the negative affinity; \(-a_{i, j}\).
+\begin{equation}
+    L = 
+    \begin{pmatrix}
+        z_0 & -a_{0,1} & -a_{0,2} & \hdots \\
+        -a_{0,1} & z_1 & -a_{1,2} & \\
+        -a_{0,2} & -a_{1,2} & z_2 & \\
+        \vdots   &          &     & \ddots 
+    \end{pmatrix}
+\end{equation}
+
 Notice that this is a real symmetric matrix,
-and therefore all it's eigenvalues are real.
+and therefore all its eigenvalues are real.
 
 Considering just one cluster we find that when the Laplacien is multiplied by two indicator vectors
 the result is the function that NCut seeks to minimise for that cluster.
@@ -59,11 +68,10 @@ In the case of reconstructed particles, a possible input to the affinity measure
 A format commonly used for the distance is;
 \begin{equation}d_{i,j} = \text{min}(p_{T,i}^{2x}, p_{T,j}^{2x}) \distancedeltar{}_{i,j}\end{equation}
 where \(\distancedeltar{}_{i,j}\) is an angular distance.
-This is discussed from a practical standpoint in section~\ref{sec:physicaldist},
+This is discussed from a practical standpoint in section~\ref{sec:spectralmethodalgo},
 from a theoretical standpoint it is important to investigate the impact of the \(p_T\) factor on the eigenvalue equations.
-
-There are a number of different ways of converting a distance measure into an affinity, they are discussed in section~\ref{sec:affinity}.
-For now only one will be considered \(a_{i,j} = 1/d_{i,j}\).
+There are a number of different ways of converting a distance measure into an affinity,
+for now only one will be considered \(a_{i,j} = 1/d_{i,j}\).
 
 Starting with the \textbf{unnormalised laplacien} a relation between the size of the eigenvalues and the affinities in each group can be uncovered.
 The unnormalised laplacien has the form \(L = D -A\), as we are already using \(d\) to mean distance,
@@ -223,6 +231,37 @@ so increasing the value of the sum disfavours the clustering.
 This symmetry means that the implications for \(x > 0\) or \(x < 0\) will be the same as summarised above.
 
 \subsubsection{Distances in Physical space}\label{sec:distance_in_physical}
+In order to test the best way to measure distance between two particles
+there are two simple metrics
+that should grow in an ordinal manner with distance.
+
+The first would be the ROC-AUC (Receiver Operating Characteristic - Area Under Curve),
+for the distance measure between two particles predicting the particles being descendent from the same
+\bthing{quark}.
+A ROC-AUC is a number between \(0\) and \(1\) measures how well a predictor matches the truth labels~\cite{Fawcett06anintroduction}.
+This can be thought of as a measure of how good that distance measure is at separating 
+quarks from the same \bthing{quark} from other quark pairs.
+
+The second would be the Spearman's rank of the measured distance against the Shower distance.
+Shower distance is defined by taking the simulated shower as a graph, where nodes are particles
+and edges are interactions, and finding the least number of edges that must be traversed
+in order to get between the particles in the pair.
+
+These the first measure is more closely related to our goals,
+the second measure has a simpler physical interpretation.
+All particles from the same \bthing{quark} have a small shower distance
+but not all particles with a small shower distance are from the same \bthing{quark}.
+This can be seen in figure~\ref{fig:shower_distance_example}.
+
+\begin{figure}[htp]
+    \includegraphics[width=.5\textwidth]{graphics/shower_distance_example}
+    \caption{
+        Comparison of shower distance (see sec~\ref{sec:distance_in_eigenspace})
+        for pairs that are in the same \bthing{quark}
+        and those that are not.
+             }\label{fig:shower_distance_example}
+\end{figure}    
+
 The distances in physical space will be input values for affinities,
 which will be clustered subject to the aims of RatioCut, or NCut.
 As a reminder, RatioCut aims to minimise
@@ -281,8 +320,7 @@ A comparison of the two scoring criteria over two thousand events can be seen in
             from kt jets at the top, Cambridge Aachen in the middle row and anti-kt
             on the last row.
             On the x axis are various distance measures.
-            The third plot seems anomalous, but ignoring this
-            it seems that a Luclus PT factor is preferable.
+            It seems that a Luclus PT factor is preferable.
             The distance measures Min, Max, Correlation and Cosine
             do not perform well, with the exception of
             Cosine-Luclus, which works will for anti-kt jets.
@@ -293,47 +331,19 @@ A comparison of the two scoring criteria over two thousand events can be seen in
 
 \FloatBarrier
 \subsubsection{Distances in Eigenspace}\label{sec:distance_in_eigenspace}
-In order to test the best way to measure distance in Eigenspace there are two simple comparisons
-that could be made to a measured distance.
-
-The first would be the ROC-AUC (Receiver Operating Characteristic - Area Under Curve),
-for the distance measure between two particles and the particles being descendent from the same
-\bthing{quark}.
-This can be thought of as a measure of how good that distance measure is at separating 
-quarks from the same \bthing{quark} from other quark pairs.
-
-The second would be the Spearman's rank of the measured distance against the Shower distance.
-Shower distance is defined by taking the simulated shower as a graph, where nodes are particles
-and vertices are interactions, and finding the least number of vertices that must be transvered 
-in order to get between the particles in the pair.
-
-These the first measure is more closely related to our goals,
-the second measure has a simpler physical interpretation.
-All particles from the same \bthing{quark} have a small shower distance
-but not all particles with a small shower distance are from the same \bthing{quark}.
-This can be seen in figure \ref{fig:shower_distance_example}.
-For a visualisation of these comparisons in the first event see figure \ref{fig:eigenspace_distance_example}.
-
-\begin{figure}[htp]
-    \includegraphics[width=.5\textwidth]{graphics/shower_distance_example}
-    \label{fig:shower_distance_example}
-    \caption{
-        Comparison of shower distance (see sec~\ref{sec:distance_in_eigenspace})
-        for pairs that are in the same \bthing{quark}
-        and those that are not.
-             }
-\end{figure}    
-
+In order to test the best way to measure distance in Eigenspace a similar test to the one performed in physical space is done.
+The distance between two particles in eigenspace accordint to various metrics is co pared to both the ROC-AUC
+and the shower distance.
+For a visualisation of these comparisons in the first event see figure~\ref{fig:eigenspace_distance_example}.
 \begin{figure}[htp]
     \includegraphics[width=1.\textwidth]{graphics/eigenspace_distance_example}
-    \label{fig:eigenspace_distance_example}
     \caption{
         Each plot is a comparison of shower distance (see sec~\ref{sec:distance_in_eigenspace})
         against a distance measure applied in the Eigenspace created at the first stage of
         jet formation.
         Each point is on a plot represents the relationship between a pair of particles
         that are used to form jets in the first event.
-             }
+             }\label{fig:eigenspace_distance_example}
 \end{figure}    
 
 There are \(10\) distance measures that were tried in Eigenspace.

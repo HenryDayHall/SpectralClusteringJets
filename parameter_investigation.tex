@@ -45,7 +45,7 @@ previous observations and experimental sensitivity requirements.
 The pattern of Branching Ratios (BRs) of the two decays \(A\to ZH\) and \(H\to ZA\) was first discussed in Refs.~\cite{Moretti1994belowThreshold} and~\cite{Djouadi1995twoAndthree}
 (albeit in a Supersymmetric version of the 2HDM) and more recently implemented in Refs.~\cite{Djouadi1998HDECAY,Krause20202HDECAY} in the 2HDM.
 As for production channels, the by far most relevant one  is gluon-gluon fusion, i.e., \(gg\to A\) or \(H\),
-with an {occasional} competing contribution from \(b\bar b\to A\) or \(H\), respectively. 
+with an occasional competing contribution from \(b\bar b\to A\) or \(H\), respectively. 
 
 LHC searches for the complete channels \(gg,b\bar b\to A\to ZH\) and \(gg, b\bar b\to H\to ZA\) have been carried out at both ATLAS~\cite{Aaboud2018AZHbbll} and CMS ~\cite{Khachatryan2016resonancesbbtautau,Sirunyan2020newneutral},
 by exploiting leptonic decays of the gauge boson, \(Z\to l^+l^-\) (\(l=e,\mu\)),  and hadronic decays of
@@ -124,10 +124,10 @@ Within these ranges there are several theoretical and experimental constraints f
 \end{itemize}
 In practice the theoretical constraints are automatically checked by the program 2HDMC~\cite{Eriksson20102HDMC}.
 The program will tell us if a selected parameter combination is valid,
-however owing to the range of possible values in \(m_{12}^2\) some level of curve fitting to the valid points
+however owing to the range of possible values in \(m_{12}^2\) some curve fitting of the valid points
 is required to augment the MC sampling.
 Points that satisfy the most constraints are fitted to a polynomial and
-values of \(m_{12}^2\) near the surface of the polynomial is samples further.
+values of \(m_{12}^2\) near the surface of the polynomial are sampled further.
 The objective is to locate values that are permitted by all theory constraints.
 
 \subsubsection{Experimental constraints}
@@ -170,24 +170,24 @@ with an integrated luminosity of \(300~{\rm fb}^{-1}\), by calculating the so ca
     \caption{Exclusion limits at \(95\%\) CL in Type-I.
              The lines denoting expected and observed exclusion limits
              do not appear at all on some plots when the prediction never exceeds the 
-             expected or observed  limit.}\label{fig1}
+             expected or observed  limit.}\label{fig:2HDMparams1}
 \end{figure}
 
 \begin{figure}[t!]		
     \includegraphics[width=\textwidth]{single_tbs/type2.png}
-    \caption{Like in Fig.~\ref{fig1} but for Type-II.}\label{fig2}
+    \caption{Like in Fig.~\ref{fig:2HDMparams1} but for Type-II.}\label{fig:2HDMparams2}
 \end{figure}
 
 
 \begin{figure*}[t!]	     
     \includegraphics[width=\textwidth]{single_tbs/type3.png}
-    \caption{Like in Fig.~\ref{fig1} but for Type-Y (Flipped).}\label{fig3}
+    \caption{Like in Fig.~\ref{fig:2HDMparams1} but for Type-Y (Flipped).}\label{fig:2HDMparams3}
 \end{figure*}
 
 \begin{figure*}[t!]
 	\centering
     \includegraphics[width=\textwidth]{single_tbs/type4.png}
-    \caption{Like in Fig.~\ref{fig1} but for  Type-X (Lepton specific).}\label{fig4}
+    \caption{Like in Fig.~\ref{fig:2HDMparams1} but for  Type-X (Lepton specific).}\label{fig:2HDMparams4}
 \end{figure*}
 
 
@@ -195,8 +195,37 @@ with an integrated luminosity of \(300~{\rm fb}^{-1}\), by calculating the so ca
 	\centering
     \includegraphics[width=.5\textwidth]{branching_ratios_HAA.png}
     \caption{The branching ratio \(H\rightarrow AZ\) is suppressed by the branching ratio \(H\rightarrow AA\).
-             This effect occurs for all types, but does not occur at small \(\tan(\beta)\).}\label{figsuppress}
+             This effect occurs for all types, but does not occur at small \(\tan(\beta)\).}\label{fig:2HDMparamssuppress}
 \end{figure*}
+
+After performing a scan over the parameter space delimited by Eq.~(\ref{eq1}), we compare the prediction of the model with the observed and expected limits given in Ref.~\cite{Aaboud2018AZHbbll}.
+If the prediction exceeds the observed limit, then the parameter combination is excluded.
+When the prediction exceeds the expected limit, we anticipate that the signal would be visible above background given the energies and luminosities available, hence,  {the experiment is sensitive to these parameters.} %these parameters are testable.
+
+
+The choice of \(m^2_{12} = m_A^2 \tan(\beta) / (1 + \tan(\beta))^2\) enables us to reconstruct the exclusion limits at 95\%  CL given in Ref~\cite{Aaboud2018AZHbbll}.
+However, this choice does not actually allow to satisfy theoretical constraints in all four types of 2HDM.
+Therefore, we have dismissed it in our analysis.
+In contrast, our choice of \(m_{12}^2\) above aims to simultaneously satisfy as many theoretical constraints as possible while affording one with significant parameter space amenable to experimental investigation.
+Indeed, this is achieved by randomly sampling values of \(m^2_{12}\) between \(0\) and \(2\times 10^{5}\)~GeV for each point of the scan and selecting the one that passes most theoretical checks.
+
+
+Figs.~\ref{fig:2HDMparams1}~to~\ref{fig:2HDMparams4} illustrate the outcome the scan for each
+Yukawa type, \(\tan(\beta)\) and mass combination $(m_H,m_A)$.
+Each figure provides results for one choice of Yukawa couplings
+and each frame in each figure provides results at one value of \(\tan(\beta)\).
+In the top left of each plot, where \(m_A > m_H+100\)~GeV, the decay \AZH{} is considered while 
+in the bottom right of each plot, where \(m_H > m_A+100\)~GeV,   the decay \HZA{} is considered.
+The corridor along the diagonal between these regions is coloured grey to indicate that neither decay is accessible.
+%
+If a combination of parameters is forbidden by theory, HiggsBounds or flavour constraints
+then the corresponding area is filled with solid colour, conversely,
+white areas pass all these checks and so are of interest. The hatching over the solid colour is used to indicate which of the checks
+causes the corresponding parameter combination to fail.
+There are three boundary lines drawn over the plots: 
+these are the observed and expected \(95\%\) CLs for the ATLAS detector in its present state, \(13\) TeV and \(36.1~\text{fb}^{-1}\),
+plus the expected 95\% CL for an upgraded LHC and ATLAS detector at \(14\) TeV and \(300~\text{fb}^{-1}\)\footnote{We neglect here to consider the case of $\sqrt s=13$ TeV and $L\approx140$ fb$^{-1}$, as it only improves marginally the present situation yet it would be make the plots far too crowded.}.
+The model predictions exceed the 95\% CL inside the curve.
 
 
 \begin{table}
@@ -215,60 +244,29 @@ with an integrated luminosity of \(300~{\rm fb}^{-1}\), by calculating the so ca
       Lepton specific & \textcolor{red}{Flavour constraints} & \textcolor{red}{Excluded by HiggsBounds} &  \textcolor{red}{Excluded by HiggsBounds} & \\
 \end{tabularx}
 %\vspace*{-1cm}
-\caption{Table summarising the findings in Figs.~\ref{fig1}~to~\ref{fig4}.
+\caption{Table summarising the findings in Figs.~\ref{fig:2HDMparams1}~to~\ref{fig:2HDMparams4}.
 An overview of the possibility of each Yukawa type and value of \(\tan(\beta)\) is given.
 Entries in red indicate that the combination has little or no mass combinations that are not forbidden while those in blue represent available parameter space accessible presently at Run 2  or after the upgrade of Run 3.}
 \label{tab:summary}
 \end{table}
 
-After performing a scan over the parameter space delimited by Eq.~(\ref{eq1}), we compare the prediction of the model with the observed and expected limits given in Ref.~\cite{Aaboud2018AZHbbll}.
-If the prediction exceeds the observed limit, then the parameter combination is excluded.
-When the prediction exceeds the expected limit, we anticipate that the signal would be visible above background given the energies and luminosities available, hence,  {the experiment is sensitive to these parameters.} %these parameters are testable.
-
-
-
-The choice of \(m^2_{12} = m_A^2 \tan(\beta) / (1 + \tan(\beta))^2\) enables us to reconstruct the exclusion limits at 95\%  CL given in Ref~\cite{Aaboud2018AZHbbll}.
-However, this choice does not actually allow to satisfy theoretical constraints in all four types of 2HDM.
-Therefore, we have dismissed it in our analysis.
-In contrast, our choice of \(m_{12}^2\) above aims to simultaneously satisfy as many theoretical constraints as possible while affording one with significant parameter space amenable to experimental investigation.
-Indeed, this is achieved by randomly sampling values of \(m^2_{12}\) between \(0\) and \(2\times 10^{5}\)~GeV for each point of the scan and selecting the one that passes most theoretical checks.
-
-
-
-Figs.~\ref{fig1}~to~\ref{fig4} illustrate the outcome the scan for each
-Yukawa type, \(\tan(\beta)\) and mass combination $(m_H,m_A)$.
-Each figure provides results for one choice of Yukawa couplings
-and each frame in each figure provides results at one value of \(\tan(\beta)\).
-In the top left of each plot, where \(m_A > m_H+100\)~GeV, the decay \AZH{} is considered while 
-in the bottom right of each plot, where \(m_H > m_A+100\)~GeV,   the decay \HZA{} is considered.
-The corridor along the diagonal between these regions is coloured grey to indicate that neither decay is accessible.
-%
-If a combination of parameters is forbidden by theory, HiggsBounds or flavour constraints
-then the corresponding area is filled with solid colour, conversely,
-white areas pass all these checks and so are of interest. The hatching over the solid colour is used to indicate which of the checks
-causes the corresponding parameter combination to fail.
-There are three boundary lines drawn over the plots: 
-these are the observed and expected \(95\%\) CLs for the ATLAS detector in its present state, \(13\) TeV and \(36.1~\text{fb}^{-1}\),
-plus the expected 95\% CL for an upgraded LHC and ATLAS detector at \(14\) TeV and \(300~\text{fb}^{-1}\)\footnote{We neglect here to consider the case of $\sqrt s=13$ TeV and $L\approx140$ fb$^{-1}$, as it only improves marginally the present situation yet it would be make the plots far too crowded.}.
-The model predictions exceed the 95\% CL inside the curve.
-
-In Fig.~\ref{fig1} the parameter space with Type-I Yukawa couplings is shown.
+In Fig.~\ref{fig:2HDMparams1} the parameter space with Type-I Yukawa couplings is shown.
 The upper left plot shows that \(\tan(\beta) = 1\) is always forbidden by flavour constraints.
 The upper right plot shows that there are many mass combinations that do not prevent the decay \AZH{} for \(\tan(\beta) = 5\),
 but theory constraints forbid all mass combinations relevant to \HZA{}.
 At \(\tan(\beta) = 5\) for \(13\) TeV (and \(36.1~\text{fb}^{-1}\)) the area of sensitivity (inside the expected curve) that is not excluded by observation (inside the observed curve) is very limited. 
-\textcolor{red}{It is also seen that the \(H\rightarrow AZ\) signal has reduced sensitivity when \(\tan(\beta)\) is \(5\) or more.
-This is due to \(H\rightarrow AA\) competing with \(H\rightarrow AZ\), as shown in figure~\ref{figsuppress}.
-The branching ratio \(H\rightarrow AA\) becomes significant because of the enhancement of the trilinear coupling \(\lambda_{HAA}\) at large \(\tan(\beta)\).}
+It is also seen that the \(H\rightarrow AZ\) signal has reduced sensitivity when \(\tan(\beta)\) is \(5\) or more.
+This is due to \(H\rightarrow AA\) competing with \(H\rightarrow AZ\), as shown in figure~\ref{fig:2HDMparamssuppress}.
+The branching ratio \(H\rightarrow AA\) becomes significant because of the enhancement of the trilinear coupling \(\lambda_{HAA}\) at large \(\tan(\beta)\).
 At \(14\) TeV and \(300~\text{fb}^{-1}\), however, we expect many mass combinations to be testable that have not yet been excluded.
 The lower left plot shows the behaviour at \(\tan(\beta) = 10\) to be similar to \(\tan(\beta) = 5\), i.e., 
 everything is forbidden for \HZA{} by theory while for \AZH{} most combinations for which there is sensitivity have been excluded at \(13\) TeV
 but \(14\) TeV offers even more possible parameter space than seen at \(\tan(\beta) = 5\).
-Finally, in the lower right frame of Fig.~\ref{fig1}, the parameter space for \(\tan(\beta) = 20\) is shown.
+Finally, in the lower right frame of Fig.~\ref{fig:2HDMparams1}, the parameter space for \(\tan(\beta) = 20\) is shown.
 The state of \HZA{} is unchanged, but now \AZH{} has no expected or observed exclusion at \(13\) TeV, i.e., these parameters are harder to probe.
 With the upgrade to \(14\) TeV and 300 fb$^{-1}$ there is some sensitivity to \AZH{} at \(\tan(\beta) = 20\).
 
-As might be expected, the behaviour of Type-II, shown in Fig.~\ref{fig2} and Type-Y, shown in Fig.~\ref{fig3}, is remarkably similar.
+As might be expected, the behaviour of Type-II, shown in Fig.~\ref{fig:2HDMparams2} and Type-Y, shown in Fig.~\ref{fig:2HDMparams3}, is remarkably similar.
 The upper left plot shows that \(\tan(\beta) = 1\) is forbidden by flavour constraints in all areas where there is sensitivity.
 At \(13\) TeV  and 36.1 fb$^{-1}$ the upper right plot shows that the same can be said for \(\tan(\beta) = 5\), however,
 after Run 3,  at \(14\) TeV and 300 fb$^{-1}$, there are many permitted mass combinations for \AZH{}. However, 
@@ -278,8 +276,8 @@ except more of the exclusion at \(13\) TeV and 36.1 fb$^{-1}$  is from observati
 Finally, in the lower right plot, \(\tan(\beta) = 20\) is shown to be excluded for almost all mass choices,
 by multiple constraints.
 
-In Fig.~\ref{fig4} the behaviour of the Type-X 2HDM is shown, at a set of \(\tan(\beta)\) values that differs from those previously considered.
-\textcolor{red}{The change is made because the parameter space in Type-X shrinks more rapidly with increasing \(\tan(\beta)\) compared to the other Yukawa types.}
+In Fig.~\ref{fig:2HDMparams4} the behaviour of the Type-X 2HDM is shown, at a set of \(\tan(\beta)\) values that differs from those previously considered.
+The change is made because the parameter space in Type-X shrinks more rapidly with increasing \(\tan(\beta)\) compared to the other Yukawa types.
 For these choices HiggsBounds excludes all areas inside the expected limits.
 This remains true even after the end of Run 3.
 
@@ -288,7 +286,7 @@ Finally, Tab.~\ref{tab:summary} summarises our findings, highlighting that sensi
 
 \subsection{Conclusions}
 In summary, we have revisited an experimental analysis of the ATLAS Collaboration of the production and decay process $gg,b\bar b\to A\to ZH\to l^+l^-b\bar b$ performed at Run 2 with 36.1 fb$^{-1}$ of luminosity, which had been interpreted in terms of exclusion limits over the parameter space of the four types of the 2HDM, wherein the lightest Higgs state is identified with the SM-like Higgs boson discovered during Run 1 at the LHC with mass 125 GeV. Upon validating the ATLAS interpretation in our framework, though, we have discovered that their (fixed) choice of $m_{12}$, a mass parameter in the 2HDM Lagrangian that softly breaks an underlying $Z_2$ symmetry of the 2HDM to avoid FCNCs, yields parameter space configurations which are ruled out by theoretical requirements of model consistency. Hence, we have allowed this parameter to vary freely and subject the ensuing parameter space configurations to both the aforementioned theoretical constraints as well as those emerging from past and present experiments, thereby redrawing the actual sensitivity of such an experimental search to all four Yukawa types of the 2HDM, as a function of $\tan(\beta)$. In doing so, we have have also forecast the potential sensitivity of this channel to the 2HDM parameter space at the end of Run 3, assuming increased energy to 14 TeV and luminosity to 300 fb$^{-1}$.
-This revealed some extended coverage of the 2HDM Type-I, -II and -Y (but not -X), %{\textcolor{red}{SM: the previous sentence might need revising once the mixup with Figs. 2--4 is fixed}} Henry: fixed.
+This revealed some extended coverage of the 2HDM Type-I, -II and -Y (but not -X),
 especially for intermediate $\tan(\beta)$ values (say, between  5 and 10), with $m_A$ up to 800 GeV and $m_H$ up to 700 GeV.
 This is somewhat beyond what is presently covered, i.e.,  up to 150 GeV or so in mass of either Higgs state, so as to justify further searches for this signature at the next stage of the LHC. Finally, we have recast the sensitivity of this analysis onto that of the channel  $gg,b\bar b\to H\to ZA\to l^+l^-b\bar b$. However, we have found that the complementary parameter space accessible this way (i.e., $m_H\ge  m_A+m_Z$) is actually entirely excluded already by existing theoretical and/or experimental constraints, so as to conclude that it is not warranted to pursue further this channel at the LHC, at least, not with a view to interpret it in the context of the standard four Yukawa types of the 2HDM\footnote{We finally note that analyses similar to Ref.~\cite{Aaboud2018AZHbbll}
 performed by the CMS Collaboration exist \cite{Khachatryan2016resonancesbbtautau,Sirunyan2020newneutral}. We have not used these for two reasons. On the one hand, they did not convey all the  information necessary to make  extrapolations to higher energies. On the other hand, they did not afford one with significantly different sensitivity to the 2HDM at present energies than what achieved by the ATLAS analysis ~\cite{Aaboud2018AZHbbll} that we have adopted as benchmark.}.

@@ -1,6 +1,5 @@
-\section{Method}
-\subsection{Particle data}
-\textcolor{red}{Describe the production of the input data}
+\subsection{Method}
+\subsubsection{Particle data}
 The dataset used for the majority of this work is a simulated Higgs cascade decay.
 One Standard Model (SM) Higgs at \(125\)GeV decays to two light higgs at \(40\)GeV,
 which in turn decay to \beau{}-\bbar{} quark pairs.
@@ -12,22 +11,6 @@ owing to the boost provided by large mass of the SM Higgs and
 the high chance of overlap with 4 \bthing{quarks} in the event.
 
 Other radiation from the protons is also included.  % TODO clarify exactly what background is in here!
-
-\begin{figure}[htp]
-    \begin{minipage}[c]{0.48\textwidth}
-        \includegraphics[width=1\textwidth]{graphics/truth_306.png}
-        \includegraphics[width=1\textwidth]{graphics/truth_1936.png}
-    \end{minipage}\hfill
-    \begin{minipage}[c]{0.48\textwidth}
-        \includegraphics[width=1\textwidth]{graphics/truth_423.png}
-        \includegraphics[width=1\textwidth]{graphics/truth_1378.png}
-    \end{minipage}\hfill
-    \caption{Some examples of events after cuts. Each white dot is a particle that
-             passes the cuts and can be used for jet clustering.
-             A green diamond indicates the location of the \bthing{quark}
-             (not an input to clustering).
-         A green circle indicates a descendant of the \bthing{quark}.}
-\end{figure}    
 
 
 Before any evaluation can be performed on the final state of the simulation
@@ -54,8 +37,7 @@ This is to mimic restrictions from reconstruction accuracy.
 
 After cuts, \(72\%\) of events have at least \(5\) \bthing{descendants} and \(5\) non \bthing{descendants} available.
 
-\subsection{Clustering algorithm}
-\textcolor{red}{Describe the spectral algorithm in detail}
+\subsubsection{Clustering algorithm}\label{sec:spectralmethodalgo}
 Now the implementation of the theory described in section~\ref{sec:spectral_theory} will be specified.
 For every simulated event this process if used to select a clustering.
 
