@@ -22,6 +22,10 @@
 \usepackage{float}
 \usepackage{booktabs}
 \usepackage{rotating}
+\usepackage[toc,page]{appendix}
+
+\newcommand{\nocontentsline}[3]{}
+\newcommand{\tocless}[2]{\bgroup\let\addcontentsline=\nocontentsline#1{#2}\egroup}
 
 % make table
 \definecolor{tableHeader}{gray}{0.5}
@@ -88,6 +92,7 @@
     % make a future plans section short ~2 page
     \FloatBarrier
     \input{rtnn_plans}
+    \input{talks_posters}
     % add a conferences and training section ~1 page
     %\section{Acknowledgements}
     %I would like to thank Professor Stefano Moretti, Professor Claire Shepherd-Themistocleous, Professor Srinandan Dasmahapatra and Dr Emmanuel Olaiya for their excellent supervision and advice.
