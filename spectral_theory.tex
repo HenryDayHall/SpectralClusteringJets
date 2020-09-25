@@ -13,7 +13,7 @@ The objective used for a good clustering will be the NCut objective;
 \end{equation}
 Where \(W(A_k, \bar{A_k})\) measures the strength of the connections that must be
 broken in order to separate the cluster \(A_k\) from the graph
-and \(|A_k|\) corrisponds to the number of elements in \(A_k\).
+and \(|A_k|\) corresponds to the number of elements in \(A_k\).
 
 Membership of cluster \(A_k\) will be determined by the indicator vector \(h_k\);
 \begin{equation}
@@ -76,7 +76,7 @@ for now only one will be considered \(a_{i,j} = 1/d_{i,j}\).
 Starting with the \textbf{unnormalised laplacien} a relation between the size of the eigenvalues and the affinities in each group can be uncovered.
 The unnormalised laplacien has the form \(L = D -A\), as we are already using \(d\) to mean distance,
 let us take \(z_i = \sum_{j\neq i} a_{i,j}\) where it is understood that by default a sum goes over all node indices.
-From this point onwards it is also assumed that all \(a_{i,i} = 0\), so such sums can omit the \(i \ne j\).
+From this point onward it is also assumed that all \(a_{i,i} = 0\), so such sums can omit the \(i \ne j\).
 This gives 
 \begin{equation}
     L = 
