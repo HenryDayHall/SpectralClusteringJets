@@ -3,7 +3,7 @@
 This section summarises the work began during a secondment to University Cadi Ayyad, Morocco,
 in collaboration with Rachid Benbrik and Souad Semlali, 
 for which my supervisor Stefano Moretti is also co-author~\cite{benbrik2020mapping}.
-The work extends and recasts existing scan of the 2HDM model,
+The work extends and recasts existing scans of the 2HDM model,
 to locate parameter space of interest now, and after
 a planned luminosity and energy upgrade to the LHC.
 My contribution was focused on efficient data generation by integrating existing tools.
@@ -12,9 +12,9 @@ creating frameworks to run in parallel without race conditions
 and finding efficient search strategies.
 
 
-Parameter areas of interest for the process \(pp\to H\to ZA\to l^+l^-b\bar b\)
+Parameter regions of interest for the process \(pp\to H\to ZA\to l^+l^-b\bar b\)
 and its mirror image \(pp\to A \to ZH\to l^+l^-b\bar{b}\) 
-are established by eliminating areas ruled out by theory constraints,
+are established by eliminating regions ruled out by theory constraints,
 previous observations and experimental sensitivity requirements.
 
 Existing studies of the relevant branching ratios are~\cite{Moretti1994belowThreshold, Djouadi1995twoAndthree, Djouadi1998HDECAY,Krause20202HDECAY}.
@@ -29,8 +29,8 @@ and extend the analysis to higher energy and luminosity from planned detector up
 The different transformations of the quark fields under the \(Z_2\) symmetry lead to four structures of Higgs-fermions interactions:
 in Type-I only one doublet couples to all fermions;
 in Type-II one of the doublets couples to the up quarks while the other doublets couples to the down quark;
-in Type-X (or Lepton specific)  one of the doublets couples to all quarks and the other couples to all leptons;
-in Type-Y (or Flipped) one of the doublet couples to up-type quarks and to leptons and the other couples to down-type quarks. 
+in Type-X (or Lepton Specific)  one of the doublets couples to all quarks and the other couples to all leptons;
+in Type-Y (or Flipped) one of the doublet couples to up-type quarks, and to leptons and the other couples to down-type quarks. 
 \subsection{Scan}
 In this study, we identify the lightest CP-even Higgs boson of the 2HDM as the observed Higgs state at the LHC, with $m_h=125$ GeV, 
 and assume \(\sin (\beta-\alpha) = 1\).
@@ -83,7 +83,7 @@ The set of values chosen for \(\tan(\beta)\), and the masses, align with the cho
     \caption{Like in Fig.~\ref{fig:2HDMparams1} but for  Type-X (Lepton specific).}\label{fig:2HDMparams4}
 \end{figure*}
 
-While an evident symmetry exists between the two cases, neither the constraints affecting the two processes nor their  sensitivity reaches should expected to be.
+While an evident symmetry exists between the two cases, neither the constraints affecting the two processes nor their  sensitivity reaches should be expected to be symmetric.
 On the one hand, the role played by the heavy CP-even and CP-odd Higgs states of the 2HDM in both theoretical and experimental limits is different, owing to their different quantum numbers (and hence couplings).
 On the other hand, their production and decay rates at the LHC are different despite leading to the same final states, including residual differences due to width effects entering their normalisation (but, as mentioned, not their kinematics), since, e.g., the $A$ state does not decay to $W^+W^-$ and $ZZ$ pairs while the $H$ state does and, conversely, the $A$ state decays to $Zh$ while the $H$ state does not.  
 However, in the alignment limit used here these decay channels are closed.
@@ -117,11 +117,11 @@ Within these ranges there are several theoretical and experimental constraints f
 In practice the theoretical constraints are automatically checked by the program 2HDMC~\cite{Eriksson20102HDMC}.
 The program can determine if a selected parameter combination is valid.
 
-The choice of \(m^2_{12} = m_A^2 \tan(\beta) / (1 + \tan(\beta))^2\) enables us to reconstruct the exclusion limits at 95\%  CL given in Ref~\cite{Aaboud2018AZHbbll}.
+The choice of \(m^2_{12} = m_A^2 \tan(\beta) / (1 + \tan(\beta))^2\) enables us to reconstruct the exclusion limits at 95\%  confidence level (CL) given in Ref~\cite{Aaboud2018AZHbbll}.
 However, this choice does not actually allow to satisfy theoretical constraints in all four types of 2HDM.
 In contrast, our choice of \(m_{12}^2\) above aims to simultaneously satisfy as many theoretical constraints as possible while affording one with significant parameter space amenable to experimental investigation.
 
-2HDMC is a well engineered, fast library,
+2HDMC is a well engineered, fast library;
 however owing to the range of possible values in \(m_{12}^2\) some curve fitting of the valid points
 is required to augment the MC sampling.
 Points that satisfy the most constraints are fitted to a polynomial and
@@ -131,7 +131,7 @@ values of \(m_{12}^2\) near the surface of the polynomial are sampled further.
 In addition to theoretical constraints experimental constrains need to be accounted for.
 \begin{itemize}
 	\item EW Precision Observables (EWPOs) \cite{Haller2018EWUpdate}, such as the oblique parameters $S$ and $T$ \cite{Peskin:1991sw, Grimus2008Oblique}, require a level of degeneracy between the charged Higgs boson state and one of the heavier neutral Higgs bosons. Here, we assume $m_{H^\pm} = m_{A}$  or $m_H$, as appropriate (see below), so that the $T$ parameter exactly vanishes in the alignment limit. 
-    \item Exclusion limits at 95\% Confidence Level (CL) from Higgs searches at colliders (LEP, Tevatron and LHC) via HiggsBounds, version 5.3.2~\cite{Bechtle2009higgsbounds, Bechtle2011higgsbounds2, Bechtle2014higgsbounds4} are enforced.
+    \item Exclusion limits at 95\% CL from Higgs searches at colliders (LEP, Tevatron and LHC) via HiggsBounds, version 5.3.2~\cite{Bechtle2009higgsbounds, Bechtle2011higgsbounds2, Bechtle2014higgsbounds4} are enforced.
     Furthermore, the ATLAS Collaboration has set an upper limit at 95\% CL on the production cross section $\sigma$ of the $A$ state times its decay BR into $ZH\to l^+l^-b\bar b$, i.e., \(\sigma(A)\times {\rm BR}(A\rightarrow ZH \rightarrow l^+l^-b\bar b)\)~\cite{Aaboud2018AZHbbll}, that is not included in this tool, hence we have accounted for it separately.
 	
 \item Constraints from the Higgs boson signal strength measurements are automatically satisfied as we assume $\sin(\beta-\alpha) =1$.	

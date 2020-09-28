@@ -1,7 +1,8 @@
 \subsection{Theory of spectral clustering}\label{sec:spectral_theory}
 
-
-Spectral clustering is the result of relaxing the criteria that would precisely
+Spectral clustering begins with embedding all data in a new space using the eigenvectors.
+In this new space the clustering a standard clustering will be performed.
+Embedding is the result of relaxing the criteria that would precisely
 to identify infinitely separated groups to estimate the members  groups that may have some connection.
 This is best described in \cite{luxburg2007spectraltutorial}, a short summary is given here.
 
@@ -24,16 +25,16 @@ Membership of cluster \(A_k\) will be determined by the indicator vector \(h_k\)
     \end{cases}
 \end{equation}
 where \(|A_k|\) is the number of points in set \(A_k\).
-The edge between two points is assigned an affinity, \(a_{i,j} = a_{j, i}\),
+A pair of points is assigned an affinity, \(a_{i,j} = a_{j, i}\),
 of either \(1\) for connected \(i\) and \(j\) or \(0\) 
 if points \(i\) and \(j\) are unconnected.
 
-The graph is represented by the graph Laplacien, a square
+The graph is represented by the graph Laplacian, a square
 matrix with as many rows and columns as there are points.
 On \(i\)th diagonal it holds the value \(\sum_j a_{i, j}\),
 which is the degree of the vertex \(i\).
 Off the diagonal it has the negative affinity; \(-a_{i, j}\).
-\begin{equation}
+\begin{equation}\label{eqn:laplacian}
     L = 
     \begin{pmatrix}
         z_0 & -a_{0,1} & -a_{0,2} & \hdots \\
@@ -46,7 +47,7 @@ Off the diagonal it has the negative affinity; \(-a_{i, j}\).
 Notice that this is a real symmetric matrix,
 and therefore all its eigenvalues are real.
 
-Considering just one cluster we find that when the Laplacien is multiplied by two indicator vectors
+Considering just one cluster we find that when the Laplacian is multiplied by two indicator vectors
 the result is the function that NCut seeks to minimise for that cluster.
 \begin{equation}
     h_k'Lh_k = \frac{1}{|A_k|}\sum_{i \in A_k, j \in A_k} \left(\delta_{i, j}\sum_{l} a_{l, i} - a_{i, j} \right) = \frac{W(A_k, \bar{A_k})}{|A_k|}
@@ -63,6 +64,11 @@ eigenvalues.
 Generalising this to a graph that is not disconnected
 only requires relaxing the requirements on the form of the indicator vectors; \(h_k\).
 
+Once these indicator vectors have been created the position of the points in the embedding space is determined.
+Each indicator vector has as many elements as there are points to be clustered,
+so the coordinates of a point are the corresponding elements or the indicator vectors.
+Using the positions in embedding space the points can be gathered agglomeratively,
+this part is not a relaxation of a well defined objective.
 \subsubsection{Impact of \(p_T\) factors}
 In the case of reconstructed particles, a possible input to the affinity measure is the \(p_T\) of the particles.
 A format commonly used for the distance is;
@@ -73,11 +79,11 @@ from a theoretical standpoint it is important to investigate the impact of the \
 There are a number of different ways of converting a distance measure into an affinity,
 for now only one will be considered \(a_{i,j} = 1/d_{i,j}\).
 
-Starting with the \textbf{unnormalised laplacien} a relation between the size of the eigenvalues and the affinities in each group can be uncovered.
-The unnormalised laplacien has the form \(L = D -A\), as we are already using \(d\) to mean distance,
-let us take \(z_i = \sum_{j\neq i} a_{i,j}\) where it is understood that by default a sum goes over all node indices.
+Starting with the Laplacian a relation between the size of the eigenvalues and the affinities in each group can be uncovered.
+% The Laplacian has the form \(L = D -A\), as we are already using \(d\) to mean distance,
+Let us take \(z_i = \sum_{j\neq i} a_{i,j}\) where it is understood that by default any sum goes over all node (i.e. particle) indices.
 From this point onward it is also assumed that all \(a_{i,i} = 0\), so such sums can omit the \(i \ne j\).
-This gives 
+With this, equation~\ref{eqn:laplacian} can be rewritten as
 \begin{equation}
     L = 
     \begin{pmatrix}
@@ -89,11 +95,11 @@ This gives
 \end{equation}
 
 Now imagine a group that includes the first \(q\) nodes,
-it's indicator vector approximately contains two values; \(-Q_0\) for nodes \(0\) to \(q\) inclusive
+its relaxed indicator vector approximately contains two values; \(-Q_0\) for nodes \(0\) to \(q\) inclusive
 and \(Q_1\) for nodes \(q+1\) to \(n\) inclusive,  where \(Q_{0/1} > 0\).
 As the ordering of the nodes is arbitrary (the rows and columns can have any order)
 conclusions drawn for this hold for any group containing \(q\) nodes.
-This must be approximate because we do not require that the \(q\) nodes are perfectly separated,
+This must be approximate because we do not require that the \(q\) nodes are perfectly separated (the model is relaxed),
 there for the eigenvalue equation is a relaxation.
 
 The eigenvalue equation has the form
@@ -145,8 +151,8 @@ particle will be larger, so the placement of soft emissions will be important.
 Alternatively, with \(x < 0\) affinities involving one high \(p_T\) particle will be larger,
 so the placement of hard emissions will be most important.
 
-This has found the role of \(p_T\) in an unnormalised laplacien,
-the same steps can be taken for the \textbf{symmetric laplacien}; \(L = D^{-1/2}(D -A) D^{-1/2}\).
+This has found the role of \(p_T\) in an unnormalised laplacian,
+the same steps can be taken for the \textbf{symmetric laplacian}; \(L = D^{-1/2}(D -A) D^{-1/2}\).
 \begin{equation}
     L_\text{symm} = 
     \begin{pmatrix}

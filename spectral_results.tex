@@ -3,9 +3,9 @@ This section is still subject to change as findings reveal advantages and drawba
 of parameter choices.
 Three choices of clustering algorithm are considered here;
 \begin{itemize}
-    \item A standard anti-KT algorithm with \(\stoppingdeltar{}=0.6\) %TODO will you keep this?
-    \item A \spectralmeanjet{} algorithm with an inverse affinity \(\stoppingdeltar{}=0.033\), and \(q=-0.34\)
-    \item A \spectralfulljet{} algorithm with an linear affinity \(\stoppingdeltar{}=0.037\), and \(q=-0.71\)
+    \item A standard anti-KT algorithm with \(\stoppingdeltar{}=1.36\)
+    \item A \spectralfulljet{} algorithm with \(2\) eigenvectors, \(\stoppingdeltar{}=0.63\), and \(q=-0.035\)
+    \item A \spectralmeanjet{} algorithm with \(4\) eigenvectors, \(\stoppingdeltar{}=0.70\), and \(q=0\)
 \end{itemize}
 
 As the data is simulated it is possible to compare the performance of clustering algorithms to Monte Carlo truth.
@@ -40,7 +40,7 @@ that the mass of the associated jets in each event is shown.
             A peak just shy of \(125\)GeV is desired as this is the mass of the decaying
             heavy Higgs.
             Another peak at \(40\)GeV could be observed is only one light Higgs
-            was found in the detector volume,
+            was found in the detector volume.
             \spectralfulljet{} gets closest, peaking close to \(115\) GeV and
             showing some contamination from background with the bins \(>125\) GeV.
             Anti-KT and \spectralmeanjet{} both give similar behaviour, falling somewhat short.

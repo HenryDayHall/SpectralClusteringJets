@@ -1,6 +1,6 @@
 \subsection{Method}
 \subsubsection{Particle data}
-The dataset used for the majority of this work is a simulated Higgs cascade decay.
+The dataset used here is the \(40\)GeV simulated Higgs cascade decay used in section~\ref{sec:dataset6040}.
 One Standard Model (SM) Higgs at \(125\)GeV decays to two light Higgs at \(40\)GeV,
 which in turn decay to \beau{}-\bbar{} quark pairs.
 That is \(H_{125\text{GeV}} \rightarrow h_{40\text{GeV}} h_{40\text{GeV}} \rightarrow \beau \bbar \beau \bbar\).
@@ -48,35 +48,34 @@ For every simulated event this process if used to select a clustering.
     To obtain an affinity, first a distance is obtained; \(d_{i,j} = \sqrt{(y_i - y_j)^2 + (\phi_i - \phi_j)^2}\)
     where \(y_i\) is the rapidity of particle \(i\) and \(\phi_i\) is the barrel angle is particle \(i\).
 
-    \item The distance shrinks as particles become similar, to obtain an affinity this must be transformed so that
-    the value grows with increasing similarity.
-    This is done by taking an inverse so that \(a_{i,j} = 1/d_{i,j}\), as done in~\cite{hadjighasem2016votex}. % TODO check you stick with this
+    \item The affinity must increase as particles become more similar, whereas the distance will shrink.
+        This is done by taking an exponent so that \(a_{i,j} = \text{exp}(2d_{i,j})\).%, as done in~\cite{hadjighasem2016votex}. % TODO check you stick with this
 
-    \item These affinities allow the construction of a Laplacien.
-    The Laplacien used is the unnormalised Laplacien, which has \(\sum_j a_{i,j}\) in the \(i\)th
+    \item These affinities allow the construction of a Laplacian.
+    The Laplacian used is the unnormalised Laplacien, which has \(\sum_j a_{i,j}\) in the \(i\)th
     diagonal entry (also known as the degree of node \(i\)) and \(-a_{i,j}\) of the diagonal 
     in column \(i\) row \(j\).
 
-    \item From the Laplacien a predetermined number of eigenvectors are calculated to create the embedding space.
+    \item From the Laplacian a predetermined number of eigenvectors are calculated to create the embedding space.
     The eigenvectors have as many elements as there are particles, and the coordinates of
     the \(i\)th particle in the embedding space is the \(i\)th element of each eigenvector.
 
     \item The first clustering can be done based on 
-    a measure of distance derived from the particles \(p_T\) and it's position in the embedding space.
+    a measure of distance derived from the particles \(p_T\) and its position in the embedding space.
     The \(p_T\) is used as in the Luclus~\cite{moretti1998new}, with a variable exponent, \(q\);
-    \[p_T \text{ factor} = \left(\frac{{p_T}_i{p_T}_j}{s({p_T}_i+{p_T}_j)}\right)^q\].
+    \[p_T \text{ factor} = \left(\frac{{p_T}_i{p_T}_j}{s({p_T}_i+{p_T}_j)}\right)^q.\]
     Where \(s\) is the invariant mass of all observed particles in the event, it is used
     to make the \(p_T\) factor unitless.
     The embedded distance is euclidean distance in the embedding space multiplied by this factor.
 
-    \item The two object that have the smallest embedding distance are combined.
+    \item The two objects that have the smallest embedding distance are combined.
     In physical space the combined object is created by summing the respective four momenta,
     in the embedding space two methods for locating the combined object are tried.
     \begin{enumerate}
         \item In a \spectralmeanjet{} clustering the location of the combined object is the
         geometric mean of the inputs. The clustering then continues to combine things in this manner.
         \item In a \spectralfulljet{} once two object have been combined in physical space
-            the embedding space is recalculate from step~\ref{step:start}. 
+            the embedding space is recalculated from step~\ref{step:start}. 
     \end{enumerate}
 
     \item When the closest object to a particle in the embedding space is further away than \stoppingdeltar{}
