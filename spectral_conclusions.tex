@@ -1,30 +1,14 @@
-\subsection{Conclusions}
-Spectral clustering has the potential to perform at least as well as 
-traditional clustering methods such as anti-kt.
-Fully re-clustering at each step, as in \spectralfulljet{} is important for good performance,
-and thus spectral clustering may prove expensive.
-
-Spectral clustering is certainly capable of producing sharp mass peaks,
-though it tends to include more background than is ideal.
-
 \subsubsection{Going forward}
-From here, there are three further questions that seem pressing;
+From here, there a two possible ways forward;
 \begin{enumerate}
-    \item Is spectral clustering IRC safe? Ideally this would be tested 
-        by generating samples with soft radiation and collinear splitting
-        and comparing the clusters formed with and without these changes.
-        Shape variables might also be of assistance here, as they have
-        infra-red and collinear limits.
-    \item Does spectral clustering perform well on other data samples?
-        Comparing the performance of methods with the same hyperparameters on
-        different data samples would explore how well the clustering generalises.
-        It is important to determine if the method can reliably gather
-        any signal, or if it has been tuned to gather the signal we expect to find.
-    \item Does the additional information produced by spectral clustering 
-        provide any guidance in jet classification?
-        Jet classification will be discussed more in section~\ref{sec:jetclasification},
-        however, it is worth noting at this point that spectral clustering
-        effectively generates additional values associated with each jet,
-        and perhaps these values would be of use in classifying the jet.
+    \item Introduce some \(p_T\) dependence.
+        Due to the high parameter space this will require writing in
+        an optimiser.
+        Not conceptually difficult, but time consuming.
+    \item Investigate Diffusion mapping.
+        This has some resemblance to \ref{compressionstep} in the current method.
+        It might also provide a faster algorithm.
 \end{enumerate}
 
+I am inclined to try 1 first then 2
+because I am confident 1 will yield results.

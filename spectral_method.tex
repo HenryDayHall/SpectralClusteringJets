@@ -83,7 +83,7 @@ Finally the procedure for checking infrared-collinear (IRC) safety will be descr
     \end{enumerate}
     To provide a basis for comparison the results of clustering with an anti-kt algorithm (as in~\cite{Cacciari2008akt}) is also shown.
 
-\subsubsection{Tunable parameters}
+\subsubsection{Tunable parameters}\label{sec:spectralmethodparam}
 Unlike most machine learning techniques, Spectral clustering does not have large arrays of learnt parameters.
 The parameters for the clustering are a small, interpretable, set.
 Appropriate values were chosen by performing scans and observing the influence of changes to the parameters on jets formed.
@@ -116,7 +116,7 @@ The meaning, and chosen value of these is given here;
     \item \stoppingdeltar{}; is introduced in step~\ref{step:stoppingcondition}.
          This determines the expected spacing between jets. 
          Of all the parameters this one may be most process specific.
-         The value selected here is \(\stoppingcondition{} = 1.26\).
+         The value selected here is \(\stoppingdeltar{} = 1.26\).
 \end{itemize}
 
 
@@ -232,48 +232,48 @@ These modifications did not seem to improve performance, so they are not include
     These ISR components add noise to the data.
     %Exactly how the percentage of \bthing{descendants} changes with event size is visualised in figure~\ref{fig:bdecendantpercent}.
 
-\subsubsection{Determining IRC safety}
-It would be possible to demonstrate IRC safety analytically, however,
-as the environment required for clustering on Monte Carlo data is already set up
-it is more efficient for this study to prove IRC safety with data.
-This can be done by showing that an IRC sensitive variable, for example the jet mass spectrum,
-is stable between a leading order (LO) dataset with no IRC singularities and a next to leading order (NLO)
-dataset which will contain IRC singularities.
+\subsubsection{Determining IRC safety}\label{sec:IRCmethod}
+    It would be possible to demonstrate IRC safety analytically, however,
+    as the environment required for clustering on Monte Carlo data is already set up
+    it is more efficient for this study to prove IRC safety with data.
+    This can be done by showing that an IRC sensitive variable, for example the jet mass spectrum,
+    is stable between a leading order (LO) dataset with no IRC singularities and a next to leading order (NLO)
+    dataset which will contain IRC singularities.
 
-Showing the jet mass spectrum at LO and NLO for a particular configuration,
-that is a particular selection of clustering parameters,
-would allow a comparison that would highlight any differences cause by IRC sensitivity.
-This will be done for illustrative purposes,
-however, event an IRC unsafe algorithm such as Iterative Cone~\cite{cacciari_antikt2018}
- has some configurations for which it these singularities are avoided.
+    Showing the jet mass spectrum at LO and NLO for a particular configuration,
+    that is a particular selection of clustering parameters,
+    would allow a comparison that would highlight any differences cause by IRC sensitivity.
+    This will be done for illustrative purposes,
+    however, event an IRC unsafe algorithm such as Iterative Cone~\cite{cacciari_antikt2018}
+     has some configurations for which it these singularities are avoided.
 
-To provided a more global view a scan of parameter configurations must be compared.
-Thus, for an unsafe algorithm (such as Iterative Cone) the unsafe configuration
-will be found.
-It would be cumbersome to compare all these jet mass spectrum by eye, however.
-Instead we introduce a summery statistic representing the divergence between two distributions,
-the Jenson Shannon score~\cite{jensen_shannon}.
+    To provided a more global view a scan of parameter configurations must be compared.
+    Thus, for an unsafe algorithm (such as Iterative Cone) the unsafe configuration
+    will be found.
+    It would be cumbersome to compare all these jet mass spectrum by eye, however.
+    Instead we introduce a summery statistic representing the divergence between two distributions,
+    the Jenson Shannon score~\cite{jensen_shannon}.
 
-The Jenson Shannon score is a value computed between two distributions that increases in magnitude the more these distributions differ.
-It is a symmetrized variant of the Kullback-Leibler divergence.
-The Kullback-Leibler divergence between probability densities \(p\) and \(q\) can be written;
-\[D_\text{KL} (p | q) = \int^{\inf}_{-inf} p(x) log\left(\frac{p(x)}{q(x)}\right) dx.\]
-From which the Jenson Shannon divergence can be written;
-\[D_\test{JS}(p, q) = \frac{1}{2}D\left(p | \frac{1}{2}(p + q)\right) + \frac{1}{2}D\left(q | \frac{1}{2}(p + q)\right)\]
-\(D_\text{JS}\) treats \(p\) and \(q\) symmetrically, and will grow as they become more different.
-The spectrum of Jenson Shannon scores will be plotted for a known IRC safe clustering algorithm, Anti-kt,
-a known unsafe clustering algorithm Iterative Cone and the spectral clustering algorithm.
+    The Jenson Shannon score is a value computed between two distributions that increases in magnitude the more these distributions differ.
+    It is a symmetrized variant of the Kullback-Leibler divergence.
+    The Kullback-Leibler divergence between probability densities \(p\) and \(q\) can be written;
+    \[D_\text{KL} (p | q) = \int^{\inf}_{-inf} p(x) log\left(\frac{p(x)}{q(x)}\right) dx.\]
+    From which the Jenson Shannon divergence can be written;
+    \[D_\text{JS}(p, q) = \frac{1}{2}D\left(p | \frac{1}{2}(p + q)\right) + \frac{1}{2}D\left(q | \frac{1}{2}(p + q)\right)\]
+    \(D_\text{JS}\) treats \(p\) and \(q\) symmetrically, and will grow as they become more different.
+    The spectrum of Jenson Shannon scores will be plotted for a known IRC safe clustering algorithm, Anti-kt,
+    a known unsafe clustering algorithm Iterative Cone and the spectral clustering algorithm.
 
-One small issue with this method is that a large \(D_\text{JS}\) would not differentiate
-between a change in \(p\) and \(q\) due to IRC sensitivity and 
-a change due to noise in the jet mass spectrum.
-The more events used to find the jet mass spectrum the lower the expected noise,
-however is is also possible to subsample within a distribution (LO or NLO)
-to discover how much \(D_\text{JS}\) is influenced by noise.
-If two random sets of jet masses, from events \(a\) and events \(b\) are drawn from the LO events,
-and a \(D_\text{JS}(a, b)\) is computed between them, a large value will indicate that 
-noise in the spectrum is increasing the size of \(D_\text{JS}\) between the LO and NLO spectrums.
-To account for this a subsampled \(D_{JS}\) can be constructed;
-\[D_{JS, subsampled}(p, q) = \frac{cD_{JS}(p, q)}{\sum_{a \in p, b \in p} D_{JS}(a, b)\sum_{c \in q, b \in q} D_{JS}(c, d)}\]
-If this does not differ too much from \(D_{JS}\) then the data sets are large enough the noise in
-the spectrum is not influencing the results.
+    One small issue with this method is that a large \(D_\text{JS}\) would not differentiate
+    between a change in \(p\) and \(q\) due to IRC sensitivity and 
+    a change due to noise in the jet mass spectrum.
+    The more events used to find the jet mass spectrum the lower the expected noise,
+    however is is also possible to subsample within a distribution (LO or NLO)
+    to discover how much \(D_\text{JS}\) is influenced by noise.
+    If two random sets of jet masses, from events \(a\) and events \(b\) are drawn from the LO events,
+    and a \(D_\text{JS}(a, b)\) is computed between them, a large value will indicate that 
+    noise in the spectrum is increasing the size of \(D_\text{JS}\) between the LO and NLO spectrums.
+    To account for this a subsampled \(D_{JS}\) can be constructed;
+    \[D_{JS, subsampled}(p, q) = \frac{cD_{JS}(p, q)}{\sum_{a \in p, b \in p} D_{JS}(a, b)\sum_{c \in q, b \in q} D_{JS}(c, d)}\]
+    If this does not differ too much from \(D_{JS}\) then the data sets are large enough the noise in
+    the spectrum is not influencing the results.

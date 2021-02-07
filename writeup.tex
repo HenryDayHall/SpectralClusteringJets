@@ -54,29 +54,33 @@
 \bibliography{writeup}
 \graphicspath{{./graphics/}}
 \begin{document}
-\title{Extracting jet signals of new Higgs physics: from data analysis to machine learning}
-\author{H.A. Day-Hall \\ {\small Supervisors; S. Dasmahapatra, S. Moretti, C.H. Shepherd-Themistocleous}}
+\title{Spectral clustering for Jet physics}
+% author list???
+\author{S. Dasmahapatra, H.A. Day-Hall, B. Ford, S. Moretti, C.H. Shepherd-Themistocleous}
 	
 	\maketitle
 	
-	\tableofcontents
+%	\tableofcontents
     \FloatBarrier
-    %\begin{abstract}
-    %    Stuff
-	%\end{abstract}
+    \begin{abstract}
+        An alternative method of jet clustering, utilising Spectral Clustering, is considered.
+        The performance of this algorithm on a \(H_{125\text{GeV}} \rightarrow H_{40\text{GeV}} H_{40\text{GeV}} \rightarrow b \bar{b} b \bar{b}\)
+        monte carlo sample is compared to that of the Anti-KT algorithm.
+        Measures of infra-red collinear safety are also studied.
+	\end{abstract}
      
-    \FloatBarrier
-    % should be shortened and have a opening added about my training with the ngcm ~2 pages
-    \input{introduction}
-    \input{problem_statement}
+    %\FloatBarrier
+    %% should be shortened and have a opening added about my training with the ngcm ~2 pages
+    %\input{introduction}
+    %\input{problem_statement}
     \FloatBarrier
     % merge these sections and shorten  ~9 pages
     % need to add my contrbution
     % can move soem content to intro
-    \input{parameter_investigation} % ~4 pages
-    \FloatBarrier
-    % add H->hh->4b paper section short ~2 page
-    \input{jet_clustering}
+    %\input{parameter_investigation} % ~4 pages
+    %\FloatBarrier
+    %% add H->hh->4b paper section short ~2 page
+    %\input{jet_clustering}
     \FloatBarrier
     % again need to discuss my contribution
     % shorten spectral ~3 pages
@@ -88,18 +92,18 @@
     \FloatBarrier
     \input{spectral_results}
     \FloatBarrier
-    \input{spectral_conclusions}
+    %\input{spectral_conclusions}
     % make a future plans section short ~2 page
-    \FloatBarrier
-    \input{rtnn_plans}
-    \input{talks_posters}
+    %\FloatBarrier
+    %\input{rtnn_plans}
+    %\input{talks_posters}
     % add a conferences and training section ~1 page
-    \section{Acknowledgements}
-    I would like to thank Professor Stefano Moretti, Professor Claire Shepherd-Themistocleous, Professor Srinandan Dasmahapatra, Dr Emmanuel Olaiya, Prof. Rachid Benbrik and Dr Amit Chakraborty for their excellent supervision and advice.
-    My colleagues, Souad Semlali, Billy Ford and Shubhani Jain have been very generous in their assistance and collaboration.
-    I would also like to thank Dr Mauro Verzetti for assistance with the data and Dr Jim Pivarski for creating the excellent packages \lstinline{uproot} and \lstinline{awkward-array}.
-    The IRIDIS High Performance Computing Facility was used for this work,
-    and I am grateful for the assistance of associated support services at
-    the University of Southampton.
+    %\section{Acknowledgements}
+    %I would like to thank Professor Stefano Moretti, Professor Claire Shepherd-Themistocleous, Professor Srinandan Dasmahapatra, Dr Emmanuel Olaiya, Prof. Rachid Benbrik and Dr Amit Chakraborty for their excellent supervision and advice.
+    %My colleagues, Souad Semlali, Billy Ford and Shubhani Jain have been very generous in their assistance and collaboration.
+    %I would also like to thank Dr Mauro Verzetti for assistance with the data and Dr Jim Pivarski for creating the excellent packages \lstinline{uproot} and \lstinline{awkward-array}.
+    %The IRIDIS High Performance Computing Facility was used for this work,
+    %and I am grateful for the assistance of associated support services at
+    %the University of Southampton.
     \printbibliography	
 \end{document}
