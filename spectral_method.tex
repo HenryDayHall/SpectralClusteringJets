@@ -18,16 +18,25 @@ Finally the procedure for checking infrared-collinear (IRC) safety will be descr
         No \(p_T\) dependence is used.
 
     \item \label{step:affinity} The affinity must increase as particles become more similar, whereas the distance will shrink.
-            This is done by taking an exponent so that \(a_{i,j} = \text{exp}(d_{i,j}^\alpha/\sigma)\), as done in~\cite{hadjighasem2016votex}. % TODO check you stick with this
+            This is done by taking an exponent so that \(a_{i,j} = \text{exp}(-d_{i,j}^\alpha/\sigma)\), as done in~\cite{hadjighasem2016votex}. % TODO check you stick with this
             %Sigma (\(\sigma\)) defines a scale for the distances.
             Distances much larger than \(\sigma\) are only allowed very small affinities,
             thus less influence over the clustering.
             %It is tunable and chosen to be \(0.2\).
+    \item\label{step:KNN} The affinity between particles that are far apart contains less useful information,
+        such particles are unlikely to be genuinely related.
+        Removing these affinities reduces noise.
+    A fixed number, \(k_\text{NN}\), of neighbours of each point are
+    preserved, and all other affinities are set to zero.
 
-        \item These affinities allow the construction of a Laplacian.
-            The Laplacian used is the symmetric Laplacien, which has \(-a_{i,j}/(\sum_k a_{i,k})^{0.5}(\sum_k a_{j,k})^{0.5}\)
-            in the \(i\)th row and \(j\)th column, and \(1\) all along the diagonal.
-            Let \(z_i = \sum_k a_{i,k}\), then
+\item\label{step:laplacean} These affinities allow the construction of a Laplacian.
+        The Laplacian used is the symmetric Laplacien, which has \(-a_{i,j}/(\sum_k a_{i,k})^{0.5}(\sum_k a_{j,k})^{0.5}\)
+        in the \(i\)th row and \(j\)th column, and \(1\) all along the diagonal.
+        The two factors in the denominator, \((\sum_k a_{i, k})^{0.5}\) and \((\sum_k a_{j, k})^{0.5}\) are the weights of \(i\) and \(j\).
+        In subsequent iterations weights will not be recalculated,
+        if a particle is combined with another particle, the weight of the new object is the sum of the weights of the old objects.
+        This condition is required for IRC safety.
+        Let \(z_i = \sum_k a_{i,k}\), then
     \begin{equation}\label{eqn:laplacian}
         L = 
         \begin{pmatrix}
@@ -65,7 +74,8 @@ Finally the procedure for checking infrared-collinear (IRC) safety will be descr
         %The value of \stoppingdeltar{} used here is \(1.26\).
         In physical space the combined object is created by summing the respective four momenta,
         in the embedding space two methods for locating the combined object are tried.
-        Once two objects have been combined in physical space, the embedding space is recalculated from step~\ref{step:start}. 
+        Once two objects have been combined in physical space, the embedding space is recalculated from step~\ref{step:start},
+        with the caveat mentioned in step~\ref{step:laplacean} that weights are not recalculated.
         %\begin{enumerate}
         %    \item In a \spectralmeanjet{} clustering the location of the combined object is the
         %    geometric mean of the inputs. The clustering then continues to combine things in this manner.
@@ -88,10 +98,10 @@ Unlike most machine learning techniques, Spectral clustering does not have large
 The parameters for the clustering are a small, interpretable, set.
 Appropriate values were chosen by performing scans and observing the influence of changes to the parameters on jets formed.
 
-In section~\ref{sec:spectralmethodalgo} 4 parameters are named;
-\(\sigma\), \(\alpha\), \(\lambda_\text{limit}\), \(\lambda_\text{exponent}\) and \stoppingdeltar{}.
+In section~\ref{sec:spectralmethodalgo} 5 parameters are named;
+\(\sigma\), \(\alpha\), \(k_\text{NN}\), \(\lambda_\text{limit}\), \(\lambda_\text{exponent}\) and \stoppingdeltar{}.
 These parameters have a range of values for which sensible results are obtained.
-The meaning, and chosen value of these is given here;
+The interpretation of these parameters is given here;
 \begin{itemize}
     \item \(\sigma\); introduced in step~\ref{step:affinity}, this is a scale parameter in physical space.
                       The value indicated an approximate distance within which particles are deemed close.
@@ -99,24 +109,26 @@ The meaning, and chosen value of these is given here;
     \item  \(\alpha\); also introduced in step~\ref{step:affinity}, this controls the rate which which 
            the influence of particles further away drops. 
            Higher values increase how strictly the parameter \(\sigma\) is used to define a neighbourhood.
-           The value used here is \(\alpha = 1.4\).
+          % The value used here is \(\alpha = 1.4\).
+       \item \(k_\text{NN}\); introduced in step~\ref{step:KNN}, this dictates the minimum number of non-zero affinities around each point.
+           Lower values create a sparser affinity matrix, reducing noise at the potential cost of lost signal.
        \item  \(\lambda_\text{limit}\); introduced in step~\ref{step:eigenvectors}, is a means of limiting the number of eigenvectors used
            to create dimensions in the embedding space.
            The eigenvalue associated with an eigenvector determines the quality of the information it contains about the allocation of points to clusters,
            lower values indicate better information.
            Only eigenvectors corresponding to eigenvalues less than \(\lambda_\text{limit}\) are used.
-           The value chosen here is \(\lambda_\text{limit} = 0.4\).
+          % The value chosen here is \(\lambda_\text{limit} = 0.4\).
        \item  \(\lambda_\text{exponent}\); is introduced in step~\ref{step:compression}.
            To account for variable quality of information in the eigenvectors, as given by their eigenvalues,
         dimensions of the embedding space with lower quality information are compressed.
         Quality of information is proportionate of the size of the eigenvalue, o the correct compression is found by
         dividing the lengths in the dimension by \(\lambda^{\lambda_\text{exponent}}\).
         The larger the value of \(\lambda_\text{exponent}\) the more dimensions with lower quality information are compressed.
-        The value chosen here is \(\lambda_\text{exponent} = 1.6\).
+      %  The value chosen here is \(\lambda_\text{exponent} = 1.6\).
     \item \stoppingdeltar{}; is introduced in step~\ref{step:stoppingcondition}.
          This determines the expected spacing between jets. 
          Of all the parameters this one may be most process specific.
-         The value selected here is \(\stoppingdeltar{} = 1.26\).
+      %   The value selected here is \(\stoppingdeltar{} = 1.26\).
 \end{itemize}
 
 
@@ -124,6 +136,73 @@ A number of other parameters that could influence clustering were experimented w
 including changed of Laplacian and parameters using \(p_T\).
 These modifications did not seem to improve performance, so they are not included.
 
+To investigate the behaviour of the clustering when the parameters change scans where performed.
+On a small sample of events (\(2\)k events) the clustering is performed with many different parameter choices.
+
+With the aid of MC truth information a metric of success can be created.
+For each object we wish to find (e.g. a \bthing{quark}) 
+the MC truth can reveal which of the particles that are visible to the detector have
+been created by that object.
+In many cases, a particle see in the detector will have been created by two objects,
+such as a particle coming from an interaction between a \(b-\bar{b}\) pair,
+in these cases both objects are considered together.
+The complete set of visible particles that came from these objects could be referred to as their descendants.
+The aim in jet clustering is to capture only all of the descendants in the same number of jets as there were objects that created them.
+So the descendants of \(b-\bar{b}\) pair should be captured in exactly 2 jets.
+
+There are two ways a jet finding algorithm can make mistakes in this task:
+the first is to omit some of the descendants of the objects being reconstructed, causing the jet to have less mass than it should;
+the second is to include particles that are not in the descendants of the objects being reconstructed, such as initial state radiation or particles from other objects,
+causing the jet to have more mass than it should.
+The effects of these mistakes will cancel in the jet mass,
+but they are both still individually undesirable,
+so separate metrics are made for each of them.
+The first is ``Signal mass lost", the mass of all descendants of the object being reconstructed that were not included in the jet.
+The second is ``Background contamination", the mass of particles included in the jet that are not descendants of the objects being reconstructed.
+The standard algorithm for this process, the Anti-KT algorithm with \(\stoppingdeltar{}=0.8\), slightly prefers suppressing ``Signal mass lost" over ``Background contamination",
+this leads to the clearest mass peaks.
+When the metrics are combined into a single loss value this is accounted for by weighting;
+\begin{equation}\label{eqn:loss}
+\text{Loss} = \sqrt{0.73(\text{Background contamination})^2 + (\text{Signal mass lost})^2}
+\end{equation}
+
+An example of this scan for the generalised KT algorithm is given in figure~\ref{fig:scan_genkt}.
+For spectral clustering there are more than 2 variables to deal with, 
+so a set of two dimensional slices are shown in figure
+These slices have been chosen to include the best performing combination.
+    \begin{figure}[htp]
+        \begin{minipage}[c]{0.5\textwidth}
+            \includegraphics[width=1\textwidth]{graphics/trangle_scan_genkt.png}
+        \end{minipage}\hfill
+        \begin{minipage}[c]{0.45\textwidth}
+            \caption{Generalised-KT algorithm offers two parameters that can be varied.
+                The stopping condition, \stoppingdeltar{}, and a multiple for the exponent of the \(p_T\) factor.
+                When the exponent of the \(p_T\) factor is \(-1\) the algorithm becomes the Anti-KT algorithm.
+                Here the loss, as described in equation~\ref{eqn:loss}, is shown for a number of parameter combinations.
+                It can be seen that while good results are possible with many values of \(p_T\) exponent,
+                \stoppingdeltar{} must fall in a narrow range to yield good results.
+             }\label{fig:scan_genkt}
+        \end{minipage}
+    \end{figure}    
+
+    \begin{figure}[htp]
+            \includegraphics[width=1\textwidth]{graphics/trangle_scan_incomplete.png}
+            \caption{There are 5 free parameters for spectral clustering,
+                as described in section~\ef{sec:spectralmethodparam}.
+                Here the loss, as described in equation~\ref{eqn:loss}, is shown for reasonable of parameter ranges.
+                These ranges are either chosen by convention (e.g. \(\alpha\) is conventionally \(1\) or \(2\))
+                or chosen according to physical scales (e.g. the distance between particles is of order \(0.1\),
+                so \(\sigma\) should be of the same order).
+                It can be seen that some parameters, such as \(\alpha\), \(k_\text{NN}\), \(\lambda_\text{exponent}\)
+                and \(\lambda_\text{limit}\) are relatively insensitive.
+                They give good results in a wide range of values.
+                By contrast \stoppingdeltar{} and \(\sigma\) must fall in a narrow range to yield good results.
+            {\color{red}TODO; Get data/clip to fill in white space.}
+             }\label{fig:scan_spectral}
+    \end{figure}    
+
+
+    The parameters used in the remained of this work are \(\alpha=2.\), \(k_\text{NN}=5\), \(\stoppingdeltar{} = 1.26\), \(\lambda_\text{exponent} = 1.4\) and \(\lambda_\text{limit} = 0.4\).
 \subsubsection{Particle data}
 
     In order to evaluate the behaviour of this clustering method three datasets are used.
