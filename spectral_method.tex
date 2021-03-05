@@ -8,7 +8,7 @@ Finally the procedure for checking infrared-collinear (IRC) safety will be descr
 
 \subsubsection{Clustering algorithm}\label{sec:spectralmethodalgo}
     The implementation of the theory described in section~\ref{sec:spectral_theory} will be specified.
-    For every simulated event this process if used to identify the jets.
+    For every simulated event this process is used to identify the jets.
 
     \begin{enumerate}
         \item \label{step:start} The particles will be used to form the nodes of a graph,
@@ -32,11 +32,8 @@ Finally the procedure for checking infrared-collinear (IRC) safety will be descr
 \item\label{step:laplacean} These affinities allow the construction of a Laplacian.
         The Laplacian used is the symmetric Laplacien, which has \(-a_{i,j}/(\sum_k a_{i,k})^{0.5}(\sum_k a_{j,k})^{0.5}\)
         in the \(i\)th row and \(j\)th column, and \(1\) all along the diagonal.
-        The two factors in the denominator, \((\sum_k a_{i, k})^{0.5}\) and \((\sum_k a_{j, k})^{0.5}\) are the weights of \(i\) and \(j\).
-        In subsequent iterations weights will not be recalculated,
-        if a particle is combined with another particle, the weight of the new object is the sum of the weights of the old objects.
-        This condition is required for IRC safety.
-        Let \(z_i = \sum_k a_{i,k}\), then
+        For ease of notation let \(z_i = \sum_k a_{i,k}\).
+        The laplacian can now be written;
     \begin{equation}\label{eqn:laplacian}
         L = 
         \begin{pmatrix}
@@ -58,11 +55,18 @@ Finally the procedure for checking infrared-collinear (IRC) safety will be descr
             \vdots   &          &     & \ddots 
         \end{pmatrix}^{-\frac{1}{2}}.
     \end{equation}
+        \(z_i\) can be thought of as a measure of the `size' that particle \(i\) contributes to the group size.
+        When two pseudojets are combined, instead of calculating \(z_i\) as the sum of the affinities of the combined pseudojet,
+        the new \(z_i\) is the sum of the two previous \(z_i\).
+        For example, if pseudojet \(1\) and \(2\) are to be combined to make pseudojet \(11\),
+        then \(z_{11} = z_1 + z_2\) rather than the sum of affinity between new pseudojet \(11\) and the remaining pseudojets.
+        This condition is required for IRC safety.
 
 \item \label{step:eigenvectors} From the Laplacian eigenvectors are calculated to create the embedding space.
             All eigenvectors corresponding to an eigenvalue less that the eigenvalue limit, \(\lambda_\text{limit}\), are considered.
         The eigenvectors have as many elements as there are particles, and the coordinates of
         the \(i\)th particle in the embedding space is the \(i\)th element of each eigenvector.
+        The first embedding space of a clustering is shown in figure~\ref{fig:embedding_space_simple}.
 
     \item \label{step:compression} Each coordinate direction is divided by the corresponding eigenvalue raised to \(\lambda_\text{exponent}\).
             %in this case \(1.5\). 
@@ -91,7 +95,22 @@ Finally the procedure for checking infrared-collinear (IRC) safety will be descr
         and their contents considered noise,
         as are jets that do not pass \(p_T\) cuts.
     \end{enumerate}
-    To provide a basis for comparison the results of clustering with an anti-kt algorithm (as in~\cite{Cacciari2008akt}) is also shown.
+
+    These steps will form a variable number of jets from a variable number of particles.
+    An example of the constructed embedding space is shown in figure~\ref{fig:embedding_space_simple}.
+    This illustrates how the embedding space highlights the clusters.
+
+    \begin{figure}[htp]
+        \includegraphics[width=1\textwidth]{graphics/embedding_space_simple.png}
+        \caption{A single event and it's embedding space, as created by spectral clustering.
+            At the top the grey plot shows the particles in the event as points on the unrolled detector barrel.
+            The colour of each point indicates the shower it came from.
+            The lower two plots show the first 4 dimensions of the embedding space,
+            and the location of the points within the embedding space.
+        }\label{fig:embedding_space_simple}
+    \end{figure}    
+
+    %To provide a basis for comparison the results of clustering with an anti-kt algorithm (as in~\cite{Cacciari2008akt}) is also shown.
 
 \subsubsection{Tunable parameters}\label{sec:spectralmethodparam}
 Unlike most machine learning techniques, Spectral clustering does not have large arrays of learnt parameters.
@@ -105,18 +124,24 @@ The interpretation of these parameters is given here;
 \begin{itemize}
     \item \(\sigma\); introduced in step~\ref{step:affinity}, this is a scale parameter in physical space.
                       The value indicated an approximate distance within which particles are deemed close.
-                      The value used here is \(\sigma = 0.15)\).
+                      This should be on the scale of separation of particles in the event, \(\mathcal{O} (0.1)\).
     \item  \(\alpha\); also introduced in step~\ref{step:affinity}, this controls the rate which which 
            the influence of particles further away drops. 
            Higher values increase how strictly the parameter \(\sigma\) is used to define a neighbourhood.
+           Traditionally the value used here is \(2\), which as in a Gaussian distribution.
           % The value used here is \(\alpha = 1.4\).
        \item \(k_\text{NN}\); introduced in step~\ref{step:KNN}, this dictates the minimum number of non-zero affinities around each point.
            Lower values create a sparser affinity matrix, reducing noise at the potential cost of lost signal.
+           Values above \(7\) are seen to have to have little impact.
        \item  \(\lambda_\text{limit}\); introduced in step~\ref{step:eigenvectors}, is a means of limiting the number of eigenvectors used
            to create dimensions in the embedding space.
            The eigenvalue associated with an eigenvector determines the quality of the information it contains about the allocation of points to clusters,
            lower values indicate better information.
            Only eigenvectors corresponding to eigenvalues less than \(\lambda_\text{limit}\) are used.
+           Thus the number of dimensions in the embedding space can be increased with a larger \(\lambda_\text{limit}\),
+           however, as the eigenvalues will be influenced by the number of clear clusters available 
+           this will not result in the same number of dimensions each time.
+           This should be on the scale of the first few eigenvalues, \(\mathcal{O} (0.1)\).
           % The value chosen here is \(\lambda_\text{limit} = 0.4\).
        \item  \(\lambda_\text{exponent}\); is introduced in step~\ref{step:compression}.
            To account for variable quality of information in the eigenvectors, as given by their eigenvalues,
@@ -124,10 +149,14 @@ The interpretation of these parameters is given here;
         Quality of information is proportionate of the size of the eigenvalue, o the correct compression is found by
         dividing the lengths in the dimension by \(\lambda^{\lambda_\text{exponent}}\).
         The larger the value of \(\lambda_\text{exponent}\) the more dimensions with lower quality information are compressed.
+        This is should be \(\mathcal{O}(1)\).
       %  The value chosen here is \(\lambda_\text{exponent} = 1.6\).
     \item \stoppingdeltar{}; is introduced in step~\ref{step:stoppingcondition}.
-         This determines the expected spacing between jets. 
-         Of all the parameters this one may be most process specific.
+         This determines the expected spacing between jets, in the embedding space.
+         As the number of dimensions in the embedding space grows with increasing 
+         number of clear clusters it will not result in the same or
+         similar number of clusters each time.
+
       %   The value selected here is \(\stoppingdeltar{} = 1.26\).
 \end{itemize}
 
@@ -157,9 +186,9 @@ causing the jet to have more mass than it should.
 The effects of these mistakes will cancel in the jet mass,
 but they are both still individually undesirable,
 so separate metrics are made for each of them.
-The first is ``Signal mass lost", the mass of all descendants of the object being reconstructed that were not included in the jet.
-The second is ``Background contamination", the mass of particles included in the jet that are not descendants of the objects being reconstructed.
-The standard algorithm for this process, the Anti-KT algorithm with \(\stoppingdeltar{}=0.8\), slightly prefers suppressing ``Signal mass lost" over ``Background contamination",
+The first is ``Signal mass lost", the difference between the mass of the jets and the mass they would have had if all they contained all descendants of the object being reconstructed.
+The second is ``Background contamination", the difference between the mass of jets and the mass they would have if they didn't contain anything but descendants of the objects being reconstructed.
+The standard algorithm for this process, the Anti-KT algorithm with \(\stoppingdeltar{}_\text{kt}=0.8\), slightly prefers suppressing ``Signal mass lost" over ``Background contamination",
 this leads to the clearest mass peaks.
 When the metrics are combined into a single loss value this is accounted for by weighting;
 \begin{equation}\label{eqn:loss}
@@ -197,37 +226,41 @@ These slices have been chosen to include the best performing combination.
                 and \(\lambda_\text{limit}\) are relatively insensitive.
                 They give good results in a wide range of values.
                 By contrast \stoppingdeltar{} and \(\sigma\) must fall in a narrow range to yield good results.
-                {\color{red}TODO; Get data/clip to fill in white space.}
              }\label{fig:scan_spectral}
     \end{figure}    
 
-
-    The parameters used in the remained of this work are \(\alpha=2.\), \(k_\text{NN}=5\), \(\stoppingdeltar{} = 1.26\), \(\lambda_\text{exponent} = 1.4\) and \(\lambda_\text{limit} = 0.4\).
+    As can be seen in figure~\ref{fig:scan_spectral}, the parameters choices of spectral clustering are not finely tuned.
+    Unlike the Anti-KT algorithm, there is flexibility in all parameter choices.
+    The parameters used in the remained of this work are \(\alpha=2.\), \(k_\text{NN}=5\), \(\stoppingdeltar{} = 1.26\), \(\lambda_\text{exponent} = 1.4\), \(\sigma = 0.15\) and \(\lambda_\text{limit} = 0.4\).
 \subsubsection{Particle data}
 
-    In order to evaluate the behaviour of this clustering method three datasets are used.
+    In order to evaluate the behaviour of this clustering method four datasets are used.
 
     \begin{enumerate}
-        \item A \(125\)GeV simulated Higgs cascade decay.
+        \item A \(125\)GeV simulated \textbf{light Higgs cascade decay}.
     One Standard Model (SM) Higgs at \(125\)GeV decays to two light Higgs at \(40\)GeV,
     which in turn decay to \beau{}-\bbar{} quark pairs.
     That is \(p^+ p^+ \rightarrow H_{125\text{GeV}} \rightarrow h_{40\text{GeV}} h_{40\text{GeV}} \rightarrow \beau \bbar \beau \bbar\).
 
-     \item The second dataset used is a \(500\)GeV simulated Higgs cascade decay.
+\item The second dataset used is a \(500\)GeV simulated \textbf{heavy Higgs cascade decay}.
          One Heavy Higgs, from the two Higgs doublet model, type-II~\cite{2hdm_modelfile}, at \(500\)GeV decays to two SM Higgs at \(125\)GeV,
     which in turn decay to \beau{}-\bbar{} quark pairs.
     That is \(p^+ p^+ \rightarrow H_{500\text{GeV}} \rightarrow h_{125\text{GeV}} h_{125\text{GeV}} \rightarrow \beau \bbar \beau \bbar\).
 
-    \item For the purpose of checking IRC safety a variety of three jet events are used.
+\item To obtain jets with a different width, a \textbf{semileptonic top decay} is used.
+        That is \( p p \rightarrow t \bar{t} \rightarrow W^+ b W^- \bar{b} \)  where one \(w\) decays to a pair of quark jets, and the other decays leptonically.
+        The quark jets from the \(w\) may be \(u\), \(c\), \(d\), \(s\) or \(b\).
+        
+
+    \item For the purpose of checking \textbf{IRC safety} a variety of three jet events are used.
         These jets can be created by any combination of \(g\), \(u\), \(c\), \(d\), \(s\), and their antiparticles.
         It will be generated at leading order and next to leading order.
         This being the simplest possible configuration where IRC singularities could be observed.
 
-     \item {\color{red}TODO; Add ttbar dataset if needed.}
-
     \end{enumerate}
 
-    Using Madgraph~\cite{alwall_madgraph2011} to generate the partonic process, and Pythia~\cite{sjostrand_pythia2015} to shower, ${\cal O}(10^5)$ of \(pp \rightarrow{} H \rightarrow{} hh \rightarrow{} b\bar{b}b\bar{b}\) events are generated, with $\sqrt{s}=13 $ TeV.
+    Using Madgraph~\cite{alwall_madgraph2011} to generate the partonic process, and Pythia~\cite{sjostrand_pythia2015} to shower, ${\cal O}(10^5)$ of each of these processes are generate.
+    The center of mass energy used is \(\sqrt{s}=13 \) TeV.
 
 
     Both Higgs cascade datasets have the desirable property of creating \bthing{jets} with a range of geometries,
@@ -242,13 +275,40 @@ These slices have been chosen to include the best performing combination.
     in creating the signal process.
 
 
+    Each of these datasets requires different cuts,
+    both at the reconstructed particle level to simulate detector accuracy,
+    and at the jet level, to select the best reconstructed events.
+    The cuts of each dataset are;
+    \begin{enumerate}
+        \item \textbf{Light Higgs cascade decay}; The reconstructed particles are required to have
+            rapidity \(< 2.5\) and \(p_T > 0.5\) GeV.
+            These cuts are likely to remove the majority of the radiation from beam remnants,
+            and reduce the radiation from ISR.
+            After cuts, \(72\%\) of events have at least \(5\) \bthing{shower} particles and \(5\) pure ISR shower particles available.
+            The jets are required to have \(p_T > 15\) GeV, which is lower than is realistic,
+            but leaves a larger range of events to compare the behaviour of jet clustering algorithms.
+        \item \textbf{Heavy Higgs cascade decay}; The reconstructed particles are required to have
+            rapidity \(< 2.5\) and \(p_T > 0.5\) GeV.
+            The jets are required to have \(p_T > 30\) GeV, which is realistic.
+            
+        \item \textbf{Semileptonic top decay}; The reconstructed particles are required to have
+            rapidity \(< 2.5\) and \(p_T > 0.5\) GeV.
+            The event is required to have at least \(p_{T,\text{miss}} > 50\) GeV,
+            where \(p_{T, \text{miss}}\) is the missing transverse momentum due to 
+            the neutrino.
+            The lepton in the event must have rapidity \(< 2.4\).
+            If the lepton in the event is a muon then its \(p_T\) must be \(>  55\) GeV.
+            If the lepton in the event is an electron and it is isolated (as defined in~\cite{Sirunyan_2018}) then its \(p_T\) must be \(> 55\), if it is not isolated then \(p_T > 120\).
+            The reconstructed jets must have \(p_T > 30\) and rapidity \(< 2.4\).
+            Finally, the lepton must be seperated from the closest jet by at least
+            \(\sqrt{\Delta \text{rapidity}^2 + \Delta \phi^2} > 0.4\) or
+            \(p_{T, \text{relative}} > 40\) GeV.
+            These cuts are copied from~\cite{Sirunyan_2020}.
+        \item \textbf{IRC safety}; the only restriction on the particles is that rapidity must be \(< 2.5\).
+            There are no cuts on the jets.
+            Issues of IRC safety are emphasized at low \(p_T\), so to highlight this we abandon all \(p_T\) cuts.
 
-    Before any evaluation can be performed on the final state of the simulation
-    particles that ended outside the range of the silicon tracker (\(|\eta|>2.5\))
-    or particles with low transverse momentum (\(p_T < 0.5\) GeV) are cut.
-    This is to mimic restrictions from reconstruction accuracy.
-    These cuts are likely to remove the majority of the radiation from beam remnants,
-    and reduce the radiation from ISR.
+    \end{enumerate}
 
     %\begin{figure}[htp]
     %    \begin{minipage}[c]{0.5\textwidth}
@@ -307,8 +367,6 @@ These slices have been chosen to include the best performing combination.
     %\end{figure}    
     %A particle is considered a \bthing{descendant} if it is found in the chain of decays from a \bthing{quark},
     %as opposed to decaying from the ISR.
-    After cuts, \(72\%\) of events have at least \(5\) \bthing{shower} particles and \(5\) pure ISR shower particles available.
-    These ISR components add noise to the data.
     %Exactly how the percentage of \bthing{descendants} changes with event size is visualised in figure~\ref{fig:bdecendantpercent}.
 
 \subsubsection{Determining IRC safety}\label{sec:IRCmethod}

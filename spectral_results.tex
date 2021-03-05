@@ -1,18 +1,41 @@
 \subsection{Results}
 
+Before the behaviour of the algorithms is analysed, some plots of kinematic variables are shown
+in figure~\ref{fig:kinematics}.
+It can bee seen that the algorithms do no greatly differ on the kinematics of the events.
+
+\begin{figure}[htp]
+    \begin{minipage}[c]{0.7\textwidth}
+    \begin{center}
+    \includegraphics[width=\textwidth]{graphics/kinematics}
+\end{center}
+\end{minipage}
+    \begin{minipage}[c]{0.25\textwidth}
+        \caption{Basic kinematic variables for each of the datasets and three clustering algorithms.
+            In the first column it can be seen that there is some difference in the typical mass produced.
+            In the second column the rapidity shows some edge effects,
+            the algorithms cluster jets at the edge of the barrel slightly differently.
+            In the final column the barrel angle show no noticeable changes.
+        }\label{fig:kinematics}
+\end{minipage}
+\end{figure}
+
 \subsubsection{Infrared-collinear safety}
 The jet mass spectrum can be used to check for IRC safety.
 For each configuration of the clustering algorithm we expect an IRC safe algorithm to give the 
 same jet mass spectrum for both LO and NLO datasets.
-Changes in the mass spectrum indicate sensitivity to the soft and collinear radiation that
+Changes in the shape variables indicate sensitivity to the soft and collinear radiation that
 has been included at NLO.
 
 
+
 \begin{figure}[htp]
-    \includegraphics[width=\textwidth]{graphics/IRC_singles}
+    \includegraphics[width=\textwidth]{graphics/IRC_singles2}
     \caption{Spectrums for jet properties created with LO and NLO datasets.
-             The columns from left to right are; the jet mass (which would be IRC sensitive),
-             the jet \(p_T\) (which would also be IRC sensitive),
+             The \(4\) jets with highest \(p_T\) from each event are used to 
+             form these plots.
+             The columns from left to right are; the jet mass, 
+             thrust of the jets, sphere city of the jets and oblateness of the jets.
              the barrel angle of the jets and the rapidity of the jets.
              Algorithms where configured (i.e. settings of \stoppingdeltar{} chosen)
              to give sensible results on
@@ -127,69 +150,64 @@ However it is good to have a verification in data.
 In this section Anti-KT algorithms, with jet radius \(\stoppingdeltar{} = 0.4\) and \(\stoppingdeltar{} = 0.8\)
 are compared to the spectral clustering algorithm specified in section~\ref{sec:spectralmethodparam}.
 
+The jets are tagged using MC truth.
+Each of the \bthing{quarks} created by a light higgs may tag the closest jet (by angle, \(\sqrt{(y_i - y_j)^2 + (\phi_i - \phi_j)^2}\)) provided that jet is no further than \(0.8\) away.
+From this point on, only jets tagged this way are considered.
 
-Firstly, jet multiplicities, that is number of jets found per event are given.
+
+Firstly, jet multiplicities, that is number of tagged jets found per event are given.
 These can be seen for three data samples in fig~\ref{fig:multiplicity}
 
 
 \begin{figure}[htp]
-    \begin{minipage}[c]{0.32\textwidth}
-        \includegraphics[width=\textwidth]{graphics/multiplicity/light_higgs.png}
-    \end{minipage}\hfill
-    \begin{minipage}[c]{0.33\textwidth}
-        \includegraphics[width=\textwidth]{graphics/multiplicity/heavy_higgs.png}
-    \end{minipage}\hfill
-    \begin{minipage}[c]{0.29\textwidth}
-        \includegraphics[width=\textwidth]{graphics/multiplicity/tt_bar.png}
-    \end{minipage}\hfill
+    \begin{center}
+        \includegraphics[width=0.7\textwidth]{graphics/multiplicity/all3.png}
+    \end{center}
     \caption{Jet multiplicities for spectral clustering, on three data samples.
     }\label{fig:multiplicity}
 \end{figure}    
 
 
 
-As the data is simulated, it is possible to compare the performance of clustering algorithms to Monte Carlo truth.
-Each higgs cascade event contains 4 \bthing{quarks} and for each of them it is possible to identify the particle into which they decayed, as a subset of the particles in the final state.
-Henceforth the detectable decay products of the \bthing{quark} will be called the descendants of the \bthing{quark}.
-For two reasons it is not possible for this clustering algorithm to gather all the descendants
-of each \bthing{quark} into one jet:
-firstly, not all the descendants make the \(p_T\) and \(\eta\) cuts, so some are discarded before clustering;
-secondly, the descendants of the \bthing{quarks} in an event are not mutually exclusive, due to interactions during hadronisation the quarks share descendants, and our clustering algorithm does produce exclusive clusters.
+%As the data is simulated, it is possible to compare the performance of clustering algorithms to Monte Carlo truth.
+%Each higgs cascade event contains 4 \bthing{quarks} and for each of them it is possible to identify the particle into which they decayed, as a subset of the particles in the final state.
+%Henceforth the detectable decay products of the \bthing{quark} will be called the descendants of the \bthing{quark}.
+%For two reasons it is not possible for this clustering algorithm to gather all the descendants
+%of each \bthing{quark} into one jet:
+%firstly, not all the descendants make the \(p_T\) and \(\eta\) cuts, so some are discarded before clustering;
+%secondly, the descendants of the \bthing{quarks} in an event are not mutually exclusive, due to interactions during hadronisation the quarks share descendants, and our clustering algorithm does produce exclusive clusters.
+%
+%Combining these factors with the \(p_T\) cuts, almost \(2/3\) of the objects could be reconstructed in theory.
 
-Combining these factors with the \(p_T\) cuts, almost \(2/3\) of the objects could be reconstructed in theory.
+%Knowing the parts of the final state that are descended from each \bthing{quark} creates a clear
+%allocation of jets to quarks.
+%For each quark, the jet that contains the greatest mass in descendent particles is tagged to represent that quark.
 
-Knowing the parts of the final state that are descended from each \bthing{quark} creates a clear
-allocation of jets to quarks.
-For each quark, the jet that contains the greatest mass in descendent particles is tagged to represent that quark.
-
-Mass peaks can the be constructed from the tagged jets, using all the particles in the jet,
-both descendant of the quarks and background.
-The mass peaks for the Spectral configuration described and anti-kt 
-with \(\stoppingdeltar{} = 0.8, 0.4\) are given for comparison.
-In figure~\ref{fig:best_correct_h_allocation} three selections are plotted; firstly only events where some trace of all 4 \bthing{quarks} is found
-are plotted with the mass of the descendants of the heavy Higgs in the background.
-Then the two light Higgs in each event are sorted by the mass of their descendants,
+Mass peaks are constructed from the tagged jets.
+The mass peaks for the Spectral configuration described and Anti-KT 
+with \(\stoppingdeltar{}_\text{kt} = 0.8, 0.4\) are given for comparison.
+In figure~\ref{fig:best_correct_h_allocation} three selections are plotted; firstly only events where jets for all 4 \bthing{quarks} is found
+are plotted, reconstructing the mass of the SM Higgs.
+Then the two light Higgs in each event are differentiated by the mass of their descendants,
 in effect they are ranked by how well they were picked up by the detector.
-The mass of the light descendants is plotting in the background and over
-that the mass of the associated jets in each event is shown.
+The light higgs with more mass visible to the detector is called the better observed light higgs,
+the light higgs with less mass visible in the detector is called the less observed light higgs.
+Two jets are required to reconstruct a light higgs.
+The correct jets for each Higgs reconstruction are identified using MC truth,
+so the correct pairings are always made.
 
-
+It can be seen that Spectral clustering forms the sharpest peaks, and peaks at the correct mass.
 
 
 \begin{figure}[htp]
     \includegraphics[width=1.\textwidth]{graphics/mass_peaks/light_long_correct_frequency.png}
-    \caption{Starting with the plot on the far right, the jet mass of events where
-        some descendants from all 4 \bthing{quarks} were found is plotted over
-        the total mass of all descendants.
-        The plot on the left takes the light Higgs whose descendants have the greatest mass in each event.
-        The mass of these descendants is plotted in grey, and over this
-        the masses of the jets in each event that correspond to this better observed Higgs
-        are shown.
-        That is, the tags in each event that have been produced by the better observed light Higgs
-        are allocated to jets, and only the mass of these jets is tabulated - thus
-        a good cluster will have obtained the mass of the light Higgs descendants.
-        Finally, in the centre, the light Higgs whose descendants have less mass is shown along with
-        the corresponding jets.
+    \caption{
+Three selections are plotted; firstly only events where jets for all 4 \bthing{quarks} is found
+are plotted, reconstructing the mass of the SM Higgs.
+Then the two light Higgs in each event are differentiated by the mass of their descendants,
+in effect they are ranked by how well they were picked up by the detector.
+The light higgs with more mass visible to the detector is called the better observed light higgs,
+the light higgs with less mass visible in the detector is called the less observed light higgs.
     }\label{fig:best_correct_h_allocation}
 \end{figure}    
 
@@ -197,18 +215,13 @@ that the mass of the associated jets in each event is shown.
 
 \begin{figure}[htp]
     \includegraphics[width=1.\textwidth]{graphics/mass_peaks/heavy_long_correct_frequency.png}
-    \caption{Starting with the plot on the far right, the jet mass of events where
-        some descendants from all 4 \bthing{quarks} were found is plotted over
-        the total mass of all descendants.
-        The plot on the left takes the light Higgs whose descendants have the greatest mass in each event.
-        The mass of these descendants is plotted in grey, and over this
-        the masses of the jets in each event that correspond to this better observed Higgs
-        are shown.
-        That is, the tags in each event that have been produced by the better observed light Higgs
-        are allocated to jets, and only the mass of these jets is tabulated - thus
-        a good cluster will have obtained the mass of the light Higgs descendants.
-        Finally, in the centre, the light Higgs whose descendants have less mass is shown along with
-        the corresponding jets.
+    \caption{
+Three selections are plotted; firstly only events where jets for all 4 \bthing{quarks} is found
+are plotted, reconstructing the mass of the heavy higgs.
+Then the two SM Higgs in each event are differentiated by the mass of their descendants,
+in effect they are ranked by how well they were picked up by the detector.
+The SM Higgs with more mass visible to the detector is called the better observed SM Higgs,
+the SM Higgs with less mass visible in the detector is called the less observed SM Higgs.
     }
 \end{figure}    
 
@@ -216,19 +229,12 @@ that the mass of the associated jets in each event is shown.
 \begin{figure}[htp]
     \includegraphics[width=1.\textwidth]{graphics/mass_peaks/top_long_correct_frequency.png}
     \caption{
-        Both plots show the mass of a top, which decays to a \bthing{quark} and a $W$.
-        The contribution of the \bthing{quark} is a reconstruction using spectral clustering,
-        and the contribution of the $W$ is taken from Monte Carlo.
-        Each event contains a \(t\)-\(\bar{t}\) pair.
-        The plot on the left shows the top whose descendants have the greatest mass in each event.
-        The mass of these descendants is plotted in grey, and over this
-        the masses of the jets in each event that correspond to this better observed Higgs
-        are shown.
-        That is, the tags in each event that have been produced by the better observed light Higgs
-        are allocated to jets, and only the mass of these jets is tabulated - thus
-        a good cluster will have obtained the mass of the light Higgs descendants.
-        Finally, on the right is the top whose descendants have less mass is shown along with
-        the corresponding jets.
+        Three selections are plotted; firstly just the mass of the jet or jets that reconstruct the hadronic \(W\) is plotted.
+        Then the reconstructed mass of the leptonic top is plotted,
+        this depends on one reconstructed \bthing{jet} and then a missing \(p_T\) reconstruction
+        for the leptonic \(W\).
+        Finally, the mass of the hadronic top is plotted, as reconstructed from the 
+        \(W\) jets and the \bthing{jet} from the top.
     }
 \end{figure}    
 
