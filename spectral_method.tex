@@ -1,100 +1,117 @@
-\subsection{Method}
+\section{Method}
 In this section the methodology is covered in four parts.
-First the practical procedure chosen in this work for applying spectral clustering is given.
+First the practical procedure chosen in this work for applying \spectral{} is given.
 Secondly, choices and interpretations for the variable parameters in this algorithm are given.
 Then the datasets against which this will be measured are specified.
 Finally the procedure for checking infrared-collinear (IRC) safety will be described.
 
 
-\subsubsection{Clustering algorithm}\label{sec:spectralmethodalgo}
+\subsection{Clustering algorithm}\label{sec:spectralmethodalgo}
     The implementation of the theory described in section~\ref{sec:spectral_theory} will be specified.
     For every simulated event this process is used to identify the jets.
 
+    To begin, relevant cuts are applied to the particles to simulate the detectors reconstruction capability.
+    These are described in section~\ref{sec:particle_data}.
+    Then all particles are declared pseudojets, and given an index, \(j = 1 \dots n\), with no particular order.
+    The algorithm is recursive and agglomerative, and the first time step is labelled \(t=1\).
+
     \begin{enumerate}
-        \item \label{step:start} The particles will be used to form the nodes of a graph,
+        \item \label{step:start} The pseudojets are used to form the nodes of a graph,
         the edges of which will be weighted by some measure of proximity between the particles called affinity.
-        To obtain an affinity, first a distance is obtained; \(d_{i,j} = \sqrt{(y_i - y_j)^2 + (\phi_i - \phi_j)^2}\)
-        where \(y_i\) is the rapidity of particle \(i\) and \(\phi_i\) is the barrel angle is particle \(i\).
+        To obtain an affinity, first a distance is obtained.
+        Between pseudojets \(i\) and \(j\) this would be \(d(t)_{i,j} = \sqrt{(y(t)_i - y(t)_j)^2 + (\phi(t)_i - \phi(t)_j)^2}\)
+        where \(y(t)_j\) is the rapidity of pseudojet \(j\) at time step \(t\) and \(\phi(t)_j\) is the barrel angle, likewise for \(i\).
         No \(p_T\) dependence is used.
 
-    \item \label{step:affinity} The affinity must increase as particles become more similar, whereas the distance will shrink.
-            This is done by taking an exponent so that \(a_{i,j} = \text{exp}(-d_{i,j}^\alpha/\sigma)\), as done in~\cite{hadjighasem2016votex}. % TODO check you stick with this
-            %Sigma (\(\sigma\)) defines a scale for the distances.
-            Distances much larger than \(\sigma\) are only allowed very small affinities,
+    \item \label{step:affinity} The affinity must increase as pseudojets become more similar, whereas the distance will shrink.
+        This is done by taking an exponent so that \(a(t)_{i,j} = \text{exp}(-d(t)_{i,j}^\alpha/\sigma_v)\), as done in~\cite{hadjighasem2016votex}.
+            Distances much larger than \(\sigma_v\) are only allowed very small affinities,
             thus less influence over the clustering.
-            %It is tunable and chosen to be \(0.2\).
-    \item\label{step:KNN} The affinity between particles that are far apart contains less useful information,
-        such particles are unlikely to be genuinely related.
+
+    \item\label{step:KNN} The affinity between pseudojets that are far apart contains less useful information,
+        such pseudojets are unlikely to be good combinations.
         Removing these affinities reduces noise.
-    A fixed number, \(k_\text{NN}\), of neighbours of each point are
+    A fixed number, \(k_\text{NN}\), of neighbours of each pseudojet are
     preserved, and all other affinities are set to zero.
+    Thus in a group with more than \(k_\text{NN}\) pseudojets,
+    each pseudojet has at least \(k_\text{NN}\) non zero affinities with other pseudojets.
 
 \item\label{step:laplacean} These affinities allow the construction of a Laplacian.
-        The Laplacian used is the symmetric Laplacien, which has \(-a_{i,j}/(\sum_k a_{i,k})^{0.5}(\sum_k a_{j,k})^{0.5}\)
-        in the \(i\)th row and \(j\)th column, and \(1\) all along the diagonal.
-        For ease of notation let \(z_i = \sum_k a_{i,k}\).
+    The Laplacian used is the symmetric Laplacien, which is proportional to \(-a(t)_{i, j}\)
+        in the \(i\)th row and \(j\)th column, and exactly \(1\) on the diagonal.
+        For ease of notation let \(z(t)_j\) be a measure of the size pseudojet \(j\) contributes to a cluster,
+        with \(z(1)_j = \sum_k a_{i,k}\).
         The laplacian can now be written;
     \begin{equation}\label{eqn:laplacian}
-        L = 
+        L(t) = 
         \begin{pmatrix}
-            z_0      & 0   & 0  & \hdots \\
-               0     & z_1 &    0     & \\
-               0     &    0     & z_2 & \\
+            z(t)_1      & 0   & 0  & \hdots \\
+            0     & z(t)_2 &    0     & \\
+            0     &    0     & z(t)_3 & \\
             \vdots   &          &     & \ddots 
         \end{pmatrix}^{-\frac{1}{2}}
         \begin{pmatrix}
-            z_0 & -a_{0,1} & -a_{0,2} & \hdots \\
-            -a_{0,1} & z_1 & -a_{1,2} & \\
-            -a_{0,2} & -a_{1,2} & z_2 & \\
+            z(t)_1 & -a(t)_{1,2} & -a(t)_{1,3} & \hdots \\
+            -a(t)_{1,2} & z(t)_2 & -a(t)_{2,3} & \\
+            -a(t)_{1,3} & -a(t)_{2,3} & z(t)_3 & \\
             \vdots   &          &     & \ddots 
         \end{pmatrix}
         \begin{pmatrix}
-            z_0 &    0     &    0     & \hdots \\
-               0     & z_1 &    0     & \\
-               0     &    0     & z_2 & \\
+            z(t)_1      & 0   & 0  & \hdots \\
+            0     & z(t)_2 &    0     & \\
+            0     &    0     & z(t)_3 & \\
             \vdots   &          &     & \ddots 
         \end{pmatrix}^{-\frac{1}{2}}.
     \end{equation}
-        \(z_i\) can be thought of as a measure of the `size' that particle \(i\) contributes to the group size.
-        When two pseudojets are combined, instead of calculating \(z_i\) as the sum of the affinities of the combined pseudojet,
-        the new \(z_i\) is the sum of the two previous \(z_i\).
-        For example, if pseudojet \(1\) and \(2\) are to be combined to make pseudojet \(11\),
-        then \(z_{11} = z_1 + z_2\) rather than the sum of affinity between new pseudojet \(11\) and the remaining pseudojets.
-        This condition is required for IRC safety.
+        When two pseudojets are combined, instead of calculating \(z_j\) as the sum of the affinities of the combined pseudojet,
+        the new \(z_j\) is the sum of the two previous \(z_j\).
+        For example, if pseudojet \(1\) and \(2\) from \(t=1\) are to be combined to make pseudojet \(1\) in \(t=2\),
+        then \(z(2)_{1} = z(1)_1 + z(1)_2\) rather than the sum of affinity between new pseudojet \(1\) and other pseudojets in step \(t=2\).
+        This condition is required for IRC safety.  % TODO add some discussion/proof
 
-\item \label{step:eigenvectors} From the Laplacian eigenvectors are calculated to create the embedding space.
-            All eigenvectors corresponding to an eigenvalue less that the eigenvalue limit, \(\lambda_\text{limit}\), are considered.
-        The eigenvectors have as many elements as there are particles, and the coordinates of
-        the \(i\)th particle in the embedding space is the \(i\)th element of each eigenvector.
-        The first embedding space of a clustering is shown in figure~\ref{fig:embedding_space_simple}.
+    \item \label{step:eigenvectors} From the Laplacian eigenvectors are calculated to create the embedding space, and labelled with index \(q\).
+            \begin{equation}
+                L(t)h_q(t) = \lambda_q(t) h_q(t)
+            \end{equation}
+            All non-trivial eigenvectors, corresponding
+            to an eigenvalue less that the eigenvalue limit, \(\lambda_q(t) < \lambda_\text{limit}\),
+            are retained.
+            Then the index runs over \(q = 1 \dots c\).
+            See section~\ref{sec:eig_norm} for discussion.
 
-    \item \label{step:compression} Each coordinate direction is divided by the corresponding eigenvalue raised to \(\lambda_\text{exponent}\).
-            %in this case \(1.5\). 
-            This acts to compress the dimensions that hold less information.
+        \item \label{step:compression} Eigenvector is divided by the corresponding eigenvalue raised to \(\beta\)
+            This acts to compress the dimensions that hold less information, again see section~\ref{sec:eig_norm}.
+            The embedding space can now be formed.
+            The eigenvectors have as many elements as there are pseudojets, and the coordinates of
+            the \(j^\text{th}\) pseudojet at time step \(t\)
+            become \(m(t)_j = \left(\lambda_1(t)^{-\beta} h_1(t)_j, \dots \lambda_c(t)^{-\beta} h_c(t)_j\right)\).
+            The first embedding space of a clustering is shown in figure~\ref{fig:embedding_space_simple}.
 
-        \item \label{step:stoppingcondition} The distance between all objects in the embedding space is calculated.
-            Provided the mean of this distance is less than \stoppingdeltar{} then
-        the two objects that have the smallest embedding distance are combined.
-        %The value of \stoppingdeltar{} used here is \(1.26\).
-        In physical space the combined object is created by summing the respective four momenta,
-        in the embedding space two methods for locating the combined object are tried.
-        Once two objects have been combined in physical space, the embedding space is recalculated from step~\ref{step:start},
-        with the caveat mentioned in step~\ref{step:laplacean} that weights are not recalculated.
-        %\begin{enumerate}
-        %    \item In a \spectralmeanjet{} clustering the location of the combined object is the
-        %    geometric mean of the inputs. The clustering then continues to combine things in this manner.
-        %    This method has been abandoned as it sculpted the PT distribution.
-        %\item \label{fullmethod} In a \spectralfulljet{} once two objects have been combined in physical space,
-        %        the embedding space is recalculated from step~\ref{step:start}. 
-        %\end{enumerate}
-        %In this instance only \ref{fullmethod} is used.
+        \item  A measure of distance between all pseudojets in the embedding space is calculated.
+            In the embedding space angular distances are most appropriate, see section~\ref{sec:embedding_distance}.
+            \begin{equation}
+                d'(t)_{i, j} = \text{arccos}\left|\frac{m(t)_i.m(t)_j}{{||m(t)_i||}_2 {||m(t)_j||}_2}\right|
+            \end{equation}
 
+        \item\label{step:stoppingcondition}
 
-    \item When the mean of the distances in the embedding space rises above \stoppingdeltar{},
-        then all objects are promoted to jets. Jets with less than 2 tracks are removed,
-        and their contents considered noise,
-        as are jets that do not pass \(p_T\) cuts.
+            Provided the mean of this distance is less than \stoppingdeltar{}, that is;
+            \begin{equation}
+                \frac{1}{c}\sum_{i\ne j} d'(t)_{i, j} < \stoppingdeltar{}
+            \end{equation}
+            then the two pseudojets that have the smallest embedding distance are combined.
+            Reasons for this stopping condition are given in section~\ref{sec:stopping_condintion}.
+        The two pseudojets that have been combined are removed and replaced with one pseudojet.
+        In physical space the new pseudojet is created by summing the respective four momenta of the removed pseudojets.
+        Once two pseudojets have been combined in physical space, the embedding space is recalculated from step~\ref{step:start}, 
+        to begin time step \(t+1\).
+        There will be one fewer row and column in the Laplacian of step \(t+1\).
     \end{enumerate}
+
+    When the mean of the distances in the embedding space rises above \stoppingdeltar{},
+    then all remaining pseudojets are promoted to jets.
+    Jets with less than 2 tracks are removed, and their contents considered noise.
+    Further cuts may then be applied as described in section~\ref{sec:particle_data}.
 
     These steps will form a variable number of jets from a variable number of particles.
     An example of the constructed embedding space is shown in figure~\ref{fig:embedding_space_simple}.
@@ -102,7 +119,7 @@ Finally the procedure for checking infrared-collinear (IRC) safety will be descr
 
     \begin{figure}[htp]
         \includegraphics[width=1\textwidth]{graphics/embedding_space_simple.png}
-        \caption{A single event and it's embedding space, as created by spectral clustering.
+        \caption{A single event and it's embedding space, as created by \spectral{}.
             At the top the grey plot shows the particles in the event as points on the unrolled detector barrel.
             The colour of each point indicates the shower it came from.
             The lower two plots show the first 4 dimensions of the embedding space,
@@ -110,60 +127,58 @@ Finally the procedure for checking infrared-collinear (IRC) safety will be descr
         }\label{fig:embedding_space_simple}
     \end{figure}    
 
-    %To provide a basis for comparison the results of clustering with an anti-kt algorithm (as in~\cite{Cacciari2008akt}) is also shown.
+    %To provide a basis for comparison the results of clustering with an \antikt{}  algorithm (as in~\cite{Cacciari2008akt}) is also shown.
 
-\subsubsection{Tunable parameters}\label{sec:spectralmethodparam}
-Unlike most machine learning techniques, Spectral clustering does not have large arrays of learnt parameters.
+\subsection{Tunable parameters}\label{sec:spectralmethodparam}
+Unlike most machine learning techniques, \spectral{} does not have large arrays of learnt parameters.
 The parameters for the clustering are a small, interpretable, set.
 Appropriate values were chosen by performing scans and observing the influence of changes to the parameters on jets formed.
 
 In section~\ref{sec:spectralmethodalgo} 5 parameters are named;
-\(\sigma\), \(\alpha\), \(k_\text{NN}\), \(\lambda_\text{limit}\), \(\lambda_\text{exponent}\) and \stoppingdeltar{}.
+\(\sigma_v\), \(\alpha\), \(k_\text{NN}\), \(\lambda_\text{limit}\), \(\beta\) and \stoppingdeltar{}.
 These parameters have a range of values for which sensible results are obtained.
 The interpretation of these parameters is given here;
 \begin{itemize}
-    \item \(\sigma\); introduced in step~\ref{step:affinity}, this is a scale parameter in physical space.
-                      The value indicated an approximate distance within which particles are deemed close.
-                      This should be on the scale of separation of particles in the event, \(\mathcal{O} (0.1)\).
-    \item  \(\alpha\); also introduced in step~\ref{step:affinity}, this controls the rate which which 
-           the influence of particles further away drops. 
-           Higher values increase how strictly the parameter \(\sigma\) is used to define a neighbourhood.
-           Traditionally the value used here is \(2\), which as in a Gaussian distribution.
-          % The value used here is \(\alpha = 1.4\).
+    \item \(\sigma_v\); introduced in step~\ref{step:affinity}, this is a scale parameter in physical space.
+                      The value indicated an approximate average distance for particles in the same shower,
+                      or alternatively, the size of the neighbourhood of each particle.
+                      It is closely tied to the stopping parameter for the \genkt{} algorithm, \ktstoppingdeltar{},
+                      they both relate to the width of the jets formed.
+                      It should take values on the same order of magnitude as \ktstoppingdeltar{}, \(\mathcal{O} (0.1)\).
+    \item  \(\alpha\); also introduced in step~\ref{step:affinity},
+           this changes the shape of the distribution used to describe the neighbourhood of a particle.
+           Higher values make the probability of joining particles outside \(\sigma_v\) fall away faster.
+           Traditionally the value used here is \(2\), like in a Gaussian distribution.
        \item \(k_\text{NN}\); introduced in step~\ref{step:KNN}, this dictates the minimum number of non-zero affinities around each point.
            Lower values create a sparser affinity matrix, reducing noise at the potential cost of lost signal.
            Values above \(7\) are seen to have to have little impact.
        \item  \(\lambda_\text{limit}\); introduced in step~\ref{step:eigenvectors}, is a means of limiting the number of eigenvectors used
            to create dimensions in the embedding space.
-           The eigenvalue associated with an eigenvector determines the quality of the information it contains about the allocation of points to clusters,
-           lower values indicate better information.
            Only eigenvectors corresponding to eigenvalues less than \(\lambda_\text{limit}\) are used.
            Thus the number of dimensions in the embedding space can be increased with a larger \(\lambda_\text{limit}\),
            however, as the eigenvalues will be influenced by the number of clear clusters available 
-           this will not result in the same number of dimensions each time.
-           This should be on the scale of the first few eigenvalues, \(\mathcal{O} (0.1)\).
-          % The value chosen here is \(\lambda_\text{limit} = 0.4\).
-       \item  \(\lambda_\text{exponent}\); is introduced in step~\ref{step:compression}.
+           there will not be the same number of dimensions in each event.
+           This is discussed in section~\ref{sec:eig_norm}.
+           For a symmetric Laplacian the eigenvalues are \(0 < \lambda < 2\)
+           so values \(\mathcal{O} (0.1)\) are sensible choices.
+       \item  \(\beta\); is introduced in step~\ref{step:compression}.
            To account for variable quality of information in the eigenvectors, as given by their eigenvalues,
         dimensions of the embedding space with lower quality information are compressed.
-        Quality of information is proportionate of the size of the eigenvalue, o the correct compression is found by
-        dividing the lengths in the dimension by \(\lambda^{\lambda_\text{exponent}}\).
         The larger the value of \(\lambda_\text{exponent}\) the more dimensions with lower quality information are compressed.
-        This is should be \(\mathcal{O}(1)\).
-      %  The value chosen here is \(\lambda_\text{exponent} = 1.6\).
+        This is discussed in section~\ref{sec:eig_norm}.
+%        This is should be \(\mathcal{O}(1)\).
     \item \stoppingdeltar{}; is introduced in step~\ref{step:stoppingcondition}.
          This determines the expected spacing between jets, in the embedding space.
          As the number of dimensions in the embedding space grows with increasing 
          number of clear clusters it will not result in the same or
          similar number of clusters each time.
 
-      %   The value selected here is \(\stoppingdeltar{} = 1.26\).
 \end{itemize}
 
 
-A number of other parameters that could influence clustering were experimented with,
-including changed of Laplacian and parameters using \(p_T\).
-These modifications did not seem to improve performance, so they are not included.
+%A number of other parameters that could influence clustering were experimented with,
+%including changed of Laplacian and parameters using \(p_T\).
+%These modifications did not seem to improve performance, so they are not included.
 
 To investigate the behaviour of the clustering when the parameters change scans where performed.
 On a small sample of events (\(2\)k events) the clustering is performed with many different parameter choices.
@@ -188,15 +203,15 @@ but they are both still individually undesirable,
 so separate metrics are made for each of them.
 The first is ``Signal mass lost", the difference between the mass of the jets and the mass they would have had if all they contained all descendants of the object being reconstructed.
 The second is ``Background contamination", the difference between the mass of jets and the mass they would have if they didn't contain anything but descendants of the objects being reconstructed.
-The standard algorithm for this process, the Anti-KT algorithm with \(\stoppingdeltar{}_\text{kt}=0.8\), slightly prefers suppressing ``Signal mass lost" over ``Background contamination",
+The standard algorithm for this process, the \antikt{} algorithm with \(\stoppingdeltar{}_\text{kt}=0.8\), slightly prefers suppressing ``Signal mass lost" over ``Background contamination",
 this leads to the clearest mass peaks.
 When the metrics are combined into a single loss value this is accounted for by weighting;
 \begin{equation}\label{eqn:loss}
 \text{Loss} = \sqrt{0.73(\text{Background contamination})^2 + (\text{Signal mass lost})^2}
 \end{equation}
 
-An example of this scan for the generalised KT algorithm is given in figure~\ref{fig:scan_genkt}.
-For spectral clustering there are more than 2 variables to deal with, 
+An example of this scan for the \genkt{} algorithm is given in figure~\ref{fig:scan_genkt}.
+For \spectral{} there are more than 2 variables to deal with, 
 so a set of two dimensional slices are shown in figure
 These slices have been chosen to include the best performing combination.
     \begin{figure}[htp]
@@ -204,19 +219,19 @@ These slices have been chosen to include the best performing combination.
             \includegraphics[width=1\textwidth]{graphics/trangle_scan_genkt.png}
         \end{minipage}\hfill
         \begin{minipage}[c]{0.45\textwidth}
-            \caption{Generalised-KT algorithm offers two parameters that can be varied.
-                The stopping condition, \stoppingdeltar{}, and a multiple for the exponent of the \(p_T\) factor.
-                When the exponent of the \(p_T\) factor is \(-1\) the algorithm becomes the Anti-KT algorithm.
+            \caption{The \genkt{} algorithm offers two parameters that can be varied.
+                The stopping condition, \ktstoppingdeltar{}, and a multiple for the exponent of the \(p_T\) factor.
+                When the exponent of the \(p_T\) factor is \(-1\) the algorithm becomes the \antikt{} algorithm.
                 Here the loss, as described in equation~\ref{eqn:loss}, is shown for a number of parameter combinations.
                 It can be seen that while good results are possible with many values of \(p_T\) exponent,
-                \stoppingdeltar{} must fall in a narrow range to yield good results.
+                \ktstoppingdeltar{} must fall in a narrow range to yield good results.
              }\label{fig:scan_genkt}
         \end{minipage}
     \end{figure}    
 
     \begin{figure}[htp]
             \includegraphics[width=1\textwidth]{graphics/trangle_scan_incomplete.png}
-            \caption{There are 5 free parameters for spectral clustering,
+            \caption{There are 5 free parameters for \spectral{},
                 as described in section~\ref{sec:spectralmethodparam}.
                 Here the loss, as described in equation~\ref{eqn:loss}, is shown for reasonable of parameter ranges.
                 These ranges are either chosen by convention (e.g. \(\alpha\) is conventionally \(1\) or \(2\))
@@ -229,10 +244,10 @@ These slices have been chosen to include the best performing combination.
              }\label{fig:scan_spectral}
     \end{figure}    
 
-    As can be seen in figure~\ref{fig:scan_spectral}, the parameters choices of spectral clustering are not finely tuned.
-    Unlike the Anti-KT algorithm, there is flexibility in all parameter choices.
+    As can be seen in figure~\ref{fig:scan_spectral}, the parameters choices of \spectral{} are not finely tuned.
+    Unlike the \antikt{} algorithm, there is flexibility in all parameter choices.
     The parameters used in the remained of this work are \(\alpha=2.\), \(k_\text{NN}=5\), \(\stoppingdeltar{} = 1.26\), \(\lambda_\text{exponent} = 1.4\), \(\sigma = 0.15\) and \(\lambda_\text{limit} = 0.4\).
-\subsubsection{Particle data}
+    \subsection{Particle data}\label{sec:particle_data}
 
     In order to evaluate the behaviour of this clustering method four datasets are used.
 
@@ -369,7 +384,7 @@ These slices have been chosen to include the best performing combination.
     %as opposed to decaying from the ISR.
     %Exactly how the percentage of \bthing{descendants} changes with event size is visualised in figure~\ref{fig:bdecendantpercent}.
 
-\subsubsection{Determining IRC safety}\label{sec:IRCmethod}
+\subsection{Determining IRC safety}\label{sec:IRCmethod}
     It would be possible to demonstrate IRC safety analytically, however,
     as the environment required for clustering on Monte Carlo data is already set up
     it is more efficient for this study to prove IRC safety with data.
@@ -394,12 +409,16 @@ These slices have been chosen to include the best performing combination.
     The Jenson Shannon score is a value computed between two distributions that increases in magnitude the more these distributions differ.
     It is a symmetrized variant of the Kullback-Leibler divergence.
     The Kullback-Leibler divergence between probability densities \(p\) and \(q\) can be written;
-    \[D_\text{KL} (p | q) = \int^{\inf}_{-inf} p(x) log\left(\frac{p(x)}{q(x)}\right) dx.\]
+    \begin{equation}
+    D_\text{KL} (p | q) = \int^{\inf}_{-inf} p(x) log\left(\frac{p(x)}{q(x)}\right) dx.
+\end{equation}
     From which the Jenson Shannon divergence can be written;
-    \[D_\text{JS}(p, q) = \frac{1}{2}D\left(p | \frac{1}{2}(p + q)\right) + \frac{1}{2}D\left(q | \frac{1}{2}(p + q)\right)\]
+    \begin{equation}
+    D_\text{JS}(p, q) = \frac{1}{2}D\left(p | \frac{1}{2}(p + q)\right) + \frac{1}{2}D\left(q | \frac{1}{2}(p + q)\right)
+\end{equation}
     \(D_\text{JS}\) treats \(p\) and \(q\) symmetrically, and will grow as they become more different.
-    The spectrum of Jenson Shannon scores will be plotted for a known IRC safe clustering algorithm, Anti-kt,
-    a known unsafe clustering algorithm Iterative Cone and the spectral clustering algorithm.
+    The spectrum of Jenson Shannon scores will be plotted for a known IRC safe clustering algorithm, \antikt{},
+    a known unsafe clustering algorithm Iterative Cone and the \spectral{} algorithm.
 
     One small issue with this method is that a large \(D_\text{JS}\) would not differentiate
     between a change in \(p\) and \(q\) due to IRC sensitivity and 
@@ -411,6 +430,8 @@ These slices have been chosen to include the best performing combination.
     and a \(D_\text{JS}(a, b)\) is computed between them, a large value will indicate that 
     noise in the spectrum is increasing the size of \(D_\text{JS}\) between the LO and NLO spectrums.
     To account for this a subsampled \(D_{JS}\) can be constructed;
-    \[D_{JS, subsampled}(p, q) = \frac{cD_{JS}(p, q)}{\sum_{a \in p, b \in p} D_{JS}(a, b)\sum_{c \in q, b \in q} D_{JS}(c, d)}\]
+    \begin{equation}
+    D_{JS, subsampled}(p, q) = \frac{cD_{JS}(p, q)}{\sum_{a \in p, b \in p} D_{JS}(a, b)\sum_{c \in q, b \in q} D_{JS}(c, d)}
+\end{equation}
     If this does not differ too much from \(D_{JS}\) then the data sets are large enough the noise in
     the spectrum is not influencing the results.

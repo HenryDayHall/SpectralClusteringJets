@@ -24,33 +24,24 @@
 \usepackage{rotating}
 \usepackage[toc,page]{appendix}
 
-\newcommand{\nocontentsline}[3]{}
-\newcommand{\tocless}[2]{\bgroup\let\addcontentsline=\nocontentsline#1{#2}\egroup}
-
-% make table
-\definecolor{tableHeader}{gray}{0.5}
-\definecolor{tableShade}{gray}{0.9}
-\usepackage{tabularx}
-\usepackage[table]{xcolor}
-\newcolumntype{R}{>{\raggedright\arraybackslash}X}
-\newcolumntype{C}{>{\centering\arraybackslash}X}
 
 \let\vec\mathbf
-\newcommand{\homejet}{\lstinline{Traditional}}
-\newcommand{\fastjet}{\lstinline{FastJet}}
-\newcommand{\spectralmeanjet}{\lstinline{SpectralMeanJet}}
-\newcommand{\spectralfulljet}{\lstinline{SpectralFullJet}}
-\newcommand{\splittingjet}{\lstinline{SplittingJet}}
-\newcommand{\indicatorjet}{\lstinline{IndicatorJet}}
+% if we created names here we can quickly change capitalisation etc.
+% varient of delta R
 \newcommand{\stoppingdeltar}{\ensuremath{R}}
+\newcommand{\ktstoppingdeltar}{\ensuremath{R_\text{kt}}}
 \newcommand{\distancedeltar}{\ensuremath{\Delta R}}
+%b related things, so taht we always get the math-mode right
 \newcommand{\beau}{\ensuremath{b}}
 \newcommand{\bbar}{\ensuremath{\bar{b}}}
 \newcommand{\bthing}[1]{\ensuremath{b\text{-#1}}}
-\def\AZH{\(A \rightarrow ZH\)}
-\def\Hbb{\(H \rightarrow b\bar{b}\)}
-\def\Abb{\(A \rightarrow b\bar{b}\)}
-\def\HZA{\(H \rightarrow ZA\)}
+% some names for consistent capitalisation
+\newcommand{\genkt}{generalised KT}
+\newcommand{\antikt}{anti-KT}
+\newcommand{\itercone}{iterative cone}
+\newcommand{\spectral}{spectral}
+\newcommand{\fastjet}{\lstinline{FastJet}}
+
 \bibliography{writeup}
 \graphicspath{{./graphics/}}
 \begin{document}
@@ -78,6 +69,8 @@
     \input{spectral_method}
     \FloatBarrier
     \input{spectral_results}
+    \FloatBarrier
+    \input{spectral_conclusions}
     \FloatBarrier
     %\section{Acknowledgements}
     %I would like to thank Professor Stefano Moretti, Professor Claire Shepherd-Themistocleous, Professor Srinandan Dasmahapatra, Dr Emmanuel Olaiya, Prof. Rachid Benbrik and Dr Amit Chakraborty for their excellent supervision and advice.

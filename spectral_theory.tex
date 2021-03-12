@@ -1,4 +1,4 @@
-\subsection{Theory of spectral clustering}\label{sec:spectral_theory}
+\section{Theory of spectral clustering}\label{sec:spectral_theory}
 
 Spectral clustering is a method by which a set of points are represented in a new space,
 in which they can be easily clustered.
@@ -34,7 +34,7 @@ by sorting the graph into subgraphs, \(A_k\), where \(k=1 \dots c\).
 Minimizing the NCut objective is a function that captures this aim; 
 \begin{equation}
     \text{NCut} = \sum_k\frac{W(A_k, \bar{A_k})}{|A_k|}
-\end{equation}
+\end{equation}\label{eqn:cost_function}
 Where \(W(A_k, \bar{A_k})\) is the sum of all the vertex weights that must be dropped
 to separate the cluster \(A_k\) from the rest of the graph, \(\bar{A_k}\).
 So that \( W(A_k, \bar{A_k}) = \sum_{i \in A_k, j \in \bar{A_k}} a_{i, j} \).
@@ -57,7 +57,7 @@ matrix with as many rows and columns as there are points.
 On \(i\)th diagonal it holds the value \(\sum_j a_{i, j}\),
 which is the degree of the vertex \(i\).
 Off the diagonal, in row\(i\) column \(j\), it has the negative of the vertex weight between \(i\) and \(j\), \(-a_{i, j}\).
-\begin{equation}\label{eqn:laplacian}
+\begin{equation}\label{eqn:unnormed_laplacian}
     L = 
     \begin{pmatrix}
         z_0 & -a_{0,1} & -a_{0,2} & \hdots \\
@@ -95,3 +95,86 @@ so the coordinates of a point are the corresponding elements or the indicator ve
 Using the positions in embedding space the points can be gathered agglomeratively,
 so that we do not need to chose a predetermined number of clusters.
 This last step is not a relaxation of a well defined objective.
+
+\subsection{Distance in the embedding space}\label{sec:embedding_distance}
+Elements of the eigenvector indicate which points belong in the same group,
+they do not signify which points should be separated.
+This can be verified by looking at the cost function equation~\ref{eqn:cost_function},
+it has a term to penalise separating points that should be together, 
+but no term for joining points that should be separated.
+In many configurations indicator vectors will be indicating multiple groups.
+If the ideal grouping of some set was \(A_1\), \(A_2\) and \(A_3\)
+then;
+\begin{equation}
+\begin{aligned}
+    \text{NCut}(A_1, A_2, A_3) = &
+    \frac{W(A_1\cup A_2, A_3)}{|A_3|} + \frac{W(A_2\cup A_3, A_1)}{|A_1|} + \frac{W(A_1\cup A_3, A_2)}{|A_2|} \\
+    >& \\
+    \text{NCut}(A_1\cup A_2, A_2\cup A_3, A_1\cup A_3) =&
+    \frac{W(A_1\cup A_2, A_3)}{|A_1\cup A_2|} + \frac{W(A_2\cup A_3, A_1)}{|A_2\cup A_3|} + \frac{W(A_1\cup A_3, A_2)}{|A_1\cup A_3|} \\
+\end{aligned}
+\end{equation}
+
+Note that this still uniquely determines the group for each point,
+however we do not expect one group per indicator vector, 
+or in the relaxed case, eigenvector.
+Changes in magnitude between elements of the eigenvector would cause the euclidean distance between the corresponding points to grow,
+but as the eigenvector does not contain information about what should be separated this would be incorrect.
+An angular distance is appropriate. 
+The angular distance will grow when the eigenvectors indicating the point have less overlap,
+and this is what should be measured.
+
+\subsection{Information in the eigenvalues}\label{sec:eig_norm}
+When the clusters in the data are very clear, the situation is closer to the ideal one and the eigenvalues will be closer to \(0\).
+The smaller an eigenvalue is, the more like a perfect indicator vector the corresponding eigenvector is.
+It is possible to make use of this information.
+
+In a traditional application of spectral clustering, the number of clustered desired, \(c\), is predetermined.
+The embedding space is created by taking \(c\) eigenvectors with smallest eigenvalues, excluding the trivial eigenvector.
+The embedding space then has \(c\) dimensions.
+This follows from a relaxation of the concept of indicator vectors.
+
+When forming jets we do not know at outset how many clusters to expect in the dataset,
+so the number of eigenvectors to keep is not clear.
+While we could chose a fixed, arbitrary, number of eigenvectors, this is suboptimal.
+A better approach is to take all non-trivial eigenvectors corresponding to eigenvalues
+smaller than some limiting number, \(\lambda_\text{limit}\).
+For a symmetric matrix the eigenvalues will be \(0 < \lambda < 2\),
+so \(\lambda_\text{limit} = 0.5\) would be a reasonable choice.
+Then the number of dimensions in the embedding space will vary,
+according to the number of non-trivial eigenvectors with corresponding \(\lambda < \lambda_\text{limit}\).
+
+There is one more manipulation from the information in the eigenvalues.
+The dimensions of this embedding space are not of equal importance,
+ones with higher eigenvalues being less interesting.
+This can be accounted for by dividing the eigenvector by some power, \(\beta\), of the eigenvalue.
+
+Let the eigenvectors for which \(\lambda < \lambda_\text{limit}\);
+\begin{equation}
+    L_{i, j} (h_n)_j = \lambda_n (h_n)_i
+\end{equation}
+Then the coordinates of the \(j^\text{th}\) point in the \(c\) dimensional embedding space
+become \(m_j = \left(\lambda_1^{-\beta} (h_1)_j, \dots \lambda_c^{-\beta} (h_c)_j,\right)\).
+In effect the \(n^\text{th}\) dimension is compressed by a factor \(\lambda_n^\beta\),
+so the larger \(\lambda_n\) the greater the compression.
+
+\subsection{Stopping conditions}\label{sec:stopping_condintion}
+
+If a recursive algorithm is to be chosen, like in the \genkt{} algorithm, a stopping condition is needed.
+A stopping condition based on smallest distance between points in the embedding space does not prove to be stable,
+as the distribution  an number of dimensions in the embedding space changes sharply from event to event.
+
+The average distance between points is more stable.
+If this were used in physical space would force roughly the same number of clusters to form each time,
+however the variable number of dimensions in the embedding space is now an advantage.
+The more clear information found about clusters in the points, the more dimensions the embedding space will contain,
+as described in section~\ref{sec:eig_norm}.
+
+Say the data contains two points that would form a good cluster.
+If those two points are combined into one, that cluster is complete,
+fewer clusters remain unfinished,
+and the information for clustering the resulting points will be reduced.
+When the embedding space is recalculated for the new points it will likely have fewer dimensions.
+In a space with fewer dimensions the mean distance between the points naturally falls.
+Thus mean distance in the embedding space is a good indicator of the number of unfinished clusters available.
+Mean distance in the embedding space makes a natural cut-off.

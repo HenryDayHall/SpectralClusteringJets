@@ -1,14 +1,28 @@
-\subsubsection{Going forward}
-From here, there a two possible ways forward;
-\begin{enumerate}
-    \item Introduce some \(p_T\) dependence.
-        Due to the high parameter space this will require writing in
-        an optimiser.
-        Not conceptually difficult, but time consuming.
-    \item Investigate Diffusion mapping.
-        This has some resemblance to \ref{compressionstep} in the current method.
-        It might also provide a faster algorithm.
-\end{enumerate}
+\section{Conclusions}
+Spectral clustering offers a promising new jet formation method.
+It is a transparent mechanism with no black box element.
+All intermediate steps are interpretable.
+It satisfies the need for IRC safety and creates jets with the expected kinematics.
 
-I am inclined to try 1 first then 2
-because I am confident 1 will yield results.
+While it has many hyperparameters, then do not appear to be as finely tuned as those of \genkt{}.
+This can be seen both in parameter scans, and its adaptability to various datasets.
+
+The adaptability between datasets is remarkable,
+a \spectral{} parameter choice tuned on a light higgs cascade
+gave excellent performance on both a heavy higgs cascade and a top decay.
+On the light higgs cascade \spectral{} gives the correct mass peak,
+a narrow mass peak and the highest multiplicity.
+This would not be surprising as it was tuned for that dataset.
+On the heavy higgs dataset only \antikt{} \(\ktstoppingdeltar{} = 0.8\) 
+and \spectral{} give correct mass peaks, and \spectral{} offers considerably higher multiplicities.
+This demonstrates that the performance is not dependent on fine tuning and the algorithm is adaptable.
+
+Finally, \spectral{} was applied to a dataset for which the ideal jet radius differed.
+Its equivalent parameter \(\sigma_v\) was not allowed to vary to account for this,
+instead it was applied again with no parameter changes.
+The algorithm again proved to be adaptable and modified its behaviour to follow that of \(\ktstoppingdeltar{} = 0.4\)
+without interference.
+
+This is a novel and promising approach to jet formation. 
+Initial development already demonstrates flexibility and excellent performance.
+
