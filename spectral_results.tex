@@ -1,54 +1,53 @@
 \section{Results}
 
 Before the behaviour of the algorithms is analysed, some plots of kinematic variables are shown
-in figure~\ref{fig:kinematics}.
+in Fig.~\ref{fig:kinematics}.
 It can be seen that the algorithms do not greatly differ on the kinematics of the events.
-In particular, \spectral{} does not appear to sculpt any distributions.
+In particular, \spectral{} clustering does not appear to sculpt any distributions in any of the datasets involving Higgs bosons and top (anti)quarks.
+
 
 \begin{figure}[htp]
-    \begin{minipage}[c]{0.7\textwidth}
+%    \begin{minipage}[c]{0.7\textwidth}
     \begin{center}
     \includegraphics[width=\textwidth]{graphics/kinematics}
-\end{center}
-\end{minipage}
-    \begin{minipage}[c]{0.25\textwidth}
-        \caption{Basic kinematic variables for each of the datasets and three clustering algorithms.
-            In the first column it can be seen that there is some difference in the typical mass produced.
-            In the second column the rapidity shows some edge effects,
+%\end{minipage}
+    %\begin{minipage}[c]{0.25\textwidth}
+        \caption{Basic jet variables for each of the analysis datasets and three clustering algorithms.
+            In the first column there is some noticeable differences in the transverse momentum.
+            In the second column the rapidity shows that
             the algorithms cluster jets at the edge of the barrel slightly differently.
-            In the final column the barrel angle show no noticeable changes.
+            In the third column the barrel angle show no noticeable changes.
         }\label{fig:kinematics}
-\end{minipage}
+%\end{minipage}
+\end{center}
 \end{figure}
 
-\subsection{Infrared-collinear safety}
-Shape variable spectra would be sensitive to IRC divergences.
-For each configuration of the clustering algorithm we expect an IRC safe algorithm to give the 
-same shape variable spectrum for both LO and NLO datasets.
-Changes in the shape variables indicate sensitivity to the soft and collinear radiation that
-has been included at NLO.
-This comparison is made in figure~\ref{fig:IRC_singles2}.
-It can be seen in this figure that little difference exists between \genkt{} and \spectral{}.
-
+\subsection{IR safety}
+Shape variables (see the QCD section of Ref.~\cite{Altarelli:116932} for a useful review), such as jet mass, thrust, sphericity and oblataness,  are sensitive to IR divergences.
+For each configuration of the clustering algorithm we expect an IR safe algorithm to present a stable transition
+in a shape variable from the LO to NLO datasets, as significant
+changes in the spectra would indicate sensitivity to soft and collinear radiation.
+This comparison is made in Fig.~\ref{fig:IRC_singles2}.
+It can be seen in this figure that little difference exists between \genkt{} and \spectral{} clustering, so as to reinforce that they are both IR safe.
+{\textcolor{red}{What data set has been used here? Also, it would be woth to discuss why the distributions are so different for the case of the Mass variable. Finally, is the latter just the invariant mass formed by all tracks/particles in each jet?}}
 
 \begin{figure}[htp]
     \includegraphics[width=\textwidth]{graphics/IRC_singles3}
-    \caption{Spectrums for jet properties created with LO and NLO datasets.
-             The \(4\) jets with highest \(p_T\) from each event are used to 
+    \caption{Spectra for jet properties created with LO and NLO datasets.
+             The \(4\) jets with highest \(p_T\) from each event are used in aggregate as an average to 
              form these plots.
-             The columns from left to right are; the jet mass, 
-             thrust of the jets, sphere city of the jets and oblateness of the jets.
-             the barrel angle of the jets and the rapidity of the jets.
-             Algorithms where configured (i.e. settings of \stoppingdeltar{} chosen)
+             The columns from left to right are: the jet mass, 
+             thrust, sphericity and oblateness.
+             Algorithms where configured (i.e., settings of \stoppingdeltar{})
              to give sensible results on
-             this dataset, therefore may not represent worst case scenarios.
+             this dataset, therefore distributions may not represent worst case scenarios.
              %Looking at these graphs it is not immediately clear that the \genkt{}
-             %algorithm is IRC safe and the Iterative Cone algorithm is unsafe, 
+             %algorithm is IR safe and the Iterative Cone algorithm is unsafe, 
          %much less what the status of Spectral clustering is.
          }\label{fig:IRC_singles2}
 %    \begin{minipage}[c]{0.47\textwidth}
 %        \includegraphics[width=\textwidth]{graphics/worst_antikt_histOnly.png}
-         %        \caption{The jet mass spectrums of the \genkt{} algorithms that
+         %        \caption{The jet mass spectra of the \genkt{} algorithms that
 %                 differed the most between LO and NLO datasets.
 %                 This algorithm had a \(p_T\) exponent of \(1.\),
 %                 (so the form of the \(p_T\) factor is between Cambridge-Aachen and KT),
@@ -59,7 +58,7 @@ It can be seen in this figure that little difference exists between \genkt{} and
 %    \end{minipage}\hfill
 %    \begin{minipage}[c]{0.45\textwidth}
 %        \includegraphics[width=\textwidth]{graphics/worst_spectral_histOnly.png}
-%        \caption{The jet mass spectrums of the Spectral algorithms that
+%        \caption{The jet mass spectra of the Spectral algorithms that
 %                 differed the most between LO and NLO datasets.
 %                 This algorithm calculated affinities as
 %                 \(a_{i,j} = \text{exp}\left((\delta \phi_{i, j}^2 + \delta y_{i, j}^2)/0.3\right)\).
@@ -72,7 +71,7 @@ It can be seen in this figure that little difference exists between \genkt{} and
 %    \end{minipage}
 %    \begin{minipage}[c]{0.48\textwidth}
 %        \includegraphics[width=\textwidth]{graphics/worst_iterativecone_histonly.png}
-%        \caption{The jet mass spectrums of the Iterative Cone algorithms that
+%        \caption{The jet mass spectra of the Iterative Cone algorithms that
 %                 differed the most between LO and NLO datasets.
 %                 This algorithm had a \(p_T\) exponent of \(1.\),
 %                 (so the form of the \(p_T\) factor is between Cambridge-Aachen and KT),
@@ -91,98 +90,86 @@ It can be seen in this figure that little difference exists between \genkt{} and
 %    }
 %\end{figure}    
 %
-However, this method of establishing IRC safety only looks at one hyperparameter configuration and could be accused to cherry-picking.
-As described in section~\ref{sec:IRCmethod} this can be systematically compared for many hyperparameter configurations by calculating a Jensen-Shannon
-score for each LO-NLO pair of jet mass spectrums.
-If the Jensen-Shannon metric is low, then the two distributions are similar and appear IRC safe.
-To further clarify the result we include an algorithm known to be IRC unsafe, the \itercone{} algorithm.
-This can be seen in fig~\ref{fig:unnormedJS}.
+However, this method of establishing IR safety only looks at one hyperparameter configuration and could be accused of cherry-picking.
+As described in section~\ref{sec:IRmethod}, this can be systematically compared for many hyperparameter configurations by calculating a Jensen-Shannon
+score for each LO and NLO pair of jet mass spectra.
+If the Jensen-Shannon metric is low, then the two distributions are similar and appear IR safe.
+To further clarify the result we include an algorithm known to be IR unsafe, the \itercone{} algorithm.
+The spectral method produces Jensen-Shannon scores very similar to \genkt{} methods. Only the iterative cone one produces high Jensen-Shannon scores thus indicating significant changes between the LO and NLO spectra.
+This can be seen in Fig.~\ref{fig:unnormedJS}. {\textcolor{red}{Is this plot done only using the Mass variable of the previous figure? If so, why this choice instead of, e.g., thrust, sphericity, oblataness or others?}}
 
 \begin{figure}[htp]
     \begin{minipage}[c]{0.6\textwidth}
     \includegraphics[width=1.\textwidth]{graphics/JensenShannon_unnormed.png}
     \end{minipage}\hfill
     \begin{minipage}[c]{0.35\textwidth}
-    \caption{Here is the raw distribution of Jensen-Shannon scores.
-        Each count is a Jenson Shannon score between a probability density of jet mass from LO data and
-        from NLO data, as described in section~\ref{sec:IRCmethod}.
-        Counts at low values indicate insensitivity to IRC difference between the LO and NLO data,
-        thus IRC safety.
-        Spectral methods produce Jensen Shannon scores similar to \genkt{}
-        methods. Only Iterative cone produced high Jenson shannon scores indicating changes
-        between the LO and NLO spectrums.
+    \caption{
+        Each count is a  Jensen-Shannon score between a probability density of jet mass from LO and
+        NLO data.
+        Counts at low values indicate insensitivity to IR differences between the LO and NLO data,
+        thus IR safety.
      }\label{fig:unnormedJS}
     \end{minipage}
 \end{figure}    
 
 This comparison is slightly complicated by the fact that we must use a completely different set of events,
-so if a clustering algorithm tends to produce more noisy mass spectrums (on varied events)
-anyway it will increase the gap between the NLO and the LO datasets even if no IRC sensitivity is present.
-Again, as described in section~\ref{sec:IRCmethod} the influence of this noise can be investigated.
-This can be seen in fig~\ref{fig:jensenshannon}.
+so if a clustering algorithm tends to produce more noisy mass spectra (on varied events), this
+ will increase the gap between the LO and NLO datasets even if no IR sensitivity is present.
+Again, as described in section~\ref{sec:IRmethod}, the influence of this noise can be investigated.
+This can be seen in Fig.~\ref{fig:JensenShannon}. Here, 
+the subsampled Jensen-Shannon score is shown, again,  between a probability density of jet mass from LO and
+        NLO data, as described in section~\ref{sec:IRmethod}. Like in the previous figure, spectral clustering produces Jensen-Shannon scores similar to the \genkt{} approach. Likewise, only theiIterative cone produces high Jensen-Shannon scores, thus indicating significant changes
+        between the LO and NLO spectra. Being the results in  Figs.~\ref{fig:unnormedJS} and \ref{fig:JensenShannon} consistent with each other, this indicates  that the volume of data used to produce these
+        was sufficient to mitigate the effects of noise.
 
-From both these figures it is clear that \spectral{} is IRC safe.
-The change in jet mass spectrum between an LO and NLO dataset is consistently small,
-resulting in small Jensen Shannon scores,
-across a representative range of parameter configurations.
-This contrasts with \itercone{}, for which the jet mass spectra at LO and NLO 
-differ significantly, resulting in large Jensen Shannon scores, for many configurations.
-This is not unexpected, as the inputs to \spectral{}
-are the same as for the Cambridge-Aachen algorithm, 
-which is itself IRC safe.
-However it is good to have a verification in data.
+From  the last two figures it is clear that \spectral{} clustering  is IR safe, at least, as much as \genkt{} algorithms are.
+This contrasts with the \itercone{} algorithm, for which the jet mass spectra at LO and NLO 
+differ significantly for many configurations.
+This is not unexpected, as the inputs to the \spectral{} clustering algorithm 
+are the same as for the Cambridge-Aachen one, 
+which is itself IR safe, and the iterative cone has been  proved to produce kinematic configurations which are IR unsafe \cite{} {\textcolor{red}{Please refer to some paper illustrating this (by Salam, Seymour, etc.)}}.
+However, it is crucial to have such a verification in data, as we have done.
 
 \begin{figure}[htp]
     \begin{minipage}[c]{0.6\textwidth}
     \includegraphics[width=1.\textwidth]{graphics/JensenShannon.png}
     \end{minipage}\hfill
     \begin{minipage}[c]{0.35\textwidth}
-    \caption{Here is the distribution of subsampled Jensen-Shannon scores.
-        Each count is a subsampled Jenson Shannon score between a probability density of jet mass from LO data and
-        from NLO data, as described in section~\ref{sec:IRCmethod}.
-        Counts at low values indicate insensitivity to IRC difference between the LO and NLO data,
-        thus IRC safety.
-        Spectral methods produce Jensen Shannon scores similar to \genkt{}
-        methods. Only Iterative cone produced high Jenson shannon scores indicating changes
-        between the LO and NLO spectrums.
-        From this it is clear that \spectral{} methods are IRC safe,
-        and that the volume of data used to produce this figure and figure~\ref{fig:unnormedJS},
-        was sufficient to mitigate the effects of noise.
-    }\label{fig:jensenshannon}
+    \caption{Same as Fig.~\ref{fig:unnormedJS} for the subsampled Jensen-Shannon score.
+    }\label{fig:JensenShannon}
     \end{minipage}
 \end{figure}    
 
-\FloatBarrier{}
 \subsection{Mass peak reconstruction}
-In this section \antikt{} algorithms, with jet radius \(\ktstoppingdeltar{} = 0.4\) and \(\ktstoppingdeltar{} = 0.8\)
-are compared to the \spectral{} algorithm specified in section~\ref{sec:spectralmethodparam}.
-
-The jets are tagged using MC truth.
-Each of the \bthing{quarks} created by a signal particle (such as a light higgs)
-tag the closest jet (by angle, \(\sqrt{(y_i - y_j)^2 + (\phi_i - \phi_j)^2}\)) provided that jet is no further than \(0.8\) away.
-From this point on, only jets tagged this way are considered.
+In this section, the \antikt{} algorithm setups with jet radius \(\ktstoppingdeltar{} = 0.4\) and \(\ktstoppingdeltar{} = 0.8\)
+are compared to the \spectral{} algorithm specified in section~\ref{sec:spectralmethodparam}. The jets are tagged using MC truth.
+Each of the \bthing{quarks} created by a signal particle (either a Higgs boson or a top (anti)quark)
+tag the closest jet (by using \(\sqrt{(y_i - y_j)^2 + (\phi_i - \phi_j)^2}\) {\textcolor{red}{Do you really mean rapidity here or pseudorapidity? This needs to be clarified throughout as the two are not the same for massive objects}}) provided that jet is no further than \(0.8\) away {\textcolor{red}{The sentence is unclear}}.
+From this point on, only jets tagged this way are considered {\textcolor{red}{What about light jets from $W^\pm$ decays?}}.
 
 
-Firstly, jet multiplicities, that is number of tagged jets found per event are given.
-These can be seen for three data samples described in section~\ref{sec:particle_data} in fig~\ref{fig:multiplicity}.
+Firstly, jet multiplicities, that is number of reconstructed jets found per event, are given for both anti-$k_T$ and spectral clustering algorithms.
+These can be seen for the first three datasets described in section~\ref{sec:particle_data} in Fig.~\ref{fig:multiplicity}. Herein, it
+ is seen that \spectral{} clustering produces the best multiplicity (i.e., 4 jets) for light Higgs events while for 
+         the heavy Higgs and top MC samples  
+        it creates a multiplicity closer to that of \antikt{} with \(\ktstoppingdeltar{} = 0.4\) 
+        than \(\ktstoppingdeltar{} = 0.8\), the first of these being the best performer of the two. As a result of this study, we remark upon the adaptability of spectral clustering to the different final states without requiring adjusting its parameters, unlike the anti-$k_T$ one. The latter may seem to indicate that 0.4 is the best choice for all datasets, but this is in tension with the fact that different masses from different datasets do require the  anti-$k_T$ algorithm to be adjusted, as we shall now see. 
+
 
 
 \begin{figure}[htp]
     \begin{center}
-        \includegraphics[width=0.7\textwidth]{graphics/multiplicity/all3.png}
+        \includegraphics[width=1.0\textwidth]{graphics/multiplicity/all3.png}
     \end{center}
-    \caption{Jet multiplicities for \spectral{}, on three data samples described in section~\ref{sec:particle_data}.
-        It is seen that \spectral{} produces the best multiplicity for light higgs events.
-        For the heavy higgs and top datasets 
-        \spectral{} creates a multiplicity closer to that of \antikt{} with \(\ktstoppingdeltar{} = 0.4\) 
-        than \(\ktstoppingdeltar{} = 0.8\).
+    \caption{Jet multiplicities for the anti-$k_T$ (for two jet radius choices) and \spectral{} clustering algorithms on the light Higgs, heavy Higgs and top MC 
+ samples. For all such datasets, the hard scattering produces  4 partons in the final  state, so maximising a multiplicity of 4 jets indicates good performance.   
     }\label{fig:multiplicity}
 \end{figure}    
 
 
 
 %As the data is simulated, it is possible to compare the performance of clustering algorithms to Monte Carlo truth.
-%Each higgs cascade event contains 4 \bthing{quarks} and for each of them it is possible to identify the particle into which they decayed, as a subset of the particles in the final state.
+%Each Higgs cascade event contains 4 \bthing{quarks} and for each of them it is possible to identify the particle into which they decayed, as a subset of the particles in the final state.
 %Henceforth the detectable decay products of the \bthing{quark} will be called the descendants of the \bthing{quark}.
 %For two reasons it is not possible for this clustering algorithm to gather all the descendants
 %of each \bthing{quark} into one jet:
@@ -195,90 +182,72 @@ These can be seen for three data samples described in section~\ref{sec:particle_
 %allocation of jets to quarks.
 %For each quark, the jet that contains the greatest mass in descendent particles is tagged to represent that quark.
 
-Mass peaks are constructed from the tagged jets.
-Again, \antikt{} with \(\stoppingdeltar{}_\text{kt} = 0.8, 0.4\) is given for comparison.
-In figure~\ref{fig:best_correct_h_allocation} three selections are plotted; firstly only events where jets for all 4 \bthing{quarks} is found
-are plotted, reconstructing the mass of the SM Higgs.
-Each event also contains two light higgs.
-These are differentiated by the mass of the particles they generate that pass particle cuts,
-in effect they are ranked by how well they were picked up by the detector.
-The light higgs with more mass visible to the detector is called the better observed light higgs,
-the light higgs with less mass visible in the detector is called the less observed light higgs.
-Two jets are required to reconstruct a light higgs.
-The correct jets for each Higgs reconstruction are identified using MC truth,
-so the correct pairings are always made.
-If two jets are not found the event is not included.
-
-It can be seen that Spectral clustering forms the sharpest peaks, and peaks at the correct mass.
+Mass peaks are constructed from the reconstructed jets as well as, for the top sample only, from the lepton and neutrino.
+Again, the \antikt{} results  with \(\stoppingdeltar{}_{k_T} = 0.4\) and \(0.8\) are given for comparison.
+In Fig.~\ref{fig:best_correct_h_allocation} three selections are plotted. Firstly, we show events where all 4 $b$-jets  
+are plotted as total invariant mass of the event, thus reconstructing the mass of the SM Higgs boson.
+Each event also contains two light Higgs states, though. These are differentiated by the mass of the particles (generating them) that pass the particle cuts,
+as follows. The light Higgs boson reconstructed from the 2 $b$i-jet system with more mass visible to the detector is called the ``Better observed light Higgs''
+while the one reconstructed  with less mass visible in the detector is called the `Less observed light Higgs'' {\textcolor{red}{I do not really like this wording, I would suggest instead ``Most massive light Higgs'' and ``Lest massive light Higgs''}}.
+%Two jets are required to reconstruct a light Higgs.
+The correct jets for each Higgs mass reconstruction are identified using MC truth,
+so the correct pairings are always made. (If two such di-jet systems are not found the event is not included in the plots).
+Altogether, it can be seen that spectral clustering forms the sharpest peaks and such peaks are all very close to the correct mass. In fact, its performance
+is comparable to that of anti-$k_T$ with jet radius 0.8 and is clearly better than the 0.4 option. 
 
 
 \begin{figure}[htp]
     \includegraphics[width=1.\textwidth]{graphics/mass_peaks/light_long_correct_frequency.png}
-    \caption{
-Three selections are plotted; firstly only events where jets for all 4 \bthing{quarks} is found
-are plotted, reconstructing the mass of the SM Higgs.
-Then the two light Higgs in each event are differentiated by the mass of their descendants,
-in effect they are ranked by how well they were picked up by the detector.
-The light higgs with more mass visible to the detector is called the better observed light higgs,
-the light higgs with less mass visible in the detector is called the less observed light higgs.
+    \caption{Three mass selections are plotted for the light Higgs dataset. From left to right we show: the invariant mass of the 4 $b$-jet system, of the 2 $b$-jet system with heaviest invariant mass and of the 2 $b$-jet system with lightest invariant mass (as defined in the text).   Three jet clustering combinations are plotted as detailed in the legend.
+The spectral clustering algorithm is consistently the best performer in terms of the narrowest peaks being reconstructed and comparable to anti-$k_T$ with jet radius 0.8 in temrs of its shift from the true Higgs mass values, with  anti-$k_T$ with jet radius 0.4 always being the outlier. 
+{\textcolor{red}{Higgs should be capitalised as Higgs in the top titles, though, see my remark in the body for the actual names}}
     }\label{fig:best_correct_h_allocation}
 \end{figure}    
 
-Figure~\ref{fig:heavy_correct_mass_peaks} the exercise is repeated for the heavy higgs dataset.
-All the parameters of \spectral{} are the same as for for light higgs dataset,
-so the algorithm is being used on a dataset for which it was not tuned.
-The performance is still excellent, with sharp peaks at the correct masses.
-Note that, in figure~\ref{fig:multiplicity},
-it was seen that spectral clustering achieved better multiplicity than \antikt{} \(\ktstoppingdeltar{} = 0.8\) on this dataset.
-While the multiplicity of \antikt{} \(\ktstoppingdeltar{} = 0.4\) is a little better, the location of the peak for
-\(\ktstoppingdeltar = 0.4\) is wrong.
+In 
+Fig.~\ref{fig:heavy_correct_mass_peaks} the exercise is repeated for the heavy Higgs dataset.
+All the parameters of \spectral{} clustering are the same as in the light Higgs MC sample yet we note that 
+its performance is still excellent, with very sharp peaks at the correct masses, although the three clustering algorithms are overall much closer in performance.
+However, recall that, in Fig.~\ref{fig:multiplicity},
+it was seen that spectral clustering achieved better multiplicity than \antikt{} with \(\ktstoppingdeltar{} = 0.8\) on this dataset. Furthermore, 
+while the multiplicity of \antikt{} with \(\ktstoppingdeltar{} = 0.4\) is a little better, the location of all Higgs mass peaks for anti-$k_T$ with 
+\(\ktstoppingdeltar = 0.4\) is slightly worse. So, we are again driven to conclude that spectral clustering is probably the best performer overall with the added benefit of not requiring any adjustment of its parameters to achieve it. 
 
 \begin{figure}[htp]
     \includegraphics[width=1.\textwidth]{graphics/mass_peaks/heavy_long_correct_frequency.png}
-    \caption{
-Three selections are plotted; firstly only events where jets for all 4 \bthing{quarks} is found
-are plotted, reconstructing the mass of the heavy higgs.
-Then the two SM Higgs in each event are differentiated by the mass of their descendants,
-in effect they are ranked by how well they were picked up by the detector.
-The SM Higgs with more mass visible to the detector is called the better observed SM Higgs,
-the SM Higgs with less mass visible in the detector is called the less observed SM Higgs.
+    \caption{Same as Fig.~\ref{fig:best_correct_h_allocation} for the heavy Higgs dataset. Here, the performance of the spectral clustering and anti-$k_T$ (with both 0.4 and 0.8 as jet radiuses) clustering is much closer to each other. 
+{\textcolor{red}{ditto}}
 }\label{fig:heavy_correct_mass_peaks}
 \end{figure}    
 
 
 \begin{figure}[htp]
     \includegraphics[width=1.\textwidth]{graphics/mass_peaks/top_long_correct_frequency.png}
-    \caption{
-        Three selections are plotted; firstly just the mass of the jet or jets that reconstruct the hadronic \(W\) is plotted.
-        Then the reconstructed mass of the leptonic top is plotted,
-        this depends on one reconstructed \bthing{jet} and then a missing \(p_T\) reconstruction
-        for the leptonic \(W\).
-        Finally, the mass of the hadronic top is plotted, as reconstructed from the 
-        \(W\) jets and the \bthing{jet} from the top.
+    \caption{Three mass selections are plotted for the top dataset. From left to right we show: the invariant mass of the light jet system, of the reconstructed leptonic $W^\pm$ (as  described in the text) combined with a $b$-jet and of the hadronic $W^\pm$ combined with the other $b$-jet. Three jet clustering combinations are plotted as detailed in the legend.
+The spectral clustering algorithm  consistently outperforms the  anti-$k_T$ one with jet radius 0.8 and is slightly worse than the anti-$k_T$ one with jet radius 0.4, but only in tems of sharpness, not location.
     }\label{fig:top_correct_mass_peaks}
 \end{figure}    
 
-Finally, in figure~\ref{fig:top_correct_mass_peaks} the mass peaks for the semileptonic top decay are shown.
-Three reconstructions are given; the hadronic \(W\) is reconstructed.
+Finally, in Fig.~\ref{fig:top_correct_mass_peaks}, the $W^\pm$ and $t$ mass peaks for semileptonic $t\bar t$ decays are shown.
+Three mass reconstructions are given. Firstly, the hadronic \(W\) is reconstructed as  the mass of the jet or jets that are not tagged as $b$'s.
 This may be the mass of one jet which has been tagged by both the quarks from the \(W\),
-of the mass of two separate jets tagged by the quarks from the \(W\).
-If either of the quarks from the \(W\) failed to tag a jet the event is not used to reconstruct the \(W\).
+of the mass of two separate jets tagged by the quarks from the \(W\) {\textcolor{red}{This sentence did not make sense at all}}.
+If either of the quarks from the \(W\) failed to tag a jet the event is not used to reconstruct the \(W\) {\textcolor{red}{This sentence did not make sense either}}.
 The mass of the hadronic top is then reconstructed in events where the hadronic \(W\) could be reconstructed and the \bthing{jet}
-from the hadronic top is also found.
-The leptonic top is then reconstructed in events where \bthing{jet} from the top is found.
-The leptonic reconstruction uses the momentum of the electron and missing momentum (from unseen final state particles)
-to reconstruct the leptonic \(W\), and only proceeds if a real mass is obtained.
-
-It can be seen here that \spectral{} is adapting to jets of a different radius.
-While before its behaviour had most resembled \(\ktstoppingdeltar{} = 0.8\)
-it has now moved closer to \(\ktstoppingdeltar{} = 0.4\).
-Semileptonic top events would typically be processed using \(\ktstoppingdeltar{} = 0.4\).
-The peaks of \spectral{} are not quite as narrow as \(\ktstoppingdeltar{} = 0.4\),
-but they improve on \(\ktstoppingdeltar{} = 0.8\) and the location is correct.
+from the hadronic top is also found {\textcolor{red}{By MC truth or you pick the $b$ that gives the best $m_t$? Please clarify}}.
+The leptonic top is then reconstructed in events where \bthing{jet} from the top is combined with the reconsctructed $W^\pm$ which as decayed leptonically
+{\textcolor{red}{By MC truth or pick the $b$ that gives the best $m_t$? Please clarify}}.
+The leptonic reconstruction of the $W^\pm$ uses the momentum of the electron $p_\ell$, the missing transverse momentum $p_T^{\rm miss}$ (identified with that of the neutrino)
+and the logitudinal neutrino momentum ($p_L^\nu$, which is unknown) in a quadratic equation, $(p_\ell+p_T^{\rm miss}+p_L^\nu)^2=m_W^2$, of which only the real solutions are plotted.  In this case, it can be seen that \spectral{} clustering is adapting to jets of a different radius. In fact, 
+while before its behaviour had mostly resembled anti-$k_T$ with \(\ktstoppingdeltar{} = 0.8\), 
+it has now moved closer to the case with \(\ktstoppingdeltar{} = 0.4\).
+(Semileptonic top events would typically be processed using anti-$k_T$ with \(\ktstoppingdeltar{} = 0.4\).)
+The peaks of \spectral{} clustering are not quite as narrow as those from anti-$k_T$ with \(\ktstoppingdeltar{} = 0.4\),
+but they improve on \(\ktstoppingdeltar{} = 0.8\) and their  location is substantially correct.
 
 %\begin{figure}[htp]
 %    \includegraphics[width=1.\textwidth]{graphics/show2_40.png}
-%    \caption{Mass peaks for the light higgs cascade;
+%    \caption{Mass peaks for the light Higgs cascade;
 %    \(p^+ p^+ \rightarrow H_{125\text{GeV}} \rightarrow h_{40\text{GeV}} h_{40\text{GeV}} \rightarrow \beau \bbar \beau \bbar\).
 %        Jets are required to have at least 2 particles and \(15\) GeV \(p_T\).
 %        The left hand peak is the mass of all jets in events where 4 jets are reconstructed.
@@ -289,7 +258,7 @@ but they improve on \(\ktstoppingdeltar{} = 0.8\) and the location is correct.
 %
 %\begin{figure}[htp]
 %    \includegraphics[width=1.\textwidth]{graphics/show2_125.png}
-%    \caption{Mass peaks for the heavy higgs cascade,
+%    \caption{Mass peaks for the heavy Higgs cascade,
 %    \(p^+ p^+ \rightarrow H_{500\text{GeV}} \rightarrow h_{120\text{GeV}} h_{120\text{GeV}} \rightarrow \beau \bbar \beau \bbar\).
 %        Jets are required to have at least 2 particles and \(30\) GeV \(p_T\).
 %        The left hand peak is the mass of all jets in events where 4 jets are reconstructed.
@@ -316,14 +285,14 @@ but they improve on \(\ktstoppingdeltar{} = 0.8\) and the location is correct.
 %        
 %        \[\text{\antikt{} (\(\stoppingdeltar{} = 0.8\)) Quality Width} = 0.00141\text{GeV}\]
 %        \[\text{Spectral Quality Width} = 0.000129\text{GeV}\]
-%    \item Signal mass lost. The mass of the particles descendent from the light higgs
+%    \item Signal mass lost. The mass of the particles descendent from the light Higgs
 %        that are visible on the barrel is compared to the mass of the subset of those
 %        particles that was found in the jet. The higher the number the more
 %        signal particles are missing from the jet.
 %        \[\text{\antikt{} (\(\stoppingdeltar{} = 0.8\)) Signal mass lost} = 1.80\text{GeV}\]
 %        \[\text{Spectral Signal mass lost} = 2.17\text{GeV}\]
 %    \item Background contamination. The mass of all the background objects,
-%        either from the wrong higgs or from gluons, found in jets.
+%        either from the wrong Higgs or from gluons, found in jets.
 %        The higher the number the more the jets are tending to include too many particles.
 %        \[\text{\antikt{} (\(\stoppingdeltar{} = 0.8\)) Background contamination} = 1.92\text{GeV}\]
 %        \[\text{Spectral Background contamination} = 1.56\text{GeV}\]

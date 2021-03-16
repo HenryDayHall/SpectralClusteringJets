@@ -1,28 +1,24 @@
 \section{Conclusions}
-Spectral clustering offers a promising new jet formation method.
-It is a transparent mechanism with no black box element.
-All intermediate steps are interpretable.
-It satisfies the need for IRC safety and creates jets with the expected kinematics.
 
-While it has many hyperparameters, then do not appear to be as finely tuned as those of \genkt{}.
-This can be seen both in parameter scans, and its adaptability to various datasets.
+Spectral clustering is a popular unsupervised ML algorithm which often outperforms other approaches in many physics contexts, wherein complex multidimensional datasets are reduced into clusters of similar data in fewer dimensions. In performing such a dimensionality reduction, it makes use of the spectrum (eigenvalues) of the similarity matrix of the data.  As such, spectral clustering is very simple to implement and can be solved efficiently by standard linear algebra methods. 
+Hence,  it is a transparent algorithm with no black box element and all intermediate steps are interpretable. 
+Owing to these features,  we have found it to also be 
+a promising new method to apply to jet formation in high energy particle physics events.
 
-The adaptability between datasets is remarkable,
-a \spectral{} parameter choice tuned on a light higgs cascade
-gave excellent performance on both a heavy higgs cascade and a top decay.
-On the light higgs cascade \spectral{} gives the correct mass peak,
-a narrow mass peak and the highest multiplicity.
-This would not be surprising as it was tuned for that dataset.
-On the heavy higgs dataset only \antikt{} \(\ktstoppingdeltar{} = 0.8\) 
-and \spectral{} give correct mass peaks, and \spectral{} offers considerably higher multiplicities.
-This demonstrates that the performance is not dependent on fine tuning and the algorithm is adaptable.
+For a start, it satisfies the need for IR safety and creates jets with the expected kinematics, as dictated by QCD dynamics. Furthermore, 
+while it has many hyperparameters, they do not appear to be as finely tuned as those of more standard tools, such us sequential (or iterative) \genkt{} algorithms.
+This can be seen in both parameter scan stability and its adaptability to various datasets, each capturing physics signals embedding heavy objects decaying into lighter ones in very different patterns, all yielding complicated hadronic signatures at the LHC.
 
-Finally, \spectral{} was applied to a dataset for which the ideal jet radius differed.
-Its equivalent parameter \(\sigma_v\) was not allowed to vary to account for this,
-instead it was applied again with no parameter changes.
-The algorithm again proved to be adaptable and modified its behaviour to follow that of \(\ktstoppingdeltar{} = 0.4\)
-without interference.
+The adaptability between datasets is remarkable as a \spectral{} clustering parameter choice tuned on a light Higgs boson cascade
+gave excellent performance on both a heavy Higgs boson cascade and that of top-antitop pairs decaying semileptonically.
+In the case of the light Higgs dataset, \spectral{} clustering gave the correct mass peak positions, the narrowest resonant distributions and a jet multiplicity mapping well the partonic one. This would not be surprising as it was tuned for that dataset in the first place.
+In the case of the heavy Higgs dataset only \antikt{} with \(\ktstoppingdeltar{} = 0.8\) 
+and the \spectral{} algorithm gave correct mass peaks but  \spectral{} clustering offers considerably better multiplicity rates.
+This demonstrates that its performance is not dependent on fine tuning its parameters and hence that the algorithm is adaptable to the same final state with different masses involved.
+Finally, \spectral{} clustering was applied to a dataset with a different final state and 
+for which the ideal jet radius differed, semileptonic decays of top-antitop pairs.
+Its equivalent parameter \(\sigma_v\) was not allowed to vary to account for this, instead it was applied again with no parameter changes.
+The algorithm again proved to be adaptable and modified its behaviour to follow that of anti-$k_T$ with \(\ktstoppingdeltar{} = 0.4\), the standard choice for this kind of analyses.
 
-This is a novel and promising approach to jet formation. 
-Initial development already demonstrates flexibility and excellent performance.
+In short, spectral clustering is a novel and promising approach to jet formation, which initial development already demonstrates flexibility and excellent performance for numerical analyses at the forefront of collider physics.
 

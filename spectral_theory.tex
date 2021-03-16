@@ -3,60 +3,60 @@
 Spectral clustering is a method by which a set of points are represented in a new space,
 in which they can be easily clustered.
 This space is called the embedding space.
-Locations of the points in the embedding space is determined by calculating a
+Locations of the points in the embedding space are determined by calculating a
 spectrum of eigenvalues, hence the name.
 In this new space the points are arranged such that they are easier to cluster.
-
+%
 The theory behind the construction of the embedding space is a relaxation of criteria that would precisely
 separate disconnected subgraphs.
-This criteria can then be relaxed to permit some connection between subgraphs.
+This criteria can then be relaxed to permit some connections between subgraphs.
 An excellent description can be found in~\cite{luxburg2007spectraltutorial}, a short summary is given here.
 
-At the start we have a group of points with coordinates, which should be split into a \(c\) predetermined clusters.
-Applying the spectral method requires making these points into a graph.
+At the start we have a group of points with coordinates, which should be split into a  number \(c\) of predetermined clusters.
+Applying the spectral clustering method requires making these points into a graph.
 A simple way to do this would be to consider the points to be the nodes of a fully connected graph.
-The vertex of the graph joining node (point) \(i\) and \(j\) has weight \(a_{i, j}\) where
+The vertex of the graph joining node (or point) \(i\) and \(j\) has weight \(a_{i, j}\) where
 \begin{equation}
     a_{i, j}= 
     \begin{cases}
-        1, & \text{if points } i \text{ and } j \text{ are closer than } \delta \\
-        0,              & \text{otherwise}
+        1 & \text{if points } i \text{ and } j \text{ are closer than } \delta, \\
+        0              & \text{otherwise.}
     \end{cases}
     .
 \end{equation}
-
+%
 If points that should go in different clusters are always separated by more than \(\delta\),
 and points inside a cluster always have at least one neighbour closer than \(\delta\),
 then this describes a set of disconnected components, one for each cluster.
-
+%
 The initial aim is to identify which of the components each point belongs to,
 by sorting the graph into subgraphs, \(A_k\), where \(k=1 \dots c\).
-Minimizing the NCut objective is a function that captures this aim; 
+Minimising the NCut objective is a function that captures this aim, where 
 \begin{equation}
-    \text{NCut} = \sum_k\frac{W(A_k, \bar{A_k})}{|A_k|}
+    \text{NCut} = \sum_k\frac{W(A_k, \bar{A_k})}{|A_k|},
 \end{equation}\label{eqn:cost_function}
-Where \(W(A_k, \bar{A_k})\) is the sum of all the vertex weights that must be dropped
+where \(W(A_k, \bar{A_k})\) is the sum of all the vertex weights that must be dropped
 to separate the cluster \(A_k\) from the rest of the graph, \(\bar{A_k}\).
 So that \( W(A_k, \bar{A_k}) = \sum_{i \in A_k, j \in \bar{A_k}} a_{i, j} \).
 In the denominator \(|A_k|\) corresponds to the number of elements in \(A_k\).
 This denominator is used to penalise forming small clusters.
 
-In order to determine which point will go in which \(A_k\) a set of indicator vectors must be found.
-Membership of cluster \(A_k\) will be recorded in the indicator vector \(h_k\);
+In order to determine which point will go in which \(A_k\), a set of indicator vectors must be found.
+Membership of cluster \(A_k\) will be recorded in the indicator vector \(h_k\):
 \begin{equation}
     h_{i, k}= 
     \begin{cases}
-        1/\sqrt{|A_k|},& \text{if point } i \in A_k \\
-        0,              & \text{otherwise}
+        1/\sqrt{|A_k|}& \text{if point } i \in A_k ,\\
+        0             & \text{otherwise},
     \end{cases}
     .
 \end{equation}
 
-To find these indicator vectors the graph is represented by the graph Laplacian, a square
+To find these indicator vectors the graph is represented by the graph Laplacian, $L$, a square
 matrix with as many rows and columns as there are points.
-On \(i\)th diagonal it holds the value \(\sum_j a_{i, j}\),
+In the \(i\)$^{\rm th}$ diagonal it holds the value \(\sum_j a_{i, j}\),
 which is the degree of the vertex \(i\).
-Off the diagonal, in row\(i\) column \(j\), it has the negative of the vertex weight between \(i\) and \(j\), \(-a_{i, j}\).
+Off the diagonal, in row \(i\) and column \(j\), it has the negative of the vertex weight between \(i\) and \(j\), \(-a_{i, j}\),
 \begin{equation}\label{eqn:unnormed_laplacian}
     L = 
     \begin{pmatrix}
@@ -64,30 +64,29 @@ Off the diagonal, in row\(i\) column \(j\), it has the negative of the vertex we
         -a_{0,1} & z_1 & -a_{1,2} & \\
         -a_{0,2} & -a_{1,2} & z_2 & \\
         \vdots   &          &     & \ddots 
-    \end{pmatrix}
+    \end{pmatrix}.
 \end{equation}
 
-Notice that this is a real symmetric matrix,
-and therefore all its eigenvalues are real.
-Considering just one cluster, \(A_k\), when the Laplacian is multiplied by it's indicator vector,
+Notice that this is a real symmetric matrix
+and, therefore all its eigenvalues are real.
+Considering just one cluster, \(A_k\), when the Laplacian is multiplied by its indicator vector,
 the result is the term that NCut seeks to minimise for that cluster.
 \begin{equation}
     h_k'Lh_k = \frac{1}{|A_k|}\sum_{i \in A_k, j \in A_k} \left(\delta_{i, j}\sum_{l} a_{l, i} - a_{i, j} \right) = \frac{W(A_k, \bar{A_k})}{|A_k|}
 \end{equation}
-To obtain the sum of all the terms, stack the indicator vectors into a matrix;
-\begin{equation} h'_k L h_k = (H'L H)_{kk}\end{equation}
-and the NCut aim described earlier becomes the trace;
-\begin{equation} \text{NCut}(A_1,A_2, \dots A_n) \equiv \frac{1}{2} \sum_{i=1}^n \frac{W(A_i, \bar{A_i})}{|A_i|} = \text{Tr}(H'LH)\end{equation}
-Where \(H'H = I\).
+To obtain the sum of all the terms, stack the indicator vectors into a matrix,
+\begin{equation} h'_k L h_k = (H'L H)_{kk},\end{equation}
+and the NCut aim described earlier becomes the trace,
+\begin{equation} \text{NCut}(A_1,A_2, \dots A_n) \equiv \frac{1}{2} \sum_{i=1}^n \frac{W(A_i, \bar{A_i})}{|A_i|} = \text{Tr}(H'LH),\end{equation}
+where \(H'H = I\).
 Trace minimisation in this form is done
 by finding the eigenvectors of \(L\) with smallest 
 eigenvalues.
-Due to the form of the Laplacien, there will be an eigenvector with components of all the same value, and it's eigenvalue will be \(0\).
+Due to the form of the Laplacian, there will be an eigenvector with components all of the same value and its eigenvalue will be \(0\).
 This corresponds to the trivial solution of considering all points to be in one group.
 The next \(c\) eigenvectors of \(L\), sorted by smallest eigenvector, are the indicator vectors needed to allocate points to \(c\) clusters.
-
 Generalising this to a graph where the vertices can have weights other than \(1\) or \(0\)
-only requires relaxing the requirements on the form of the indicator vectors; \(h_k\).
+only requires relaxing the requirements on the form of the indicator vectors, \(h_k\).
 
 These indicator vectors are then used to determine position of the points in the embedding space.
 Each indicator vector has as many elements as there are points to be clustered,
@@ -97,15 +96,16 @@ so that we do not need to chose a predetermined number of clusters.
 This last step is not a relaxation of a well defined objective.
 
 \subsection{Distance in the embedding space}\label{sec:embedding_distance}
-Elements of the eigenvector indicate which points belong in the same group,
+Elements of the eigenvector indicate which points belong in the same group, although 
 they do not signify which points should be separated.
-This can be verified by looking at the cost function equation~\ref{eqn:cost_function},
+This can be verified by looking at the cost function in Eq.~(\ref{eqn:cost_function}),
 it has a term to penalise separating points that should be together, 
 but no term for joining points that should be separated.
-In many configurations indicator vectors will be indicating multiple groups.
-If the ideal grouping of some set was \(A_1\), \(A_2\) and \(A_3\)
-then;
+In many configurations, indicator vectors will be indicating multiple groups.
+If the ideal grouping of some set was \(A_1\), \(A_2\) and \(A_3\),
+then
 \begin{equation}
+\hspace*{-0.25truecm}
 \begin{aligned}
     \text{NCut}(A_1, A_2, A_3) = &
     \frac{W(A_1\cup A_2, A_3)}{|A_3|} + \frac{W(A_2\cup A_3, A_1)}{|A_1|} + \frac{W(A_1\cup A_3, A_2)}{|A_2|} \\
@@ -116,12 +116,12 @@ then;
 \end{equation}
 
 Note that this still uniquely determines the group for each point,
-however we do not expect one group per indicator vector, 
+however, we do not expect one group per indicator vector, 
 or in the relaxed case, eigenvector.
-Changes in magnitude between elements of the eigenvector would cause the euclidean distance between the corresponding points to grow,
-but as the eigenvector does not contain information about what should be separated this would be incorrect.
-An angular distance is appropriate. 
-The angular distance will grow when the eigenvectors indicating the point have less overlap,
+Changes in magnitude between elements of the eigenvector would cause the Euclidean distance between the corresponding points to grow
+but, as the eigenvector does not contain information about what should be separated, this would be incorrect.
+An angular distance is appropriate, though. 
+The angular distance will grow when the eigenvectors indicating the point have less overlap
 and this is what should be measured.
 
 \subsection{Information in the eigenvalues}\label{sec:eig_norm}
@@ -129,31 +129,31 @@ When the clusters in the data are very clear, the situation is closer to the ide
 The smaller an eigenvalue is, the more like a perfect indicator vector the corresponding eigenvector is.
 It is possible to make use of this information.
 
-In a traditional application of spectral clustering, the number of clustered desired, \(c\), is predetermined.
+In a traditional application of spectral clustering, the number of clusters desired, \(c\), is predetermined.
 The embedding space is created by taking \(c\) eigenvectors with smallest eigenvalues, excluding the trivial eigenvector.
 The embedding space then has \(c\) dimensions.
 This follows from a relaxation of the concept of indicator vectors.
 
-When forming jets we do not know at outset how many clusters to expect in the dataset,
+When forming jets we do not know from the outset how many clusters to expect in the dataset,
 so the number of eigenvectors to keep is not clear.
-While we could chose a fixed, arbitrary, number of eigenvectors, this is suboptimal.
+While we could chose a fixed, arbitrary number of eigenvectors, this is suboptimal.
 A better approach is to take all non-trivial eigenvectors corresponding to eigenvalues
 smaller than some limiting number, \(\lambda_\text{limit}\).
 For a symmetric matrix the eigenvalues will be \(0 < \lambda < 2\),
 so \(\lambda_\text{limit} = 0.5\) would be a reasonable choice.
-Then the number of dimensions in the embedding space will vary,
+Then, the number of dimensions in the embedding space will vary,
 according to the number of non-trivial eigenvectors with corresponding \(\lambda < \lambda_\text{limit}\).
 
 There is one more manipulation from the information in the eigenvalues.
 The dimensions of this embedding space are not of equal importance,
-ones with higher eigenvalues being less interesting.
+those with higher eigenvalues being less interesting.
 This can be accounted for by dividing the eigenvector by some power, \(\beta\), of the eigenvalue.
 
-Let the eigenvectors for which \(\lambda < \lambda_\text{limit}\);
+Let the eigenvectors for which \(\lambda < \lambda_\text{limit}\) be
 \begin{equation}
-    L_{i, j} (h_n)_j = \lambda_n (h_n)_i
+    L_{i, j} (h_n)_j = \lambda_n (h_n)_i.
 \end{equation}
-Then the coordinates of the \(j^\text{th}\) point in the \(c\) dimensional embedding space
+Then, the coordinates of the \(j^\text{th}\) point in the \(c\) dimensional embedding space
 become \(m_j = \left(\lambda_1^{-\beta} (h_1)_j, \dots \lambda_c^{-\beta} (h_c)_j,\right)\).
 In effect the \(n^\text{th}\) dimension is compressed by a factor \(\lambda_n^\beta\),
 so the larger \(\lambda_n\) the greater the compression.
@@ -162,19 +162,19 @@ so the larger \(\lambda_n\) the greater the compression.
 
 If a recursive algorithm is to be chosen, like in the \genkt{} algorithm, a stopping condition is needed.
 A stopping condition based on smallest distance between points in the embedding space does not prove to be stable,
-as the distribution  an number of dimensions in the embedding space changes sharply from event to event.
+as the distribution  in the number of dimensions in the embedding space changes sharply from event to event.
 
 The average distance between points is more stable.
-If this were used in physical space would force roughly the same number of clusters to form each time,
-however the variable number of dimensions in the embedding space is now an advantage.
-The more clear information found about clusters in the points, the more dimensions the embedding space will contain,
+If this were used in physical space it would force roughly the same number of clusters to form each time,
+however, the variable number of dimensions in the embedding space is now an advantage.
+The  clearer information found about clusters in the points the more dimensions the embedding space will contain,
 as described in section~\ref{sec:eig_norm}.
 
-Say the data contains two points that would form a good cluster.
+Say, the data contains two points that would form a good cluster.
 If those two points are combined into one, that cluster is complete,
-fewer clusters remain unfinished,
+fewer clusters remain unfinished
 and the information for clustering the resulting points will be reduced.
-When the embedding space is recalculated for the new points it will likely have fewer dimensions.
+When the embedding space is recalculated for the new points, it will likely have fewer dimensions.
 In a space with fewer dimensions the mean distance between the points naturally falls.
-Thus mean distance in the embedding space is a good indicator of the number of unfinished clusters available.
-Mean distance in the embedding space makes a natural cut-off.
+Thus, the mean distance in the embedding space is a good indicator of the number of unfinished clusters available.
+In short, the mean distance in the embedding space makes a natural cut-off.
