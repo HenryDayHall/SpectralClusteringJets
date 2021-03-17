@@ -218,15 +218,17 @@ causing the jet to have more mass than it should.
 The effects of these mistakes will cancel in the jet mass,
 but they are both still individually undesirable,
 so separate metrics are made for each of them.
-The first is ``Signal mass lost", the difference between the mass of the jets and the mass they would have had if all they contained all descendants of the object being reconstructed.
-The second is ``Background contamination", the difference between the mass of jets and the mass they would have if they did not contain anything but descendants of the objects being reconstructed.
-The standard algorithm for this process, the \antikt{} algorithm with \(\stoppingdeltar{}_{k_T}=0.8\), slightly prefers suppressing ``Signal mass lost" over ``Background contamination",
+The first is ``signal mass lost", the difference between the mass of the jets and the mass they would have had if all they contained all descendants of the object being reconstructed.
+The second is ``background contamination", the difference between the mass of jets and the mass they would have if they did not contain anything but descendants of the objects being reconstructed.
+When working with an \antikt{} algorithm increasing \ktstoppingdeltar{} will result in lower signal mass loss, in exchange for a higher background contamination.
+The standard choice for this process with \(\ktstoppingdeltar{}_{k_T}=0.8\), slightly prefers suppressing signal mass lost over background contamination,
 this leads to the clearest mass peaks.
 When the metrics are combined into a single ``Loss'' value, this is accounted for by weighting;
 \begin{equation}\label{eqn:loss}
 \text{Loss} = \sqrt{0.73\,(\text{Background contamination})^2 + (\text{Signal mass lost})^2}.
 \end{equation}
-{\textcolor{red}{Please explain the origin of that 0.73}}
+Where \(0.73\) is the weighting used to to account for the aforementioned preference for suppressing signal mass lost over background contamination.
+{\textcolor{red}{Please explain the origin of that 0.73}} {\textcolor{blue}{HADH improved?}}
 
 An example of this scan for the \genkt{} algorithm is given in Fig.~\ref{fig:scan_genkt}. 
 It can be seen that, while good results are possible with many values of the \(p_T\) exponent,
@@ -249,7 +251,8 @@ These slices have been chosen to include the best performing combination.
                 Here, the ``Loss'', as described in Eq.~(\ref{eqn:loss}), is shown for reasonable  parameter ranges chosen
                 either by convention (e.g., \(\alpha\) is typically \(1\) or \(2\))
                 or according to physical scales (e.g., $\sigma_v$ is of order \(0.1\)).
-                {\textcolor{red}{Please remove the equation next to the colour gauge and just leave Loss in horizontal}}
+                {\textcolor{red}{Please remove the equation next to the colour gauge and just leave Loss in horizontal}
+                \textcolor{blue}{HADH will do}}
              }\label{fig:scan_spectral}
     \end{figure}    
 
@@ -278,18 +281,17 @@ To evaluate the behaviour of the spectral clustering method four datasets are us
 
     \end{enumerate}
 
-    Using MadGraph~\cite{alwall_madgraph2011} to generate the partonic process and Pythia~\cite{sjostrand_pythia2015} to shower, ${\cal O}(10^5)$ of each of these processes are generated. {\textcolor{red}{Explain how the detector was simulated.}}
+    Using MadGraph~\cite{alwall_madgraph2011} to generate the partonic process and Pythia~\cite{sjostrand_pythia2015} to shower, ${\cal O}(10^5)$ of each of these processes are generated.
+    A full detector simulation is not used, instead, cuts on the particles are imposed to approximate detector resolution, as detailed below. 
+    {\textcolor{red}{Explain how the detector was simulated.}\textcolor{blue}{HADH does this work?}}
+    
     The Center-of-Mass (CM) energy used is \(\sqrt{s}=13 \) TeV.
 
-    The Higgs boson cascade datasets have the desirable property of creating \bthing{jets} with different kinematics: while in case 1 we may expect some slim  jets (as on average they are rather stationary, because of the small mass difference between $H_{125\,{\rm GeV}}$ and $H_{40\,{\rm GeV}}$)
-in case 2 we may see mainly fat jets (owing to the boost provided by the large mass difference between $H_{500\,{\rm GeV}}$ and $H_{125\,{\rm GeV}}$).
-In both cases we require 4 $b$-jet events. In case 3 we require 2 $b$-jets, 2 light-jets, one lepton and missing transverse energy.  In case 4, we require exactly 3 jets, whichever their composition.  {\textcolor{red}{Is this correct?}}
-
-
     Each event also contains (hard) Initial State Radiation (ISR) and soft QCD dynamics from beam remnants, i.e., the Soft Underlying Event (SUE).
+    There is no pileup or multiparton interactions in the datasets.
 %    ISR is other emissions from the quarks that create the signal process, such as radiated gluons.
 %    Beam remnants are emissions coming from the part of the proton that is not directly involved in creating the signal process.
-{\textcolor{red}{What about MPIs and pile-up?}}
+    {\textcolor{red}{What about MPIs and pile-up?}\textcolor{blue}{HADH we have neither}}
 
     Each of these datasets requires different cuts, both at the particle level, to simulate detector coverage, and at the jet level, to select the best reconstructed events.
     The cuts on each dataset are as follows.
@@ -324,6 +326,20 @@ In both cases we require 4 $b$-jet events. In case 3 we require 2 $b$-jets, 2 li
             issues of IR safety are emphasised at low \(p_T\),  to highlight this we abandon all \(p_T\) cuts.
 
     \end{enumerate}
+
+
+    The Higgs boson cascade datasets have the desirable property of creating \bthing{jets} with different kinematics: while in case 1 we may expect some slim  jets (as on average they are rather stationary, because of the small mass difference between $H_{125\,{\rm GeV}}$ and $H_{40\,{\rm GeV}}$)
+in case 2 we may see mainly fat jets (owing to the boost provided by the large mass difference between $H_{500\,{\rm GeV}}$ and $H_{125\,{\rm GeV}}$).
+%In both cases we require 4 $b$-jet events. In case 3 we require 2 $b$-jets, 2 light-jets, one lepton and missing transverse energy.  In case 4, we require exactly 3 jets, whichever their composition.
+Mass reconstruction requirements for the \underbar{Light Higgs} and \underbar{Heavy Higgs} follow the same logic.
+In order to reconstruct a Higgs decaying directly to a pair of \bthing{quarks}, we require a separate jet tagged by each \bthing{quark}, that is, two jets are required, each tagged by a \bthing{quark} from that Higgs.
+To reconstruct a Higgs that decays to a pair of child Higgs, we require both child Higgs have been reconstructed, that is, all four \bthing{jets} are found.
+In the case of the \underbar{Top} events, three masses can be reconstructed from jets, the hadronic \(W\), the ahdronic top and the leptonic top.
+The hadronic \(W\) is reconstructed if both of the quarks it decayed to have tagged jets, they are permitted to tag the same jet, so the hadronic \(W\) can be reconstructed from one or two jets.
+The hadronic top is reconstructed if the hadronic top is reconstructed and the \bthing{quark} from the hadronic top has tagged a jet, so the correct \bthing{jet} is required in addition to the requirements on the \(W\).
+The leptonic top is reconstructed if the \bthing{quark} from the top decay tags a jet, and the missing momentum calculation which reconstructs the leptonic \(W\) yields a real mass.
+If the missing mass calculation for the mass of the leptonic \(W\) yields two real masses, the one closes to the \(W\) mass is selected.
+{\textcolor{red}{Is this correct?}\textcolor{blue}{HADH it's a little different. I have also moved it after the particle and jet cuts, as it occurs afterwards.}}
 
 We now proceed to compare spectral to anti-$k_T$ clustering and we start from testing IR safety of the former, while this is a well-known feature of the latter. We will then move on to study Higgs boson and top quark events.
 
