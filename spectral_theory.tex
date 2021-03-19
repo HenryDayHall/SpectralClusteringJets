@@ -30,23 +30,23 @@ and points inside a cluster always have at least one neighbour closer than \(\de
 then this describes a set of disconnected components, one for each cluster.
 %
 The initial aim is to identify which of the components each point belongs to,
-by sorting the graph into subgraphs, \(A_k\), where \(k=1 \dots c\).
-Minimising the NCut objective is a function that captures this aim, where 
+by sorting the graph into subgraphs, \(G_k\), where \(k=1 \dots c\).
+Minimising the RatioCut objective is a function that captures this aim, where 
 \begin{equation}
-    \text{NCut} = \sum_k\frac{W(A_k, \bar{A_k})}{|A_k|},
+    \text{RatioCut} = \sum_k\frac{W(G_k, \bar{G_k})}{|G_k|},
 \end{equation}\label{eqn:cost_function}
-where \(W(A_k, \bar{A_k})\) is the sum of all the vertex weights that must be dropped
-to separate the cluster \(A_k\) from the rest of the graph, \(\bar{A_k}\).
-So that \( W(A_k, \bar{A_k}) = \sum_{i \in A_k, j \in \bar{A_k}} a_{i, j} \).
-In the denominator \(|A_k|\) corresponds to the number of elements in \(A_k\).
+where \(W(G_k, \bar{G_k})\) is the sum of all the vertex weights that must be dropped
+to separate the cluster \(G_k\) from the rest of the graph, \(\bar{G_k}\).
+So that \( W(G_k, \bar{G_k}) = \sum_{i \in G_k, j \in \bar{G_k}} a_{i, j} \).
+In the denominator \(|G_k|\) corresponds to the number of elements in \(G_k\).
 This denominator is used to penalise forming small clusters.
 
-In order to determine which point will go in which \(A_k\), a set of indicator vectors must be found.
-Membership of cluster \(A_k\) will be recorded in the indicator vector \(h_k\):
+In order to determine which point will go in which \(G_k\), a set of indicator vectors must be found.
+Membership of cluster \(G_k\) will be recorded in the indicator vector \(h_k\):
 \begin{equation}
     h_{i, k}= 
     \begin{cases}
-        1/\sqrt{|A_k|}& \text{if point } i \in A_k ,\\
+        1/\sqrt{|G_k|}& \text{if point } i \in G_k ,\\
         0             & \text{otherwise},
     \end{cases}
     .
@@ -60,24 +60,24 @@ Off the diagonal, in row \(i\) and column \(j\), it has the negative of the vert
 \begin{equation}\label{eqn:unnormed_laplacian}
     L = 
     \begin{pmatrix}
-        z_0 & -a_{0,1} & -a_{0,2} & \hdots \\
-        -a_{0,1} & z_1 & -a_{1,2} & \\
-        -a_{0,2} & -a_{1,2} & z_2 & \\
+        z_1 & -a_{1,2} & -a_{1,3} & \hdots \\
+        -a_{1,2} & z_2 & -a_{2,3} & \\
+        -a_{1,3} & -a_{2,3} & z_3 & \\
         \vdots   &          &     & \ddots 
     \end{pmatrix}.
 \end{equation}
 
 Notice that this is a real symmetric matrix
 and, therefore all its eigenvalues are real.
-Considering just one cluster, \(A_k\), when the Laplacian is multiplied by its indicator vector,
-the result is the term that NCut seeks to minimise for that cluster.
+Considering just one cluster, \(G_k\), when the Laplacian is multiplied by its indicator vector,
+the result is the term that RatioCut seeks to minimise for that cluster.
 \begin{equation}
-    h_k'Lh_k = \frac{1}{|A_k|}\sum_{i \in A_k, j \in A_k} \left(\delta_{i, j}\sum_{l} a_{l, i} - a_{i, j} \right) = \frac{W(A_k, \bar{A_k})}{|A_k|}
+    h_k'Lh_k = \frac{1}{|G_k|}\sum_{i \in G_k, j \in G_k} \left(\delta_{i, j}\sum_{l} a_{l, i} - a_{i, j} \right) = \frac{W(G_k, \bar{G_k})}{|G_k|}
 \end{equation}
 To obtain the sum of all the terms, stack the indicator vectors into a matrix,
 \begin{equation} h'_k L h_k = (H'L H)_{kk},\end{equation}
-and the NCut aim described earlier becomes the trace,
-\begin{equation} \text{NCut}(A_1,A_2, \dots A_n) \equiv \frac{1}{2} \sum_{i=1}^n \frac{W(A_i, \bar{A_i})}{|A_i|} = \text{Tr}(H'LH),\end{equation}
+and the RatioCut aim described earlier becomes the trace,
+\begin{equation} \text{RatioCut}(G_1,G_2, \dots G_n) \equiv \frac{1}{2} \sum_{k=1}^n \frac{W(G_k, \bar{G_k})}{|G_k|} = \text{Tr}(H'LH),\end{equation}
 where \(H'H = I\).
 Trace minimisation in this form is done
 by finding the eigenvectors of \(L\) with smallest 
@@ -91,35 +91,40 @@ only requires relaxing the requirements on the form of the indicator vectors, \(
 These indicator vectors are then used to determine position of the points in the embedding space.
 Each indicator vector has as many elements as there are points to be clustered,
 so the coordinates of a point are the corresponding elements or the indicator vectors.
+This is all the information the theory of spectral clustering provides.
+The steps required to make use of this information are not dictated by the theory,
+and they must be carefully selected to respect the physics.
+
 Using the positions in embedding space the points can be gathered agglomeratively,
 so that we do not need to chose a predetermined number of clusters.
-This last step is not a relaxation of a well defined objective.
 
 \subsection{Distance in the embedding space}\label{sec:embedding_distance}
-Elements of the eigenvector indicate which points belong in the same group, although 
-they do not signify which points should be separated.
-This can be verified by looking at the cost function in Eq.~(\ref{eqn:cost_function}),
-it has a term to penalise separating points that should be together, 
-but no term for joining points that should be separated.
-In many configurations, indicator vectors will be indicating multiple groups.
-If the ideal grouping of some set was \(A_1\), \(A_2\) and \(A_3\),
-then
-\begin{equation}
-\hspace*{-0.25truecm}
-\begin{aligned}
-    \text{NCut}(A_1, A_2, A_3) = &
-    \frac{W(A_1\cup A_2, A_3)}{|A_3|} + \frac{W(A_2\cup A_3, A_1)}{|A_1|} + \frac{W(A_1\cup A_3, A_2)}{|A_2|} \\
-    >& \\
-    \text{NCut}(A_1\cup A_2, A_2\cup A_3, A_1\cup A_3) =&
-    \frac{W(A_1\cup A_2, A_3)}{|A_1\cup A_2|} + \frac{W(A_2\cup A_3, A_1)}{|A_2\cup A_3|} + \frac{W(A_1\cup A_3, A_2)}{|A_1\cup A_3|} \\
-\end{aligned}
-\end{equation}
-
-Note that this still uniquely determines the group for each point,
-however, we do not expect one group per indicator vector, 
-or in the relaxed case, eigenvector.
-Changes in magnitude between elements of the eigenvector would cause the Euclidean distance between the corresponding points to grow
-but, as the eigenvector does not contain information about what should be separated, this would be incorrect.
+%Elements of the eigenvector indicate which points belong in the same group, although 
+%they do not signify which points should be separated.
+%This can be verified by looking at the cost function in Eq.~(\ref{eqn:cost_function}),
+%it has a term to penalise separating points that should be together, 
+%but no term for joining points that should be separated.
+%In many configurations, indicator vectors will be indicating multiple groups.
+%If the ideal grouping of some set was \(G_1\), \(G_2\) and \(G_3\),
+%then
+%\begin{equation}
+%\hspace*{-0.25truecm}
+%\begin{aligned}
+%    \text{RatioCut}(G_1, G_2, G_3) = &
+%    \frac{W(G_1\cup G_2, G_3)}{|G_3|} + \frac{W(G_2\cup G_3, G_1)}{|G_1|} + \frac{W(G_1\cup G_3, G_2)}{|G_2|} \\
+%    >& \\
+%    \text{RatioCut}(G_1\cup G_2, G_2\cup G_3, G_1\cup G_3) =&
+%    \frac{W(G_1\cup G_2, G_3)}{|G_1\cup G_2|} + \frac{W(G_2\cup G_3, G_1)}{|G_2\cup G_3|} + \frac{W(G_1\cup G_3, G_2)}{|G_1\cup G_3|} \\
+%\end{aligned}
+%\end{equation}
+%
+%Note that this still uniquely determines the group for each point,
+%however, we do not expect one group per indicator vector, 
+%or in the relaxed case, eigenvector.
+When the relaxed spectral clustering algorithm is used to create an embedding space, points in a group will not be at exactly the same coordinates.
+Each point can be seen as a vector, the direction of this vector indicates the group to which this point should be assigned.
+The magnitude indicates the confidence with which the assignment is made.
+Changes in magnitude cause the Euclidean distance between the corresponding points to grow.
 An angular distance is appropriate, though. 
 The angular distance will grow when the eigenvectors indicating the point have less overlap
 and this is what should be measured.
