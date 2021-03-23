@@ -21,78 +21,65 @@ summary is given here.
 At the start we have a group of points with coordinates, which should be split into a  number \(c\) of predetermined clusters.
 Applying the spectral clustering method requires making these points into a graph.
 A simple way to do this would be to consider the points to be the nodes of a fully connected graph.
-The vertex of the graph joining node (or point) \(i\) and \(j\) has weight \(a_{i, j}\) where
-\begin{equation}
-    a_{i, j}= 
-    \begin{cases}
-        1 & \text{if points } i \text{ and } j \text{ are closer than } \delta, \\
-        0              & \text{otherwise.}
-    \end{cases}
-    .
-\end{equation}
-%
-If points that should go in different clusters are always separated by more than \(\delta\),
-and points inside a cluster always have at least one neighbour closer than \(\delta\),
-then this describes a set of disconnected components, one for each cluster.
-%
+The vertex of the graph joining node (or point) \(i\) and \(j\) has weight \(a_{i, j}\),
+which should grow with the probability of \(i\) and \(j\) being in the same group.
+
 The initial aim is to identify which of the components each point belongs to,
 by sorting the graph into subgraphs, \(G_k\), where \(k=1 \dots c\).
-Minimising the RatioCut objective is a function that captures this aim, where 
+Minimising the NCut objective is a function that captures this aim, where 
 \begin{equation}
-    \text{RatioCut} = \sum_k\frac{W(G_k, \bar{G_k})}{|G_k|},
+    \text{NCut} = \frac{1}{2}\sum_k\frac{W(G_k, \bar{G_k})}{\text{vol}(G_k)},
 \end{equation}\label{eqn:cost_function}
 where \(W(G_k, \bar{G_k})\) is the sum of all the vertex weights that must be dropped
 to separate the cluster \(G_k\) from the rest of the graph, \(\bar{G_k}\).
 So that \( W(G_k, \bar{G_k}) = \sum_{i \in G_k, j \in \bar{G_k}} a_{i, j} \).
-In the denominator \(|G_k|\) corresponds to the number of elements in \(G_k\).
+In the denominator \(\text{vol}(G_k) = \sum_{i \in G_k} \sum_{j} a_{i, j}\),
+the sum of all affinities connecting to a point in \(G_k\).
 This denominator is used to penalise forming small clusters.
 
 In order to determine which point will go in which \(G_k\), a set of indicator vectors must be found.
 Membership of cluster \(G_k\) will be recorded in the indicator vector \(h_k\):
-\begin{equation}
+\begin{equation}\label{eqn:indicator}
     h_{i, k}= 
     \begin{cases}
-        1/\sqrt{|G_k|}& \text{if point } i \in G_k ,\\
+        1/\sqrt{\text{vol}(G_k)}& \text{if point } i \in G_k ,\\
         0             & \text{otherwise},
     \end{cases}
     .
 \end{equation}
 
-To find these indicator vectors the graph is represented by the graph Laplacian, $L$, a square
+To find these indicator vectors the graph is represented by the graph Laplacian, \(L\), a square
 matrix with as many rows and columns as there are points.
-In the \(i\)$^{\rm th}$ diagonal it holds the value \(\sum_j a_{i, j}\),
-which is the degree of the vertex \(i\).
-Off the diagonal, in row \(i\) and column \(j\), it has the negative of the vertex weight between \(i\) and \(j\), \(-a_{i, j}\),
-\begin{equation}\label{eqn:unnormed_laplacian}
-    L = 
-    \begin{pmatrix}
-        z_1 & -a_{1,2} & -a_{1,3} & \hdots \\
-        -a_{1,2} & z_2 & -a_{2,3} & \\
-        -a_{1,3} & -a_{2,3} & z_3 & \\
-        \vdots   &          &     & \ddots 
-    \end{pmatrix}.
+To construct this Laplacien we define two other matrices;
+an off diagonal matrix 
+\(A_{i, j} = (1 - \delta_{i, j})a_{i, j}\)
+and a diagonal matrix
+\(D_{i, j} = \delta_{i, j}\sum_q a_{i, q}\).
+Then the symmetric Laplacian can be simply written as;
+\begin{equation}\label{eqn:symmetric_laplacian}
+    L = D^{-\frac{1}{2}} (D - A) D^{-\frac{1}{2}}
 \end{equation}
 
 Notice that this is a real symmetric matrix
 and, therefore all its eigenvalues are real.
 Considering just one cluster, \(G_k\), when the Laplacian is multiplied by its indicator vector,
-the result is the term that RatioCut seeks to minimise for that cluster.
+the result is the term that NCut seeks to minimise for that cluster.
 \begin{equation}
-    h_k'Lh_k = \frac{1}{|G_k|}\sum_{i \in G_k, j \in G_k} \left(\delta_{i, j}\sum_{l} a_{l, i} - a_{i, j} \right) = \frac{W(G_k, \bar{G_k})}{|G_k|}
+    h_k'Lh_k = \frac{1}{\text{vol}(G_k)}\sum_{i \in G_k, j \in G_k} \left(\delta_{i, j}\sum_{l} a_{l, i} - a_{i, j} \right) = \frac{W(G_k, \bar{G_k})}{\text{vol}(G_k)}
 \end{equation}
 To obtain the sum of all the terms, stack the indicator vectors into a matrix,
-\begin{equation} h'_k L h_k = (H'L H)_{kk},\end{equation}
-and the RatioCut aim described earlier becomes the trace,
-\begin{equation} \text{RatioCut}(G_1,G_2, \dots G_n) \equiv \frac{1}{2} \sum_{k=1}^n \frac{W(G_k, \bar{G_k})}{|G_k|} = \text{Tr}(H'LH),\end{equation}
+\( h'_k L h_k = (H'L H)_{kk}\),
+and the NCut aim described earlier becomes the trace,
+\begin{equation} \text{NCut}(G_1,G_2, \dots G_n) \equiv \frac{1}{2} \sum_{k=1}^n \frac{W(G_k, \bar{G_k})}{\text{vol}(G_k)} = \text{Tr}(H'LH),\end{equation}
 where \(H'H = I\).
+This is still an NP hard problem, however if we relax the requirements made on \(h\) in Eqn.~\ref{eqn:indicator},
+allowing the elements of \(h\) to take arbitrary values, then the Rayleigh-Ritz theorem provides a solution.
 Trace minimisation in this form is done
 by finding the eigenvectors of \(L\) with smallest 
 eigenvalues.
 Due to the form of the Laplacian, there will be an eigenvector with components all of the same value and its eigenvalue will be \(0\).
 This corresponds to the trivial solution of considering all points to be in one group.
 The next \(c\) eigenvectors of \(L\), sorted by smallest eigenvector, are the indicator vectors needed to allocate points to \(c\) clusters.
-Generalising this to a graph where the vertices can have weights other than \(1\) or \(0\)
-only requires relaxing the requirements on the form of the indicator vectors, \(h_k\).
 
 These indicator vectors are then used to determine position of the points in the embedding space.
 Each indicator vector has as many elements as there are points to be clustered,

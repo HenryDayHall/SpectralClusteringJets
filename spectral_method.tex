@@ -16,20 +16,32 @@ Fourthly, the procedure for checking IR safety is described.
     \end{figure}    
 
 
-For clarity, note that the variable pseudorapidity is never used in this work,
-all references to rapidity should be understood as;
+For clarity, note that the variable pseudorapidity is never used
+{\color{magenta} in the algorithms proposed}; all references to rapidity $y$ correspond to
 \begin{equation}\label{eqn:rapidity}
-    y = \frac{1}{2} \text{ln}\frac{E + p_z}{E - p_z}
+    y = \frac{1}{2} \ln\frac{E + p_z}{E - p_z}.
 \end{equation}
 
+Besides rapidity, barrel angle, \(\phi\), is also used as a coordinate.
+The barrel angle is the angle of the particle in the plane perpendicular to the beam.
+Barrel angle and rapidity form an orthogonal coordinate system.
 
 \subsection{Spectral clustering algorithm}\label{sec:spectralmethodalgo}
-    For every simulated event the following process is used to identify the jets.
-    To begin with, relevant cuts are applied to the particles to simulate the detectors reconstruction capability.
+    For every simulated event the following process is used to identify the jets
+    \footnote{Code available at \url{https://github.com/HenryDayHall/jetTools}}.
+    To begin with, relevant cuts are applied to the particles to simulate the detector's
+    reconstruction capability.
     (These are described in detail in section~\ref{sec:particle_data}.)
     Then all particles are declared pseudojets  and given an index, \(j = 1 \dots n\), with no particular order.
-    The algorithm is recursive and agglomerative, hence, the first time 
-     step is labelled \(t=1\).
+    The algorithm is agglomerative, recursively selecting pairs of pseudojets to merge;
+    hence, the first iteration step is labelled \(t=1\).
+
+    When the two pseudojets to be merged, \(i\) and \(j\), have been identified they are combined
+    using the E-scheme.
+    The E-scheme forms a new pseudojet by summing the \(4\)-momentum of the two join pseudojets;
+    \(p(t+1)_l = p(t)_i + p(t)_j\).
+    The steps used to select two pseudojets to merge proceed as follows;
+
 
     \begin{enumerate}
         \item \label{step:start} The pseudojets are used to form the nodes of a graph,
@@ -37,99 +49,91 @@ all references to rapidity should be understood as;
         To obtain an affinity, first a distance is obtained.
         Between pseudojets \(i\) and \(j\) this would be \(d(t)_{i,j} = \sqrt{(y(t)_i - y(t)_j)^2 + (\phi(t)_i - \phi(t)_j)^2}\)
         where \(y(t)_j\) is the rapidity of pseudojet \(j\) at time step \(t\) and \(\phi(t)_j\) is the barrel angle, likewise for \(i\).
-        No \(p_T\) dependence is used.
+        No \(p_T\) dependence is used, as customary in many traditional jet clustering methods.
 
-    \item \label{step:affinity} The affinity must increase as pseudojets become more similar, whereas the distance will shrink.
-        This is done by taking an exponent so that \(a(t)_{i,j} = \text{exp}(-d(t)_{i,j}^\alpha/\sigma_v)\), as done in~\cite{hadjighasem2016votex}.
+    \item \label{step:affinity} The affinity must increase as pseudojets become more similar,
+        whereas the distance will shrink.
+        We chose \(a(t)_{i,j} = \text{exp}(-d(t)_{i,j}^\alpha/\sigma_v)\),
+        {\color{magenta}where $\alpha=2$ is the standard Gaussian kernel as
+        used in~\cite{BelkinNiyogi2003}}.
             Distances much larger than \(\sigma_v\) are only allowed very small affinities,
             thus less influence over the clustering.
 
-    \item\label{step:KNN} The affinity between pseudojets that are far apart contains less useful information, hence,
-        such pseudojets are unlikely to be good combinations.
+    \item\label{step:KNN} Pseudojets that are far apart have low affinity,
+        hence are unlikely to be good candidates for combination.
         Removing these affinities reduces noise.
     A fixed number, \(k_\text{NN}\), of neighbours of each pseudojet is 
     preserved while all other affinities are set to zero.
     Thus, in a group with more than \(k_\text{NN}\) pseudojets,
     each pseudojet has at least \(k_\text{NN}\) non-zero affinities with other pseudojets.
 
-\item\label{step:laplacean} These affinities allow the construction of a Laplacian.
-        The Laplacian used is the symmetric Laplacian, which is proportional to \(-a(t)_{i, j}\)
+\item\label{step:laplacean} These affinities allow the construction of the symmetric normalised
+        Laplacian; which is proportional to \(-a(t)_{i, j}\)
         in the \(i\)$^{\rm th}$ row and \(j\)$^{\rm th}$ column and exactly \(1\) on the diagonal.
         For ease of notation, let \(z(t)_j\) be a measure of the size a pseudojet \(j\) contributes to a cluster,
         with \(z(1)_j = \sum_k a_{i,k}\).
+        Then define square matrices \(A(t)_{i, j} = (1 - \delta_{i, j}) a(t)_{i, j}\) and \(Z(t)_{i, j} = \delta_{i, j} z(t)_i\)
         The Laplacian can now be written as
-    \begin{equation}\nonumber
-        L(t) = 
-        \begin{pmatrix}
-            z(t)_1      & 0   & 0  & \hdots \\
-            0     & z(t)_2 &    0     & \\
-            0     &    0     & z(t)_3 & \\
-            \vdots   &          &     & \ddots 
-        \end{pmatrix}^{-\frac{1}{2}}
-        \begin{pmatrix}
-            z(t)_1 & -a(t)_{1,2} & -a(t)_{1,3} & \hdots \\
-            -a(t)_{1,2} & z(t)_2 & -a(t)_{2,3} & \\
-            -a(t)_{1,3} & -a(t)_{2,3} & z(t)_3 & \\
-            \vdots   &          &     & \ddots 
-        \end{pmatrix}
-       \end{equation}
        \begin{equation}\label{eqn:Laplacian}
-      \hspace*{-5.1truecm}
-        \begin{pmatrix}
-            z(t)_1      & 0   & 0  & \hdots \\
-            0     & z(t)_2 &    0     & \\
-            0     &    0     & z(t)_3 & \\
-            \vdots   &          &     & \ddots 
-        \end{pmatrix}^{-\frac{1}{2}}.
-    \end{equation}
-        When two pseudojets are combined, instead of calculating \(z_j\) as the sum of the affinities of the combined pseudojet,
+        L(t) = Z(t)^{-\frac{1}{2}}(Z - A)Z(t)^{-\frac{1}{2}}
+       \end{equation}
+        After each step this Laplacian shrinks by one row and column.
+        When two pseudojets have been combined, instead of calculating \(z_j\) as the sum of the affinities of the combined pseudojet,
         the new \(z_j\) is the sum of the two previous \(z_j\)'s.
         For example, if pseudojets \(1\) and \(2\) from \(t=1\) are to be combined to make pseudojet \(1\) in \(t=2\),
         then \(z(2)_{1} = z(1)_1 + z(1)_2\) rather than the sum of affinities between the new pseudojet \(1\) and other pseudojets in step \(t=2\).
-        This condition is required for IR safety.  % TODO add some discussion/proof
+        This condition is seen to be required for IR safety. 
 
         As such, after the first time step, \(L\) will no longer be a proper graph Laplacian.
         Its rows and columns do not sum to zero.
-        However, this new \(L\) is a small perturbation from a proper Laplacian,
-        and so maintains similar behaviour.
+        However, this new \(L\) appears to maintains similar behaviour
+        to a propper Laplacian in the embedding space it creates.
 
-    \item \label{step:eigenvectors} From the Laplacian eigenvectors are calculated to create the embedding space and labelled with index \(q\):
+    \item \label{step:eigenvectors} The eigenvectors of $L(t)$, ($q$ the eigenvalue index)
             \begin{equation}
-                L(t)h_q(t) = \lambda_q(t) h_q(t).
+                L(t) h(t)_q = \lambda(t)_q h(t)_q,  \; q=1, \ldots, c
             \end{equation}
+            	are used to create the embedding of the pseudojets.
+            The eigenvector corrisponding to the smallest eigenvalue represents the trivial solution,
+            that places all points in the same cluster (see Sec.~\ref{sec:spectral_theory}).
             All non-trivial eigenvectors, corresponding
-            to an eigenvalue less that the eigenvalue limit, \(\lambda_q(t) < \lambda_\text{limit}\),
-            are retained.
-            Then the index runs over \(q = 1 \dots c\),
-            see section~\ref{sec:eig_norm}.
+            to eigenvalues less that an eigenvalue limit \(\lambda(t)_c < \lambda_\text{limit} < \lambda(t)_{c+1}\)
+            are retained. See section~\ref{sec:eig_norm}.
+            {NOTE: \color{magenta} Eigenvalues $0\leq \lambda(1)\leq 2$.
+            However, $\lambda(t)$ for $t>1$ are bounded but in a different range.} 
 
         \item \label{step:compression} A eigenvector is divided by the corresponding eigenvalue raised to \(\beta\).
             This acts to compress the dimensions that hold less information, again, see section~\ref{sec:eig_norm}.
             The embedding space can now be formed.
             The eigenvectors have as many elements as there are pseudojets and the coordinates of
             the \(j^\text{th}\) pseudojet at time step \(t\)
-            become \(m(t)_j = \left(\lambda_1(t)^{-\beta} h_1(t)_j, \dots \lambda_c(t)^{-\beta} h_c(t)_j\right)\).
+            are defined to be
+            \(m(t)_j = \left(\lambda_1(t)^{-\beta} h_1(t)_j, \dots \lambda_c(t)^{-\beta} h_c(t)_j\right)\).
             %The first embedding space of a clustering is shown in Fig.~\ref{fig:embedding_space_simple}.
 
         \item  A measure of distance between all pseudojets in the embedding space is calculated.
             In the embedding space angular distances are most appropriate (see section~\ref{sec:embedding_distance}):
             \begin{equation}
-                d'(t)_{i, j} = \text{arccos}\left|\frac{m(t)_i.m(t)_j}{{||m(t)_i||}_2 {||m(t)_j||}_2}\right|.
+                d'(t)_{i, j} = \arccos\left|\frac{m(t)_i\cdot m(t)_j}{\|m(t)_i\| \|m(t)_j\|}\right|.
             \end{equation}
+            where \(\|m\|\) is the (Euclidean) length of \(m\).
 
         \item\label{step:stoppingcondition}
 
             Provided the mean of this distance is less than \stoppingdeltar{}, that is,
             \begin{equation}
-                \frac{1}{c}\sum_{i\ne j} d'(t)_{i, j} < \stoppingdeltar{},
+                \frac{2}{c(c-1)}\sum_{i\ne j} d'(t)_{i, j} < \stoppingdeltar{},
             \end{equation}
             then the two pseudojets that have the smallest embedding distance are combined.
+            {\color{magenta} NOTE: there are $\frac{c(c-1)}{2}$ possible pairs, 
+            where \(c\) is the number of pseudojets remaining.}
             (Reasons for this stopping condition are given in section~\ref{sec:stopping_condintion}.)
-        The two pseudojets that have been combined are removed and replaced with one pseudojet.
+        
+            \sout{The two pseudojets that have been combined are removed and replaced with one pseudojet.
         In physical space the new pseudojet is created by summing the respective four-momenta of the removed pseudojets.
         Once two pseudojets have been combined in physical space, the embedding space is recalculated from step~\ref{step:start}, 
         to begin time step \(t+1\).
-        There will be one fewer row and column in the Laplacian of step \(t+1\).
+    There will be one fewer row and column in the Laplacian of step \(t+1\).}
      \end{enumerate}
     %  
     When the mean of the distances in the embedding space rises above \stoppingdeltar{},
@@ -154,29 +158,40 @@ The interpretation of these parameters is as follows.
     \item \(\sigma_v\): introduced in step~\ref{step:affinity}, this is a scale parameter in physical space.
                       The value indicates an approximate average distance for particles in the same shower,
                       or alternatively, the size of the neighbourhood of each particle.
-                      It is closely tied to the stopping parameter for the \genkt{} algorithm, \ktstoppingdeltar{},
+                      It is closely tied to the stopping parameter for the \genkt{} algorithm,
+                      \ktstoppingdeltar{},
                       they both relate to the width of the jets formed.
-                      It should take values on the same order of magnitude as \ktstoppingdeltar{}, i.e., of \(\mathcal{O} (0.1)\).
+                      It should take values on the same order of magnitude as \ktstoppingdeltar{},
+                      \sout{, i.e.,  of \(\mathcal{O} (0.1)\)}.
     \item  \(\alpha\): also introduced in step~\ref{step:affinity},
            this changes the shape of the distribution used to describe the neighbourhood of a particle.
-           Higher values make the probability of joining particles outside \(\sigma_v\) fall away faster.
-           Traditionally, the value used here is \(2\), like in a Gaussian distribution.
+           Higher values reduces the probability of joining particles outside \(\sigma_v\);
+           \(\alpha=2\) defines a Gaussian kernel.
        \item \(k_\text{NN}\): introduced in step~\ref{step:KNN}, this dictates the minimum number of non-zero affinities around each point.
            Lower values create a sparser affinity matrix, reducing noise at the potential cost of lost signal.
            Values above \(7\) are seen to have little impact.
        \item  \(\lambda_\text{limit}\): introduced in step~\ref{step:eigenvectors}, is a means of limiting the number of eigenvectors used
            to create dimensions in the embedding space.
            Only eigenvectors corresponding to eigenvalues less than \(\lambda_\text{limit}\) are used.
-           Thus, the number of dimensions in the embedding space can be increased with a larger \(\lambda_\text{limit}\),
-           however, as the eigenvalues will be influenced by the number of clear clusters available, 
+           Thus, the number of dimensions in the embedding space can be increased with a larger \(\lambda_\text{limit}\). 
+           However, as the eigenvalues will be influenced by the number of clear clusters available, 
            there will not be the same number of dimensions in each event.
            (This is discussed in section~\ref{sec:eig_norm}.)
-           For a symmetric Laplacian the eigenvalues are \(0 < \lambda < 2\),
-           so values of \(\mathcal{O} (0.1)\) are sensible choices.
+           For a symmetric Laplacian the eigenvalues are \(0 \leq \lambda_1 \leq \lambda_2 \leq \cdots \lambda_n \leq 2\),
+           {\color{magenta} and $\lambda_k$ is related to the quality of forming $k$
+           clusters \cite{LeeGharanTrevisan2014}},
+           so values of $\lambda_{\mathrm limit} < 1$ are sensible choices.
        \item  \(\beta\): introduced in step~\ref{step:compression}, it 
           accounts for variable quality of information in the eigenvectors, as given by their eigenvalues,
-        in such a way that the dimensions of the embedding spaces with lower quality information are compressed.
-        The larger the value of \(\beta\) the more dimensions with lower quality information are compressed.
+        in such a way that the dimensions of the embedding spaces 
+        {\color{magenta} corresponding to higher eigenvalues}
+        \sout{with lower quality information} are compressed.
+        \sout{The larger the value of \(\beta\) the more dimensions with
+        lower quality information are compressed.}
+        in such a way that the dimensions of the embedding spaces with lower
+        quality information are compressed.
+        The larger the value of \(\beta\) the more dimensions with
+        lower quality information are compressed.
         (This is discussed in section~\ref{sec:eig_norm}.)
 %        This is should be \(\mathcal{O}(1)\).
     \item \stoppingdeltar{}: is introduced in step~\ref{step:stoppingcondition}, it
@@ -251,9 +266,11 @@ These slices have been chosen to include the best performing combination.
 %
     As can be seen in Fig.~\ref{fig:scan_spectral}, the parameters choices  are not fine-tuned. That is, 
     unlike the \antikt{} algorithm, there is flexibility in all parameter choices. For example, it can be seen that some parameters, such as \(\alpha\), \(k_\text{NN}\), \(\beta\)
-                and \(\lambda_\text{limit}\) are relatively insensitive.
-                They give good results in a wide range of values.
-                Even when \stoppingdeltar{} and, especially, \(\sigma_v\) yield some large signal losses, say, for $R=1.22$ or 1.3 and $\sigma_v=0.05$, this happens is very narrow ranges.  For definiteness, the
+    and \(\lambda_\text{limit}\) are relatively {\color{magenta} unconstrained},
+    yielding  good results for a wide range of values.
+    Even when \stoppingdeltar{} and, especially, \(\sigma_v\) yield some large signal losses,
+    say, for $R=1.22$ or $1.3$ and $\sigma_v=0.05$, this happens is very narrow ranges. 
+    For definiteness, the
     parameters used in the remainder of this work are \(\alpha=2.\), \(k_\text{NN}=5\), \(\stoppingdeltar{} = 1.26\), \(\beta = 1.4\), \(\sigma_v = 0.15\) and \(\lambda_\text{limit} = 0.4\).
 \clearpage
     \begin{figure}[!t]
@@ -293,7 +310,7 @@ To evaluate the behaviour of the spectral clustering method four datasets are us
     \end{enumerate}
 
     Using MadGraph~\cite{alwall_madgraph2011} to generate the partonic process and Pythia~\cite{sjostrand_pythia2015} to shower, ${\cal O}(10^5)$ of each of these processes are generated.
-    A full detector simulation is not used, instead, cuts on the particles are imposed to approximate detector resolution, as detailed below. 
+    A full detector simulation is not used; instead, cuts on the particles are imposed to approximate detector resolution, as detailed below. 
     {\textcolor{red}{Explain how the detector was simulated.}\textcolor{blue}{H. does this work?}}
     
     The Center-of-Mass (CM) energy used is \(\sqrt{s}=13 \) TeV.
@@ -328,7 +345,7 @@ To evaluate the behaviour of the spectral clustering method four datasets are us
             If the lepton  is a muon then its \(p_T\) must be \(>  55\) GeV.
             If the lepton  is an electron and it is isolated (as defined in~\cite{Sirunyan_2018}) then its \(p_T\) must be \(> 55\) GeV, if it is not isolated then \(p_T > 120\) GeV.
             The reconstructed jets must have \(p_T > 30\) and \(|\eta|< 2.4\).
-            Finally, the lepton must be seperated from the closest jet by at least
+            Finally, the lepton must be separated from the closest jet by at least
             \(\sqrt{\Delta\eta^2 + \Delta \phi^2} > 0.4\) or
             \(p_{T}^{\text{relative}} > 40\) GeV.
             These cuts are copied from~\cite{Sirunyan_2020}.
@@ -344,9 +361,13 @@ in case 2 we may see mainly fat jets (owing to the boost provided by the large m
 %In both cases we require 4 $b$-jet events. In case 3 we require 2 $b$-jets, 2 light-jets, one lepton and missing transverse energy.  In case 4, we require exactly 3 jets, whichever their composition.
 Mass reconstruction requirements for the \underbar{Light Higgs} and \underbar{Heavy Higgs} follow the same logic.
 In order to reconstruct a Higgs decaying directly to a pair of \bthing{quarks}, we require a separate jet tagged by each \bthing{quark}, that is, two jets are required, each tagged by a \bthing{quark} from that Higgs.
-To reconstruct a Higgs that decays to a pair of child Higgs, we require both child Higgs have been reconstructed, that is, all four \bthing{jets} are found.
-In the case of the \underbar{Top} events, three masses can be reconstructed from jets, the hadronic \(W\), the ahdronic top and the leptonic top.
-The hadronic \(W\) is reconstructed if both of the quarks it decayed to have tagged jets, they are permitted to tag the same jet, so the hadronic \(W\) can be reconstructed from one or two jets.
+To reconstruct a Higgs that decays to a pair of child Higgs particles,
+we require both child Higgs bosons have been reconstructed,
+that is, all four \bthing{jets} are found.
+In the case of the \underbar{Top} events
+three masses can be reconstructed from jets, the hadronic \(W\),
+the hadronic top and the leptonic top.
+The hadronic \(W\) is reconstructed if both of the quarks it decayed to have tagged jets; they are permitted to tag the same jet, so the hadronic \(W\) can be reconstructed from one or two jets.
 The hadronic top is reconstructed if the hadronic top is reconstructed and the \bthing{quark} from the hadronic top has tagged a jet, so the correct \bthing{jet} is required in addition to the requirements on the \(W\).
 The leptonic top is reconstructed if the \bthing{quark} from the top decay tags a jet, and the missing momentum calculation which reconstructs the leptonic \(W\) yields a real mass.
 If the missing mass calculation for the mass of the leptonic \(W\) yields two real masses, the one closes to the \(W\) mass is selected.

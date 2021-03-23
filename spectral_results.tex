@@ -157,18 +157,19 @@ However, it is crucial to have such a verification in data, as we have done.
 
 \subsection{Mass peak reconstruction}
 In this section, the \antikt{} algorithm setups with jet radius \(\ktstoppingdeltar{} = 0.4\) and \(\ktstoppingdeltar{} = 0.8\)
-are compared to the \spectral{} algorithm specified in section~\ref{sec:spectralmethodparam}. The jets are tagged using MC truth.
+are compared to the \spectral{} algorithm specified in section~\ref{sec:spectralmethodparam}.
+The jets are tagged using MC truth.
 Each of the \bthing{quarks} created by a signal particle (either a Higgs boson or a top (anti)quark)
 tag the closest jet (by using the distance metric \(\sqrt{(y_\text{quark tag} - y_\text{jet})^2 + (\phi_\text{quark tag} - \phi_\text{jet})^2}\)
 {\textcolor{red}{Do you really mean rapidity here or pseudorapidity? This needs to be clarified throughout as the two are not the same for massive objects} \textcolor{blue}{H. it is always rapidity, pesudorapidity is never used in this work, is Eqn~\ref{eqn:rapidity} alright?}})
-provided that the separation between the jet and the tag is no greater than \(0.8\) according to the distance metric {\textcolor{red}{The sentence is unclear} \textcolor{blue}{improved?}}.
+provided that the separation between the jet and the quark is no greater than \(0.8\) according to the distance metric {\textcolor{red}{The sentence is unclear} \textcolor{blue}{improved?}}.
 In the case of a \(W^\pm\) decay, whatever quarks decay from the \(W^\pm\), which may be light quarks or \bthing{quarks}, are used to tag jets in the same way.
 From this point on, only jets tagged this way are considered {\textcolor{red}{What about light jets from $W^\pm$ decays?} \textcolor{blue}{Good point. Fixed.}}.
 
 
 Firstly, jet multiplicities, that is number of reconstructed jets found per event, are given for both anti-$k_T$ and spectral clustering algorithms.
 These can be seen for the first three datasets described in section~\ref{sec:particle_data} in Fig.~\ref{fig:multiplicity}. Herein, it
- is seen that \spectral{} clustering produces the best multiplicity (i.e., 4 jets) for light Higgs events while for 
+ is seen that \spectral{} clustering produces the best multiplicity (i.e., most events where 4 jets are found) for light Higgs events while for 
          the heavy Higgs and top MC samples  
         it creates a multiplicity closer to that of \antikt{} with \(\ktstoppingdeltar{} = 0.4\) 
         than \(\ktstoppingdeltar{} = 0.8\), the first of these being the best performer of the two. As a result of this study, we remark upon the adaptability of spectral clustering to the different final states without requiring adjusting its parameters, unlike the anti-$k_T$ one. The latter may seem to indicate that 0.4 is the best choice for all datasets, but this is in tension with the fact that different masses from different datasets do require the  anti-$k_T$ algorithm to be adjusted, as we shall now see. 
