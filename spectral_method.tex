@@ -229,14 +229,16 @@ but they are both still individually undesirable,
 so separate metrics are made for each of them.
 The first is ``signal mass lost", the difference between the mass of the jets and the mass they would have had if all they contained all descendants of the object being reconstructed.
 The second is ``background contamination", the difference between the mass of jets and the mass they would have if they did not contain anything but descendants of the objects being reconstructed.
-When working with an \antikt{} algorithm increasing \ktstoppingdeltar{} will result in lower signal mass loss, in exchange for a higher background contamination.
-The standard choice for this process with \(\ktstoppingdeltar{}_{k_T}=0.8\), slightly prefers suppressing signal mass lost over background contamination,
-this leads to the clearest mass peaks.
-When the metrics are combined into a single ``Loss'' value, this is accounted for by weighting;
+A loss function is constructed as a weighted euclidean combination of these two;
 \begin{equation}\label{eqn:loss}
-\text{Loss} = \sqrt{0.73\,(\text{Background contamination})^2 + (\text{Signal mass lost})^2}.
+\text{Loss} = \sqrt{w\,(\text{Background contamination})^2 + (\text{Signal mass lost})^2}.
 \end{equation}
-Where \(0.73\) is the weighting used to to account for the aforementioned preference for suppressing signal mass lost over background contamination.
+Where \(w\) is a weighting used to alter the preference for suppressing signal mass lost verses reducing background contamination.
+When applying an \antikt{} algorithm, increasing \ktstoppingdeltar{} will result in lower signal mass loss, in exchange for a higher background contamination.
+The standard choice for this process is \(\ktstoppingdeltar{}=0.8\).
+This value of \ktstoppingdeltar{} slightly prefers suppressing signal mass lost over background contamination,
+to create the clearest mass peaks.
+To make the loss reflect this we chose \(w = 0.73\).
 {\textcolor{red}{Please explain the origin of that 0.73}} {\textcolor{blue}{H. improved?}}
 
 An example of this scan for the \genkt{} algorithm is given in Fig.~\ref{fig:scan_genkt}. 
