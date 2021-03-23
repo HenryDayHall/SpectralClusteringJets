@@ -11,29 +11,20 @@ Agglomerative algorithms are easier to design in a manner that is infrared safe,
 as collinear particles tend to combine early due to their small angle while
  soft particles tend to combine with hard particles rather than combining  among themselves.
 
-{\color{magenta}  Jet definition precedes further algorithmic methods to extract useful
+Jet definition precedes further algorithmic methods to extract useful
 physical quantities. Finding an alternative clustering method that compares favourably to
 these popular jet algorithms and which offer additional features for further analysis is a
 useful goal. Success in obtaining clusters based on informative transformations of the data
 offers the possibility of exploiting such representations.
 In this paper, we use Laplacian eigenmaps \cite{BelkinNiyogi2003} to represent the particles
 in an event, a procedure employed in applications such as image segmentation \cite{ShiMalik1997}
-and called spectral clustering \cite{NgJordanWeiss2002}.}
+and called spectral clustering \cite{NgJordanWeiss2002}.
 Spectral clustering has had success also in other physics contexts, such as to identify the motion
 of vortices~\cite{hadjighasem2016votex} in fluid dynamics and determining the correct number of clusters.
 Furthermore, to reduce the risk of blackouts, power grids may be subdivided into `islands',
 which are
 electromechanically stable regions with minimum load shedding.
-The ideal location of such islands is found by minimising the power flow between them using spectral clustering {\color{magenta}as shown in~\cite{Li2005}.  A hierarchical, agglomerative algorithm for the same was introduced} in~\cite{fennelly2014power} \sout{that spectral clustering
-can produce a good solution in less time than other algorithms commonly used for such a problem (e.g., those using combinatorial optimisation approaches)}. {\color{magenta} This agglomerative approach is what we show to be suitable for the context of jet physics in this paper.} 
-
-%Adaptive spectral clustering with application to tripeptide conformation analysis~\cite{haack2013AdaptiveSC}.  %TODO
-
-
-\sout{To our knowledge a spectral clustering algorithm has not yet been applied to the
-    definition of jets, %TODO - double check.
-however, given its recursive and agglomerative form, we will show that it is indeed suitable to such a physics context. However, we 
-mention already that ours is a non-standard approach to spectral clustering. In fact, while the embedding step relaxes an optimisation objective 
-the agglomerative step does not (this is described in depth later on).}
+The ideal location of such islands is found by minimising the power flow between them using spectral clustering as shown in~\cite{Li2005}.  A hierarchical, agglomerative algorithm for the same was introduced in~\cite{fennelly2014power}.
+This agglomerative approach is what we show to be suitable for the context of jet physics in this paper.
 
 The plan of this paper is as follows. In the next section, we will introduce the fundamentals of the theory of spectral clustering. In the following one, we will describe the details of the specific method that we have applied. The numerical results will then follow. Finally, we will draw our conclusions. 

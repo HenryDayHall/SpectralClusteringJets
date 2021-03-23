@@ -1,20 +1,19 @@
 \section{Theory of spectral clustering}\label{sec:spectral_theory}
 
-{\color{magenta} Collimated emissions of particles are clustered by jet algorithms.  A
+Collimated emissions of particles are clustered by jet algorithms.  A
 representation of observable particles that preserves and accentuates local information
 motivates the Laplacian eigenmap~\cite{BelkinNiyogi2003} and spectral
-clustering~\cite{NgJordanWeiss2002}.}  
+clustering~\cite{NgJordanWeiss2002}.
 Spectral clustering is a method by which a set of points are represented in a new space,
 called the embedding space, in which they can be easily clustered.  Coordinates of the
 points in the embedding space are expressed in terms of the eigenvectors and eigenvalues
 of an associated Laplacian matrix, hence the name.
 
-%
-{\color{magenta} The particles in an event are described first as nodes of a graph and
-edges capturing a notion of similarity between them.}  The theory behind the
+The particles in an event are described first as nodes of a graph and
+edges capturing a notion of similarity between them.
+The theory behind the
 construction of the embedding space is a relaxation of criteria that would precisely
 partition nodes into separate disconnected subgraphs.
-\sout{This criteria can then be relaxed to permit some connections between subgraphs.}
 An excellent description can be found in~\cite{luxburg2007spectraltutorial}; a short
 summary is given here.
 
@@ -92,28 +91,6 @@ Using the positions in embedding space the points can be gathered agglomerativel
 so that we do not need to chose a predetermined number of clusters.
 
 \subsection{Distance in the embedding space}\label{sec:embedding_distance}
-%Elements of the eigenvector indicate which points belong in the same group, although 
-%they do not signify which points should be separated.
-%This can be verified by looking at the cost function in Eq.~(\ref{eqn:cost_function}),
-%it has a term to penalise separating points that should be together, 
-%but no term for joining points that should be separated.
-%In many configurations, indicator vectors will be indicating multiple groups.
-%If the ideal grouping of some set was \(G_1\), \(G_2\) and \(G_3\),
-%then
-%\begin{equation}
-%\hspace*{-0.25truecm}
-%\begin{aligned}
-%    \text{RatioCut}(G_1, G_2, G_3) = &
-%    \frac{W(G_1\cup G_2, G_3)}{|G_3|} + \frac{W(G_2\cup G_3, G_1)}{|G_1|} + \frac{W(G_1\cup G_3, G_2)}{|G_2|} \\
-%    >& \\
-%    \text{RatioCut}(G_1\cup G_2, G_2\cup G_3, G_1\cup G_3) =&
-%    \frac{W(G_1\cup G_2, G_3)}{|G_1\cup G_2|} + \frac{W(G_2\cup G_3, G_1)}{|G_2\cup G_3|} + \frac{W(G_1\cup G_3, G_2)}{|G_1\cup G_3|} \\
-%\end{aligned}
-%\end{equation}
-%
-%Note that this still uniquely determines the group for each point,
-%however, we do not expect one group per indicator vector, 
-%or in the relaxed case, eigenvector.
 When the relaxed spectral clustering algorithm is used to create an embedding space, points in a group will not be at exactly the same coordinates.
 Each point can be seen as a vector, the direction of this vector indicates the group to which this point should be assigned.
 The magnitude indicates the confidence with which the assignment is made.
