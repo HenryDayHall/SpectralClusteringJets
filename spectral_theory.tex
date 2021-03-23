@@ -1,16 +1,22 @@
 \section{Theory of spectral clustering}\label{sec:spectral_theory}
 
+{\color{magenta} Collimated emissions of particles are clustered by jet algorithms.  A
+representation of observable particles that preserves and accentuates local information
+motivates the Laplacian eigenmap~\cite{BelkinNiyogi2003} and spectral
+clustering~\cite{NgJordanWeiss2002}.}  
 Spectral clustering is a method by which a set of points are represented in a new space,
-in which they can be easily clustered.
-This space is called the embedding space.
-Locations of the points in the embedding space are determined by calculating a
-spectrum of eigenvalues, hence the name.
-In this new space the points are arranged such that they are easier to cluster.
+called the embedding space, in which they can be easily clustered.  Coordinates of the
+points in the embedding space are expressed in terms of the eigenvectors and eigenvalues
+of an associated Laplacian matrix, hence the name.
+
 %
-The theory behind the construction of the embedding space is a relaxation of criteria that would precisely
-separate disconnected subgraphs.
-This criteria can then be relaxed to permit some connections between subgraphs.
-An excellent description can be found in~\cite{luxburg2007spectraltutorial}, a short summary is given here.
+{\color{magenta} The particles in an event are described first as nodes of a graph and
+edges capturing a notion of similarity between them.}  The theory behind the
+construction of the embedding space is a relaxation of criteria that would precisely
+partition nodes into separate disconnected subgraphs.
+\sout{This criteria can then be relaxed to permit some connections between subgraphs.}
+An excellent description can be found in~\cite{luxburg2007spectraltutorial}; a short
+summary is given here.
 
 At the start we have a group of points with coordinates, which should be split into a  number \(c\) of predetermined clusters.
 Applying the spectral clustering method requires making these points into a graph.
