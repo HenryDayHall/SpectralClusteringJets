@@ -56,7 +56,7 @@ Barrel angle and rapidity form an orthogonal coordinate system.
         whereas the distance will shrink.
         We chose \(a(t)_{i,j} = \text{exp}(-d(t)_{i,j}^\alpha/\sigma_v)\),
         where $\alpha=2$ is the standard Gaussian kernel as
-        used in~\cite{BelkinNiyogi2003}.
+        used in~\cite{Belkin:2003_unfound4}.
             Distances much larger than \(\sigma_v\) are only allowed very small affinities,
             thus less influence over the clustering.
 
@@ -175,7 +175,7 @@ The interpretation of these parameters is as follows.
            (This is discussed in section~\ref{sec:eig_norm}.)
            For a symmetric Laplacian the eigenvalues are \(0 \leq \lambda_1 \leq \lambda_2 \leq \cdots \lambda_n \leq 2\),
            and \(\lambda_k\) is related to the quality of forming \(k\)
-           clusters \cite{LeeGharanTrevisan2014},
+           clusters \cite{JamesRLee:2014_unfound736},
            so values of $\lambda_{\mathrm limit} < 1$ are sensible choices.
        \item  \(\beta\): introduced in step~\ref{step:compression}, it 
           accounts for variable quality of information in the eigenvectors, as given by their eigenvalues,
@@ -294,7 +294,7 @@ To evaluate the behaviour of the spectral clustering method four datasets are us
 
     \end{enumerate}
 
-    Using MadGraph~\cite{alwall_madgraph2011} to generate the partonic process and Pythia~\cite{sjostrand_pythia2015} to shower, ${\cal O}(10^5)$ of each of these processes are generated.
+    Using MadGraph~\cite{Alwall:2011uj} to generate the partonic process and Pythia~\cite{Sjostrand:2014zea} to shower, ${\cal O}(10^5)$ of each of these processes are generated.
     A full detector simulation is not used; instead, cuts on the particles are imposed to approximate detector resolution, as detailed below. 
     
     The Center-of-Mass (CM) energy used is \(\sqrt{s}=13 \) TeV.
@@ -323,12 +323,12 @@ To evaluate the behaviour of the spectral clustering method four datasets are us
             the neutrino.
             The lepton in the event must have  \(|\eta|< 2.4\).
             If the lepton  is a muon then its \(p_T\) must be \(>  55\) GeV.
-            If the lepton  is an electron and it is isolated (as defined in~\cite{Sirunyan_2018}) then its \(p_T\) must be \(> 55\) GeV, if it is not isolated then \(p_T > 120\) GeV.
+            If the lepton  is an electron and it is isolated (as defined in~\cite{Sirunyan:2018fpa}) then its \(p_T\) must be \(> 55\) GeV, if it is not isolated then \(p_T > 120\) GeV.
             The reconstructed jets must have \(p_T > 30\) and \(|\eta|< 2.4\).
             Finally, the lepton must be separated from the closest jet by at least
             \(\sqrt{\Delta\eta^2 + \Delta \phi^2} > 0.4\) or
             \(p_{T}^{\text{relative}} > 40\) GeV.
-            These cuts are copied from~\cite{Sirunyan_2020}.
+            These cuts are copied from~\cite{Sirunyan:2019rfa}.
         \item The only restriction on the particles is that the rapidity must be \(< 2.5\).
             There are no cuts on the jets. While unrealistic, since 
             issues of IR safety are emphasised at low \(p_T\),  to highlight this we abandon all \(p_T\) cuts.
@@ -366,7 +366,7 @@ We now proceed to compare spectral to anti-$k_T$ clustering and we start from te
     that is, a particular selection of clustering parameters,
     would allow a comparison that would highlight any differences caused by IR sensitivity.
     This will be done for illustrative purposes,
-    however, even an IR unsafe algorithm, such as the iterative cone one~\cite{cacciari_antikt2018},
+    however, even an IR unsafe algorithm, such as the iterative cone one~\cite{Cacciari:2008gp},
      has some configurations for which these singularities are avoided.
 
     To provide a more global view, a scan of parameter configurations must be compared.
@@ -374,10 +374,10 @@ We now proceed to compare spectral to anti-$k_T$ clustering and we start from te
     will be found.
     It would be cumbersome to compare all these jet mass spectrum by eye, however.
     Instead, we introduce a summary statistic representing the divergence between two distributions,
-    the Jensen-Shannon score~\cite{jensen_shannon}.
+    the Jensen-Shannon score~\cite{Lin:1991zzm}.
 
     The Jensen-Shannon score is a value computed between two distributions that increases in magnitude the more these distributions differ.
-    It is a symmetrised variant of the Kullback-Leibler divergence~\cite{jensen_shannon}.
+    It is a symmetrised variant of the Kullback-Leibler divergence~\cite{Lin:1991zzm}.
     The Kullback-Leibler divergence between probability densities \(p\) and \(q\) can be written as
     \begin{equation}
     D_\text{KL} (p | q) = \int^{\infty}_{-\infty} p(x) \log\left(\frac{p(x)}{q(x)}\right) dx,
