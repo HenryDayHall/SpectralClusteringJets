@@ -38,9 +38,6 @@ It can be seen in this figure that little difference exists between \genkt{} and
              Algorithms where configured (i.e., settings of \stoppingdeltar{})
              to give sensible results on
              this dataset, therefore distributions may not represent worst case scenarios.
-             %Looking at these graphs it is not immediately clear that the \genkt{}
-             %algorithm is IR safe and the Iterative Cone algorithm is unsafe, 
-         %much less what the status of Spectral clustering is.
          }\label{fig:IRC_singles2}
 \end{figure}    
 
@@ -134,7 +131,7 @@ is comparable to that of anti-$k_T$ with jet radius 0.8 and is clearly better th
 
 
 \begin{figure}[htp]
-    \includegraphics[width=1.\textwidth]{graphics/mass_peaks/light_long_correct_lines}
+    \includegraphics[width=1.\textwidth]{graphics/mass_peaks/light_long_correct_lines.pdf}
     \caption{Three mass selections are plotted for the light Higgs dataset. From left to right we show: the invariant mass of the 4 $b$-jet system, of the 2 $b$-jet system with heaviest invariant mass and of the 2 $b$-jet system with lightest invariant mass (as defined in the text).   Three jet clustering combinations are plotted as detailed in the legend.
         The spectral clustering algorithm is consistently the best performer in terms of the narrowest peaks being reconstructed and comparable to \antikt{} with \(\ktstoppingdeltar{} = 0.8\) in terms of its shift from the true Higgs mass values, with \antikt{} with \(\ktstoppingdeltar{} = 0.4\) always being the outlier. 
     }\label{fig:best_correct_h_allocation}
@@ -159,7 +156,7 @@ while the multiplicity of \antikt{} with \(\ktstoppingdeltar{} = 0.4\) is a litt
 \begin{figure}[htp]
     \includegraphics[width=1.\textwidth]{graphics/mass_peaks/top_long_correct_lines}
     \caption{Three mass selections are plotted for the top dataset. From left to right we show: the invariant mass of the light jet system, of the reconstructed leptonic $W^\pm$ (as  described in the text) combined with a $b$-jet and of the hadronic $W^\pm$ combined with the other $b$-jet. Three jet clustering combinations are plotted as detailed in the legend.
-The spectral clustering algorithm  consistently outperforms the  anti-$k_T$ one with jet radius 0.8 and is slightly worse than the anti-$k_T$ one with jet radius 0.4, but only in tems of sharpness, not location.
+The spectral clustering algorithm  consistently outperforms the  anti-$k_T$ one with jet radius 0.8 and is slightly worse than the anti-$k_T$ one with jet radius 0.4, but only in terms of sharpness, not location.
     }\label{fig:top_correct_mass_peaks}
 \end{figure}    
 

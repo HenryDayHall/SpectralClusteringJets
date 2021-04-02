@@ -1,47 +1,78 @@
 \section{Theory of spectral clustering}\label{sec:spectral_theory}
-
-Collimated emissions of particles are clustered by jet algorithms.  A
-representation of observable particles that preserves and accentuates local information
+% These sentences unclear.
+Gathering collimated emissions of particles is the target of jet formation,
+thus jet formation must be decided by localised information.
+A representation of observable particles that preserves and accentuates local information
 motivates the Laplacian eigenmap~\cite{Belkin:2003_unfound4} and spectral
-clustering~\cite{Ng:2001_unfound543}.
+clustering~\cite{Ng:2001_unfound543},
+and so these are suitable tools for jet formation.
+An excellent description of the theory behind spectral clustering
+can be found in~\cite{UlrikevonLuxburg:2007_unfound52}; a short
+summary is given in this section.
+
+% clarify with;
+% Spectral clustering works on the basis of local information and this si why we chose to explore this represntation
+% clarity approch;
+% we use the eigenmap from spectral clustering in an algorithm.
+% define Laplacian eigenmap
 Spectral clustering is a method by which a set of points are represented in a new space,
-called the embedding space, in which they can be easily clustered.  Coordinates of the
+called the embedding space, in which they can be easily clustered.
+Coordinates of the
 points in the embedding space are expressed in terms of the eigenvectors and eigenvalues
 of an associated Laplacian matrix, hence the name.
 
-The particles in an event are described first as nodes of a graph and
-edges capturing a notion of similarity between them.
-The theory behind the
-construction of the embedding space is a relaxation of criteria that would precisely
-partition nodes into separate disconnected subgraphs.
-An excellent description can be found in~\cite{UlrikevonLuxburg:2007_unfound52}; a short
-summary is given here.
+% define graph, edge and node, vertex
+Input data for spectral clustering must be given as a graph,
+which is a set of nodes, in this care representing the particles,
+and edges which join nodes together, representing relationship between particles.
+Not all nodes must be connected by edges, 
+but for simplicity we begin with a fully connected graph.
+The edges may be weighted, that is a positive number is associated with the edge,
+called an affinity.
+Affinity represents degree of belief that the nodes connected by the edge should go in the same group,
+for jet clustering this will be a degree of belief that the particles came from the same shower.
 
-At the start we have a group of points with coordinates, which should be split into a  number \(c\) of predetermined clusters.
-Applying the spectral clustering method requires making these points into a graph.
-A simple way to do this would be to consider the points to be the nodes of a fully connected graph.
-The vertex of the graph joining node (or point) \(i\) and \(j\) has weight \(a_{i, j}\),
+% reword that; too opaque, explain that thwo whole graph is all the particles and the subgraphs are the jets.
+% we are going from the complete graph to subgrapsh, this is the jet finding process
+% thsi si an NP hard probelms but we have found a relaxation to do it in a tractable way. << say this now, then presnt the relaxation
+The theory behind the
+construction of the embedding space is a relaxation
+of optimising a criteria that would best 
+partition nodes into separate disconnected subgraphs,
+splitting nodes into groups.
+
+% say that "The standard procedure"
+In a standard (non-physics) procedure we would start from points with coordinates,
+which should be split into a predetermined number \(s\) of clusters.
+% say this is a problem for jet finding, reasure the reader that an adaptaion with be made
+% say that "we will address this problem"
+The points are represented by nodes of a fully connected graph.
+The edge of the graph joining node (or point) \(i\) and \(j\) has weight \(a_{i, j}\),
 which should grow with the probability of \(i\) and \(j\) being in the same group.
 
-The initial aim is to identify which of the components each point belongs to,
-by sorting the graph into subgraphs, \(G_k\), where \(k=1 \dots c\).
-Minimising the NCut objective is a function that captures this aim, where 
+To identify groups for the points the graph is split into subgraphs,
+\(G_\indicatoridx{k}\), where \(\indicatoridx{k}=1 \dots s\).
+These groups should not split up points which are connected by edges with high affinity,
+but it should also penalise clusters of very uneven size.
+Minimising the NCut objective is a function that captures this aim, where NCut is defined as
 \begin{equation}
-    \text{NCut} = \frac{1}{2}\sum_k\frac{W(G_k, \bar{G_k})}{\text{vol}(G_k)},
+    \text{NCut} = \frac{1}{2}\sum_\indicatoridx{k}\frac{W(G_\indicatoridx{k}, \bar{G_\indicatoridx{k}})}{\text{vol}(G_\indicatoridx{k})},
 \end{equation}\label{eqn:cost_function}
-where \(W(G_k, \bar{G_k})\) is the sum of all the vertex weights that must be dropped
-to separate the cluster \(G_k\) from the rest of the graph, \(\bar{G_k}\).
-So that \( W(G_k, \bar{G_k}) = \sum_{i \in G_k, j \in \bar{G_k}} a_{i, j} \).
-In the denominator \(\text{vol}(G_k) = \sum_{i \in G_k} \sum_{j} a_{i, j}\),
-the sum of all affinities connecting to a point in \(G_k\).
+where \(W(G_\indicatoridx{k}, \bar{G_\indicatoridx{k}})\) is the sum of all the edge weights that must be dropped
+to separate the cluster \(G_\indicatoridx{k}\) from the rest of the graph, \(\bar{G_\indicatoridx{k}}\).
+% relate back to jets again
+So that \( W(G_\indicatoridx{k}, \bar{G_\indicatoridx{k}}) = \sum_{i \in G_\indicatoridx{k}, j \in \bar{G_\indicatoridx{k}}} a_{i, j} \).
+In the denominator \(\text{vol}(G_\indicatoridx{k}) = \sum_{i \in G_\indicatoridx{k}} \sum_{j} a_{i, j}\),
+the sum of all affinities connecting to a point in \(G_\indicatoridx{k}\).
+% define affinities, something about how the indicate that points belong to the same shower
 This denominator is used to penalise forming small clusters.
 
-In order to determine which point will go in which \(G_k\), a set of indicator vectors must be found.
-Membership of cluster \(G_k\) will be recorded in the indicator vector \(h_k\):
+In order to determine which point will go in which \(G_\indicatoridx{k}\), a set of indicator vectors must be found.
+Membership of cluster \(G_k\) will be recorded in the indicator vector \(h_\indicatoridx{k}\):
 \begin{equation}\label{eqn:indicator}
-    h_{i, k}= 
+    h_\indicatoridx{k}_i= 
     \begin{cases}
-        1/\sqrt{\text{vol}(G_k)}& \text{if point } i \in G_k ,\\
+        1/\sqrt{\text{vol}(G_\indicatoridx{k})}& \text{if point } i \in G_\indicatoridx{k} ,\\
         0             & \text{otherwise},
     \end{cases}
     .
@@ -49,7 +80,7 @@ Membership of cluster \(G_k\) will be recorded in the indicator vector \(h_k\):
 
 To find these indicator vectors the graph is represented by the graph Laplacian, \(L\), a square
 matrix with as many rows and columns as there are points.
-To construct this Laplacien we define two other matrices;
+To construct this Laplacian we define two other matrices;
 an off diagonal matrix 
 \(A_{i, j} = (1 - \delta_{i, j})a_{i, j}\)
 and a diagonal matrix
@@ -59,97 +90,137 @@ Then the symmetric Laplacian can be simply written as;
     L = D^{-\frac{1}{2}} (D - A) D^{-\frac{1}{2}}
 \end{equation}
 
-Notice that this is a real symmetric matrix
-and, therefore all its eigenvalues are real.
-Considering just one cluster, \(G_k\), when the Laplacian is multiplied by its indicator vector,
+Considering just one cluster, \(G_\indicatoridx{k}\), when the Laplacian is multiplied by its indicator vector,
 the result is the term that NCut seeks to minimise for that cluster.
 \begin{equation}
-    h_k'Lh_k = \frac{1}{\text{vol}(G_k)}\sum_{i \in G_k, j \in G_k} \left(\delta_{i, j}\sum_{l} a_{l, i} - a_{i, j} \right) = \frac{W(G_k, \bar{G_k})}{\text{vol}(G_k)}
+    h_\indicatoridx{k}'Lh_\indicatoridx{k} = \frac{1}{\text{vol}(G_\indicatoridx{k})}\sum_{i \in G_\indicatoridx{k}, j \in G_\indicatoridx{k}} \left(\delta_{i, j}\sum_{l} a_{l, i} - a_{i, j} \right) = \frac{W(G_\indicatoridx{k}, \bar{G_\indicatoridx{k}})}{\text{vol}(G_\indicatoridx{k})}
 \end{equation}
 To obtain the sum of all the terms, stack the indicator vectors into a matrix,
-\( h'_k L h_k = (H'L H)_{kk}\),
+\( h'_\indicatoridx{k} L h_\indicatoridx{k} = (H'L H)_{\indicatoridx{k}\indicatoridx{k}}\),
 and the NCut aim described earlier becomes the trace,
-\begin{equation} \text{NCut}(G_1,G_2, \dots G_n) \equiv \frac{1}{2} \sum_{k=1}^n \frac{W(G_k, \bar{G_k})}{\text{vol}(G_k)} = \text{Tr}(H'LH),\end{equation}
+\begin{equation} \text{NCut}(G_\indicatoridx{1},G_\indicatoridx{2}, \dots G_\indicatoridx{n}) \equiv \frac{1}{2} \sum_{k=1}^n \frac{W(G_\indicatoridx{k}, \bar{G_\indicatoridx{k}})}{\text{vol}(G_\indicatoridx{k})} = \text{Tr}(H'LH),\end{equation}
 where \(H'H = I\).
-This is still an NP hard problem, however if we relax the requirements made on \(h\) in Eqn.~\ref{eqn:indicator},
+This is still an NP hard problem, that is, a problem that requires at least polynomial time for a solution~\cite[p. 477]{Leeuwen:1990_unfound0}.
+However if we relax the requirements made on \(h\) in Eqn.~\ref{eqn:indicator},
 allowing the elements of \(h\) to take arbitrary values, then the Rayleigh-Ritz theorem provides a solution.
-Trace minimisation in this form is done
-by finding the eigenvectors of \(L\) with smallest 
-eigenvalues.
+Trace minimisation in this form is done by finding the eigenvectors of \(L\) with smallest eigenvalues.
+\begin{equation}
+    \lambda_\text{min} = \min_{\|x\|\ne 0 } \frac{x^H L x}{x^H x}
+\end{equation}
+Where \(x\) is the relaxed indicator vector, and an eigenvector of \(L\).
+Notice that \(L\) is a real symmetric matrix
+and, therefore all its eigenvalues are real.
 Due to the form of the Laplacian, there will be an eigenvector with components all of the same value and its eigenvalue will be \(0\).
 This corresponds to the trivial solution of considering all points to be in one group.
-The next \(c\) eigenvectors of \(L\), sorted by smallest eigenvector, are the indicator vectors needed to allocate points to \(c\) clusters.
+The next \(c=s\) eigenvectors of \(L\), sorted by smallest eigenvalue, can be used to allocate points to \(s\) clusters.
 
-These indicator vectors are then used to determine position of the points in the embedding space.
-Each indicator vector has as many elements as there are points to be clustered,
-so the coordinates of a point are the corresponding elements or the indicator vectors.
+These eigenvectors are then used to determine position of the points in the embedding space.
+Each eigenvector has as many elements as there are points to be clustered,
+so the coordinates of a point are the corresponding elements or the eigenvectors.
 This is all the information the theory of spectral clustering provides.
 The steps required to make use of this information are not dictated by the theory,
 and they must be carefully selected to respect the physics.
 
+% this needs more expansions
+The standard method above is designed to form a fixed number of clusters,
+but typically we do not know how many jets should be created in an event.
+We will create an alternative algorithm, beginning with the principles of
+spectral clustering and adjusting to the needs of the physics.
 Using the positions in embedding space the points can be gathered agglomeratively,
 so that we do not need to chose a predetermined number of clusters.
+% explaing that is this new approch
+% it is need becuase we want a variable number of jets
+% we have designed agglomerative sequence to accommodate this
 
 \subsection{Distance in the embedding space}\label{sec:embedding_distance}
-When the relaxed spectral clustering algorithm is used to create an embedding space, points in a group will not be at exactly the same coordinates.
+% ensure the "relaxed sepctral clustering" algorithm is well defined by then
+When the relaxed spectral clustering algorithm is used to create an embedding space,
+points in each group will be distributed in the embedding space. % not be at exactly the same coordinates.
 Each point can be seen as a vector, the direction of this vector indicates the group to which this point should be assigned.
-The magnitude indicates the confidence with which the assignment is made.
-Changes in magnitude cause the Euclidean distance between the corresponding points to grow.
-An angular distance is appropriate, though. 
-The angular distance will grow when the eigenvectors indicating the point have less overlap
-and this is what should be measured.
+%The magnitude indicates the confidence with which the assignment is made.
+Changes in magnitude of the vectors cause the Euclidean distance between the corresponding points to grow,
+however, an angular distance is invariant to change in magnitude,
+ therefore is a suitable measure to use.
+%The angular distance will grow when the eigenvectors indicating the point have less overlap
+%and this is what should be measured.
 
 \subsection{Information in the eigenvalues}\label{sec:eig_norm}
-When the clusters in the data are very clear, the situation is closer to the ideal one and the eigenvalues will be closer to \(0\).
-The smaller an eigenvalue is, the more like a perfect indicator vector the corresponding eigenvector is.
+% what is "the ideal one"? find another working
+When the clusters in the data are well separated,
+the affinities between groups are close to \(0\)
+and the eigenvalues will also be closer to \(0\).
+So a small eigenvalue means that the corresponding eigenvector
+is separating the particles cleanly according to the information given by affinities.
 It is possible to make use of this information.
 
-In a traditional application of spectral clustering, the number of clusters desired, \(c\), is predetermined.
-The embedding space is created by taking \(c\) eigenvectors with smallest eigenvalues, excluding the trivial eigenvector.
+% add that the number of clusters is the number of jets
+% s is the number of clusters
+In a traditional application of spectral clustering, the number of clusters desired, \(s\), is predetermined.
+The embedding space is created by taking \(c=s\) eigenvectors with smallest eigenvalues, excluding the trivial eigenvector.
 The embedding space then has \(c\) dimensions.
-This follows from a relaxation of the concept of indicator vectors.
+% check this is covered earlier v
+%This follows from a relaxation of the concept of indicator vectors.
 
 When forming jets we do not know from the outset how many clusters to expect in the dataset,
 so the number of eigenvectors to keep is not clear.
+We cannot set \(c=s\).
 While we could chose a fixed, arbitrary number of eigenvectors, this is suboptimal.
 A better approach is to take all non-trivial eigenvectors corresponding to eigenvalues
 smaller than some limiting number, \(\lambda_\text{limit}\).
-For a symmetric matrix the eigenvalues will be \(0 < \lambda < 2\),
-so \(\lambda_\text{limit} = 0.5\) would be a reasonable choice.
+For a symmetric Laplacian the eigenvalues are \(0 \leq \lambda_\eigenidx{1} \leq \lambda_\eigenidx{2} \leq \cdots \lambda_\eigenidx{n} \leq 2\),
+and \(\lambda_\eigenidx{k}\) is related to the quality of forming \(\eigenidx{k}\)
+clusters~\cite{JamesRLee:2014_unfound736}.
+Removing eigenvectors with eigenvalues close to \(0\) would result
+in discarding useful information, while retaining eigenvectors 
+whose eigenvalues are close to \(2\) would increase the noise.
+Values of $0.2 < \lambda_{\mathrm limit} < 1$ are sensible choices,
+and within this range the choice is not critical.
+% explain what happens as you move towards both limits (noisy vs lost information)
+% explain thsi si not a critical determining parameter.
 Then, the number of dimensions in the embedding space will vary,
 according to the number of non-trivial eigenvectors with corresponding \(\lambda < \lambda_\text{limit}\).
 
 There is one more manipulation from the information in the eigenvalues.
-The dimensions of this embedding space are not of equal importance,
-those with higher eigenvalues being less interesting.
+The dimensions of this embedding space are not of equal importance.
+%those with higher eigenvalues being less interesting.
 This can be accounted for by dividing the eigenvector by some power, \(\beta\), of the eigenvalue.
 
 Let the eigenvectors for which \(\lambda < \lambda_\text{limit}\) be
+% get rid of the brackets - the look like function arguments = go boldface or different font
 \begin{equation}
-    L_{i, j} (h_n)_j = \lambda_n (h_n)_i.
+    \sum_j L_{i, j} x_\eigenidx{n}_j = \lambda_\eigenidx{n} x_\eigenidx{n}_i.
 \end{equation}
 Then, the coordinates of the \(j^\text{th}\) point in the \(c\) dimensional embedding space
-become \(m_j = \left(\lambda_1^{-\beta} (h_1)_j, \dots \lambda_c^{-\beta} (h_c)_j,\right)\).
-In effect the \(n^\text{th}\) dimension is compressed by a factor \(\lambda_n^\beta\),
-so the larger \(\lambda_n\) the greater the compression.
+become \(m_j = \left(\lambda_\eigenidx{1}^{-\beta} h_\eigenidx{1}_j, \dots \lambda_\eigenidx{c}^{-\beta} h_\eigenidx{c}_j,\right)\).
+In effect the magnitude of the vectors, \(m_j\), in the \(n^\text{th}\) dimension are compressed by a factor \(\lambda_\eigenidx{n}^\beta\),
+so the larger \(\lambda_\eigenidx{n}\) the greater the compression.
 
 \subsection{Stopping conditions}\label{sec:stopping_condintion}
 
 If a recursive algorithm is to be chosen, like in the \genkt{} algorithm, a stopping condition is needed.
-A stopping condition based on smallest distance between points in the embedding space does not prove to be stable,
-as the distribution  in the number of dimensions in the embedding space changes sharply from event to event.
+A stopping condition based on smallest distance between points in the embedding space 
+but this was not found to be stable.
+Choosing an acceptable value for all was not possible.
 
-The average distance between points is more stable.
-If this were used in physical space it would force roughly the same number of clusters to form each time,
-however, the variable number of dimensions in the embedding space is now an advantage.
-The  clearer information found about clusters in the points the more dimensions the embedding space will contain,
+% clarify
+Distance between the last two points to be joined before the desired jets have been formed
+ varies significantly between events, so minimum separation is not a good stopping condition.
+The average distance between points before this last join more stable because it 
+is balanced by two opposing influences.
+When points are joined together in a fix number of dimensions the average
+distance between points rises.
+If this were used in physical space it would be roughly proportionate to the number of points remaining.
+So in physical space, if we stopped clustering when average distance exceeded some cut-off
+we would expect roughly the same number of jets in each event.
+However, the embedding space has a variable number of dimensions.
+% remove the word clearer
+When lots of clustering still remains to be done the lower eigenvalues mean that
+the embedding space has more dimensions,
 as described in section~\ref{sec:eig_norm}.
+When the number of dimensions in the embedding space falls,
+the mean distance between points will also fall.
 
-Say, the data contains two points that would form a good cluster.
-If those two points are combined into one, that cluster is complete,
-fewer clusters remain unfinished
-and the information for clustering the resulting points will be reduced.
-When the embedding space is recalculated for the new points, it will likely have fewer dimensions.
-In a space with fewer dimensions the mean distance between the points naturally falls.
-Thus, the mean distance in the embedding space is a good indicator of the number of unfinished clusters available.
+As points combine the mean distance will rise,
+but when fewer combinations with higher affinity remain the number of
+dimensions in the embedding space falls, counteracting the rise in mean distance.
 In short, the mean distance in the embedding space makes a natural cut-off.

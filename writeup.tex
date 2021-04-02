@@ -173,6 +173,8 @@ goldstone/.style={draw=green,postaction={decorate},decoration={markings,mark=at 
 \newcommand{\stoppingdeltar}{\ensuremath{R}}
 \newcommand{\ktstoppingdeltar}{\ensuremath{R_{k_T}}}
 \newcommand{\distancedeltar}{\ensuremath{\Delta R}}
+\newcommand{\eigenidx}[1]{\textbf{#1}}  % eigen equation numbering
+\newcommand{\indicatoridx}[1]{\textbf{#1}}  % indicator vector numbering
 %b related things, so that we always get the math-mode right
 \newcommand{\beau}{\ensuremath{b}}
 \newcommand{\bbar}{\ensuremath{\bar{b}}}
@@ -224,14 +226,22 @@ C.H. Shepherd-Themistocleous\footnote{E-mail: {\tt claire.shepherd@stfc.ac.uk}} 
 %
 \begin{abstract}
 \noindent
-We present a new method of jet definition as an alternative to the clustering methods, such as \antikt, that are based directly on kinematic data by, instead, using kinematic relations to define a spectral representation of the particles.
+We present a new method of jet definition; an alternative to methods that cluster directly on kinematic data, such as \antikt,
+we use kinematic relations to represent the particles in a new multidimensional space for clustering.
+This new space is created using the spectral clustering algorithm.
+% what is spectral representation? "Represent the particles in a new large multidimentisonal space."
+% the algorithm for this is spectral clusteing. so people know what spectral is
  The performance of this algorithm in analysing  
 \(gg\to H_{125\,\text{GeV}} \rightarrow H_{40\,\text{GeV}} H_{40\,\text{GeV}} \rightarrow b \bar{b} b \bar{b}\),
 \(gg\to H_{500\,\text{GeV}} \rightarrow H_{125\,\text{GeV}} H_{125\,\text{GeV}} \rightarrow b \bar{b} b \bar{b}\)
 and
 \(gg,q\bar q\to t\bar t\to b\bar b W^+W^-\to b\bar b jj \ell\nu_\ell\) events from 
 Monte Carlo (MC) samples in reconstructing the relevant final states is compared to that of the \antikt{} algorithm.
- Measures of infra-red (IR) safety, both soft and collinear, are also studied. We find that the ability of spectral clustering in reconstructing mass peaks is comparable to that of \antikt{} under realistic acceptance and selection criteria.  Unlike the standard approach in which the jet cone size needs to be adapted to the  kinematics of the events under study, the new algorithm does not require an adjustment of its parameter settings for the processes analysed.
+ Measures of infra-red (IR) safety, both soft and collinear, are also studied. We find that the ability of spectral clustering to reconstruct mass peaks is comparable to that of \antikt{}.% under realistic acceptance and selection criteria. << Too non specific
+ This process is shown to work on a variety of signal processes without change to it's parameter settings,
+ including signals that would need adjusted parameters under \antikt{}.
+ % this process is shown to work in a variety of different signal type events.
+ % Cut " adapted to the kinematics of the events under study"  this is a much more specific adaption in experimental conditions, so shouldn't be seen as standard practice. 
  \end{abstract}
 \thispagestyle{empty}
 \vfill
