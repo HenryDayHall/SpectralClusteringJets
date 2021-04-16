@@ -1,56 +1,38 @@
 \section{Introduction}\label{sec:JetClustering}
 
 The preferred choice for jet clustering in the context of hadron collider physics tends to be one of three algorithms:  
-the \antikt{}~\cite{Cacciari:2008gp},
+the \antikt{}~\cite{Cacciari:2008gp, Catani:1993hr, Moretti:1998qx},
 the Cambridge-Aachen~\cite{Dokshitzer:1997in,Wobisch:1998wt} or the $k_T$  one~\cite{Ellis:1993tq},
-%that have  eventually replaced cone algorithms,  % may not need to mention cone algorithms at all here
-% this happened at the LHC - the cone algorithms were useful in high density enviroments, computationally expensive to use antikt
-% talk about these being used early on at the LHC
-%which had seen widespread use.  % it wasn't inventing the agglomerative algorithm that replaced cone
-% is was aglomerative algorithms getting computationally cheap enough to use.
-All of these having seen  their origin in $e^+e^-$ physics, see  Refs.~\cite{Sterman:1977wj,Bethke:1991wk,Catani:1991hj,Moretti:1998qx}.
-% also refer to LEP, these algorithms were developed there too
+all of these having seen  their origin in $e^+e^-$ physics, see  Refs.~\cite{Sterman:1977wj,Bethke:1991wk,Catani:1991hj,Moretti:1998qx}.
 They have been the default choice for some time because they have a number of desirable properties.
 They are infrared safe, excellent implementations of them are publicly available (see \fastjet{}~\cite{Cacciari:2011ma})
-and they are flexible enough to capture many different jets signals with minimal parameter changes.
+and they are flexible enough to capture many different jet signals with minimal parameter changes.
 These algorithms are recursive (or iterative) and agglomerative.
 A recursive algorithm is well suited to clustering objects when the number of groups is not known from the outset.
-% some algorithms combine soft to hard first then combine hard
 Agglomerative algorithms create jets by grouping objects,
 starting from individual particles,
 and continuing to combine the groups of particles into larger groups,
 until the desired jet size is reached.
-Creating jets that are infrared (IR) safe
-can be achieved by ensuring that pairs particles with small angular separation,
-such as soft or collinear emissions, combine early in this process.
+Creating jets that are  IR safe
+can be achieved by ensuring that pairs of  particles emerging from soft or collinear emissions, combine early in this process.
 Once these IR splittings have been recombined they
-can not influence the rest of the clustering process.
-
-% early is poorly defined - make it clear that there is a sequential process,
-% make it clear that this defines a timeline
-%as collinear particles tend to combine early due to their small angle while
-% soft emmisions from hard particles will be at small angles, this is identical to sentance above
-% soft particles tend to combine with hard particles rather than combining  among themselves.
-% now explain why combining collinear particles means IR safety. 
-% 
+cannot influence the rest of the clustering process.
 
 Jet definition precedes further algorithmic methods to extract useful
 physical quantities. Finding an alternative clustering method that compares favourably to
-these popular jet algorithms and which offers additional features for further analysis is our goal.
-% and provide insigth into jet substructure
+these popular jet algorithms, and which offers additional features for further analysis, is our goal.
 Success in obtaining clusters based on informative transformations of the data
 offers the possibility of exploiting such representations.
 In this paper, we use Laplacian eigenmaps \cite{Belkin:2003_unfound4} to represent the particles
 in an event, a procedure employed in applications such as image segmentation \cite{Shi:1997_unfound595}
 and called spectral clustering \cite{Ng:2001_unfound543}.
-Spectral clustering has had success also in other physics contexts, such as to identify the motion
-of vortices~\cite{Hadjighasem:2016_unfound447} in fluid dynamics 
-and determining the correct number of clusters to contain the vortices.
-% correct number of clusters of what? Correct number of vortices
+Spectral clustering has also had success in other physics contexts, such as to identify the motion
+of vortices~\cite{Hadjighasem:2016_unfound447} in fluid dynamics,
+to determine the correct number of clusters to contain the vortices.
 Furthermore, to reduce the risk of blackouts, power grids may be subdivided into `islands',
 which are
 electromechanically stable regions with minimum load shedding.
 The ideal location of such islands is found by minimising the power flow between them using spectral clustering as shown in~\cite{HaoLi:2005_unfound114}.  A hierarchical, agglomerative algorithm for the same was introduced in~\cite{RJSanchezGarcia:2014_unfound420}.
-This agglomerative approach is what we show to be suitable for the context of jet physics in this paper.
+This agglomerative approach is what we show in this paper to be suitable also in the context of jet physics.
 
 The plan of this paper is as follows. In the next section, we will introduce the fundamentals of the theory of spectral clustering. In the following one, we will describe the details of the specific method that we have applied. The numerical results will then follow. Finally, we will draw our conclusions. 

@@ -1,0 +1,119 @@
+\documentclass[12pt]{article}
+
+%\pdfoutput=1
+
+\usepackage[section]{placeins}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[sorting=none]{biblatex}
+\usepackage{subfig}
+\usepackage{hyperref}
+
+\hypersetup{
+   colorlinks=true,       % false: boxed links; true: colored links
+   linkcolor=blue,        % color of internal links
+   citecolor=red,         % color of links to bibliography
+   filecolor=magenta,      % color of file links
+   urlcolor=cyan,           % color of external links
+   linktocpage = true,
+   }
+
+% if we created names here we can quickly change capitalisation etc.
+% varient of delta R
+\newcommand{\stoppingdeltar}{\ensuremath{R}}
+\newcommand{\ktstoppingdeltar}{\ensuremath{R_{k_T}}}
+\newcommand{\distancedeltar}{\ensuremath{\Delta R}}
+\newcommand{\eigenidx}[1]{\textbf{#1}}  % eigen equation numbering
+\newcommand{\indicatoridx}[1]{\textbf{#1}}  % indicator vector numbering
+%b related things, so that we always get the math-mode right
+\newcommand{\beau}{\ensuremath{b}}
+\newcommand{\bbar}{\ensuremath{\bar{b}}}
+\newcommand{\bthing}[1]{\ensuremath{b\text{-#1}}}
+% some names for consistent capitalisation
+\newcommand{\genkt}{generalised $k_T$}
+\def\antikt{anti-$k_T$}
+\newcommand{\itercone}{iterative cone}
+\newcommand{\spectral}{spectral}
+\def\fastjet{{\tt FASTJET}}
+
+\bibliography{spectraljet}   
+\graphicspath{{./graphics/}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%BEGINNING OF TEXT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\allowdisplaybreaks[2]
+\addtolength\textwidth{2cm}
+\evensidemargin 0cm
+\oddsidemargin  0cm
+\begin{document}
+
+
+\title{\hfill ~\\[-50mm]
+                  \textbf{Spectral Clustering for Jet Physics
+                }        }
+
+\author{\\[-5mm]
+S. Dasmahapatra\footnote{E-mail: {\tt sd@ecs.soton.ac.uk}} $^{1}$,\
+H.A. Day-Hall\footnote{E-mail: {\tt h.a.day-hall@soton.ac.uk}} $^{2,3}$,\
+B. Ford\footnote{E-mail: {\tt b.ford@soton.ac.uk}} $^{2}$,\ \\
+S. Moretti\footnote{E-mail: {\tt stefano@phys.soton.ac.uk}} $^{2,3}$,\
+C.H. Shepherd-Themistocleous\footnote{E-mail: {\tt claire.shepherd@stfc.ac.uk}} $^{3}$
+\\ \\
+\emph{\small $^1$School of Electronics and Computer Science, University of Southampton,}\\
+\emph{\small Southampton, SO17 1BJ, United Kingdom}\\
+\emph{\small $^2$School of Physics and Astronomy, University of Southampton,}\\
+\emph{\small Southampton, SO17 1BJ, United Kingdom}\\
+\emph{\small  $^3$Particle Physics Department, Rutherford Appleton Laboratory,}\\
+\emph{\small Chilton, Didcot, Oxon OX11 0QX, United Kingdom}\\[4mm]
+}
+%
+\maketitle
+%
+\vspace*{-10mm}
+%
+\begin{abstract}
+\noindent
+We present a new approach to jet definition as an alternative to methods that exploit kinematic data directly, such as the anti-$k_T$ scheme,
+we use the kinematics to represent the particles in an event in a new multidimensional space.
+The latter is constituted by the eigenvectors of a matrix of kinematic relations between particles, and the resulting partition is called spectral clustering.
+After confirming its Infra-Red (IR) safety, we compare 
+its performance to the \antikt{} algorithm in reconstructing relevant final states. 
+We base this on Monte Carlo (MC) samples generated from the following processes: 
+\(gg\to H_{125\,\text{GeV}} \rightarrow H_{40\,\text{GeV}} H_{40\,\text{GeV}} \rightarrow b \bar{b} b \bar{b}\),
+\(gg\to H_{500\,\text{GeV}} \rightarrow H_{125\,\text{GeV}} H_{125\,\text{GeV}} \rightarrow b \bar{b} b \bar{b}\)
+and
+\(gg,q\bar q\to t\bar t\to b\bar b W^+W^-\to b\bar b jj \ell\nu_\ell\).
+Finally, we show that the  results for spectral clustering are obtained without any change in the algorithm's parameter settings, unlike the \antikt{} case, which requires the cone size to be adjusted to the physics process under study.
+ \end{abstract}
+\thispagestyle{empty}
+\vfill
+\newpage
+%
+    \input{spectral_introduction}
+    \FloatBarrier
+    \input{spectral_theory}
+    \FloatBarrier
+    \input{spectral_method}
+    \FloatBarrier
+    \input{spectral_results}
+    \FloatBarrier
+    \input{spectral_conclusions}
+    \FloatBarrier
+    \section{Acknowledgements}
+We thank A. Chakraborty, 
+G. Cerro, 
+J. Chaplais, 
+S. Jain and 
+E. Olaiya for insightful discussions. HAD-H thanks
+G.P. Salam for useful advice. 
+HAD-H, BF, SM and CHS-T are supported in  in part through the NExT Institute.
+SM is also supported by the STFC Consolidated
+Grant No. ST/L000296/1. BF is funded by the DISCnet \& SEPnet scholarship schemes.
+We finally 
+acknowledge the use of the IRIDIS High Performance Computing Facility, and associated
+support services, at the University of Southampton, in the completion of this work.
+
+\printbibliography
+\end{document}

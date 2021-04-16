@@ -1,8 +1,8 @@
 \section{Method}
 In this section the methodology is covered in four parts.
-Firstly, the practical procedure chosen in this work for applying \spectral{} clustering  is given.
+Firstly, the algorithm chosen in this work for applying \spectral{} clustering  is given.
 Secondly, choices and interpretations for the variable parameters in this algorithm are given.
-Thirdly,  the datasets against which this will be measured are specified.
+Thirdly,  the datasets against which this method will be measured are specified.
 Fourthly, the procedure for checking IR safety is described.
 
     \begin{figure}[!t]
@@ -11,48 +11,43 @@ Fourthly, the procedure for checking IR safety is described.
         \caption{A single event and its embedding space, as created by \spectral{} clustering.
             At the top the grey plot shows the particles in the event as points on the unrolled detector barrel.
             The colour of each point indicates the shower it came from.
-            The lower two plots show the first 4 dimensions of the embedding space,
+            The lower two plots show the first 4 dimensions of the embedding space
             and the location of the points within the embedding space.}\label{fig:embedding_space_simple}
     \end{figure}    
 
-% define the corrdinate space in a footnote, should say z is the beam distance, and phi is the angle
-% z is the ector along the beam line
-% barel angle is not the normal phrase
 Our coordinate system has a \(z\) axis parallel to the beam line.
-Directions perpendicular to the \(z\) axis are termed transverse (\(T\)), and
+Directions perpendicular to the \(z\) axis are termed transverse (\(T\)) and
 the angle in the transverse plane is labelled \(\phi\).
-% need to define coordinate system before thsi point to use p_z
 For clarity, note that the variable pseudorapidity is never used
-in the algorithms proposed; all references to rapidity $y$ correspond to
+in the algorithm proposed, all references to rapidity $y$ correspond to
 \begin{equation}\label{eqn:rapidity}
     y = \frac{1}{2} \ln\frac{E + p_z}{E - p_z}.
 \end{equation}
 Rapidity and \(\phi\) form an orthogonal coordinate system.
 
 \subsection{Spectral clustering algorithm}\label{sec:spectralmethodalgo}
-    For every simulated event the following process is used to identify the jets
-    To begin with, relevant cuts are applied to the particles to simulate the detector's
+    For every simulated event, the following process is used to identify the jets.
+    To begin with, relevant cuts are applied to the particles to simulate the detector
     reconstruction capability.
     (These are described in detail in section~\ref{sec:particle_data}.)
     Then all particles are declared pseudojets  and given an index, \(j = 1 \dots n\), with no particular order.
-    The algorithm is agglomerative, recursively selecting pairs of pseudojets to merge;
+    The algorithm is agglomerative, recursively selecting pairs of pseudojets to merge,
     hence, the first iteration step is labelled \(t=1\).
 
-    When the two pseudojets to be merged, \(i\) and \(j\), have been identified they are combined
+    When the two pseudojets to be merged, \(i\) and \(j\), have been identified, they are combined
     using the E-scheme.
-    The E-scheme forms a new pseudojet by summing the \(4\)-momentum of the two joined pseudojets;
+    The E-scheme forms a new pseudojet by summing the \(4\)-momenta of the two joined pseudojets,
     \(p(t+1)_l = p(t)_i + p(t)_j\).
-    The steps used to select two pseudojets to merge proceed as follows;
+    The steps used to select two pseudojets to merge proceed as follows.
 
 
     \begin{enumerate}
         \item \label{step:start} The pseudojets are used to form the nodes of a graph,
         the edges of which will be weighted by some measure of proximity between the particles called affinity.
         To obtain an affinity, first a distance is obtained.
-        Between pseudojets \(i\) and \(j\) this is \(d(t)_{i,j} = \sqrt{(y(t)_i - y(t)_j)^2 + (\phi(t)_i - \phi(t)_j)^2}\)
-        where \(y(t)_j\) is the rapidity of pseudojet \(j\) at step \(t\) and \(\phi(t)_j\) is the barrel angle, likewise for \(i\).
-        % remove references to time
-        No \(p_T\) dependence is used, as customary in many traditional jet clustering methods.
+        Between pseudojets \(i\) and \(j\) this is \(d(t)_{i,j} = \sqrt{(y(t)_i - y(t)_j)^2 + (\phi(t)_i - \phi(t)_j)^2}\),
+        where \(y(t)_j\) is the rapidity of pseudojet \(j\) at step \(t\) and \(\phi(t)_j\) is the angle in the transverse plane, likewise for \(i\).
+        No \(p_T\) (transverse momentum) dependence is used, unlike in many traditional jet clustering methods.
 
     \item \label{step:affinity} The affinity must increase as pseudojets become more similar,
         whereas the distance, \(d(t)_{i,j}\), will shrink.
@@ -71,44 +66,46 @@ Rapidity and \(\phi\) form an orthogonal coordinate system.
     each pseudojet has at least \(k_\text{NN}\) non-zero affinities with other pseudojets.
 
 \item\label{step:laplacean} These affinities allow the construction of the symmetric normalised
-        Laplacian; which is proportional to \(-a(t)_{i, j}\)
+        Laplacian, which is proportional to \(-a(t)_{i, j}\)
         in the \(i\)$^{\rm th}$ row and \(j\)$^{\rm th}$ column and exactly \(1\) on the diagonal.
         For ease of notation, let \(z(t)_j\) be a measure of the size a pseudojet \(j\) contributes to a cluster,
         with \(z(1)_j = \sum_k a_{j,k}\).
-        Then define square matrices \(A(t)_{i, j} = (1 - \delta_{i, j}) a(t)_{i, j}\) and \(Z(t)_{i, j} = \delta_{i, j} z(t)_i\)
-        Then following the logic presented in Eqn.~\ref{eqn:symmetric_laplacian}, the Laplacian can now be written as
+        Then define square matrices \(A(t)_{i, j} = (1 - \delta_{i, j}) a(t)_{i, j}\) and \(Z(t)_{i, j} = \delta_{i, j} z(t)_i\).
+        Then, following the logic presented in Eqn.~\ref{eqn:symmetric_laplacian}, the Laplacian can now be written as
        \begin{equation}\label{eqn:Laplacian}
-           L(t) = Z(t)^{-\frac{1}{2}}(Z(t) - A(t))Z(t)^{-\frac{1}{2}}
+           L(t) = Z(t)^{-\frac{1}{2}}(Z(t) - A(t))Z(t)^{-\frac{1}{2}}.
        \end{equation}
         After each step this Laplacian shrinks by one row and column.
         When two pseudojets have been combined, instead of calculating \(z_j\) as the sum of the affinities of the combined pseudojet,
         the new \(z_j\) is the sum of the two previous \(z_j\)'s.
-        For example, if pseudojets \(1\) and \(2\) from \(t=1\) are to be combined to make pseudojet \(1\) in \(t=2\),
+        For example, if pseudojets \(1\) and \(2\) from \(t=1\) are to be combined to make pseudojet \(1\) at \(t=2\),
         then \(z(2)_{1} = z(1)_1 + z(1)_2\) rather than \(z(2)_{1} = \sum_k a(2)_{1, k} \).
         This condition is seen to be required for IR safety. 
-
         As such, after the first step, \(t > 1\),
         \(L(t)\) will no longer be a proper graph Laplacian.
         Its rows and columns do not sum to zero.
 
-    \item \label{step:eigenvectors} The eigenvectors of $L(t)$, ($q$ the eigenvalue index)
+    \item \label{step:eigenvectors} The eigenvectors of \(L(t)\) (\(\eigenidx{q}\) being the eigenvalue index)
             \begin{equation}
-                L(t) h(t)_\eigenidx{q} = \lambda(t)_\eigenidx{q} h(t)_\eigenidx{q},  \; \eigenidx{q}=1, \ldots, c
+                L(t) h(t)_\eigenidx{q} = \lambda(t)_\eigenidx{q} h(t)_\eigenidx{q},  \; \eigenidx{q}=1, \ldots c
             \end{equation}
             	are used to create the embedding of the pseudojets.
-            The eigenvector corrisponding to the smallest eigenvalue represents the trivial solution,
-            that places all points in the same cluster (see Sec.~\ref{sec:spectral_theory}).
+            The eigenvector corresponding to the smallest eigenvalue represents the trivial solution,
+            that places all points in the same cluster (see section~\ref{sec:spectral_theory}).
             All non-trivial eigenvectors, corresponding
-            to eigenvalues less that an eigenvalue limit \(\lambda(t)_\eigenidx{c} < \lambda_\text{limit} < \lambda(t)_\eigenidx{c+1}\)
-            are retained. See section~\ref{sec:eig_norm}.
+            to eigenvalues less than an eigenvalue limit, \(\lambda(t)_\eigenidx{c} < \lambda_\text{limit} < \lambda(t)_\eigenidx{c+1}\),
+            are retained (see section~\ref{sec:eig_norm}).
+            If no eigenvectors are retained by this, the clustering ends here.
 
-        \item \label{step:compression} A eigenvector is divided by the corresponding eigenvalue raised to \(\beta\).
+        \item \label{step:compression} An eigenvector is divided by the corresponding eigenvalue raised to \(\beta\).
+            To prevent zero division errors, the smallest eigenvalues are clipped to \(0.001\),
+            such that \(\lambda'_\eigenidx{q} = \min(\lambda_\eigenidx{q}, 0.001)\).
             This acts to compress the dimensions that hold less information, again, see section~\ref{sec:eig_norm}.
             The embedding space can now be formed.
             The eigenvectors have as many elements as there are pseudojets and the coordinates of
             the \(j^\text{th}\) pseudojet at step \(t\)
             are defined to be
-            \(m(t)_j = \left(\lambda_\eigenidx{1}(t)^{-\beta} h_\eigenidx{1}(t)_j, \dots \lambda_\eigenidx{c}(t)^{-\beta} h_\eigenidx{c}(t)_j\right)\).
+            \(m(t)_j = \left(\lambda'_\eigenidx{1}(t)^{-\beta} h_\eigenidx{1}(t)_j, \dots \lambda'_\eigenidx{c}(t)^{-\beta} h_\eigenidx{c}(t)_j\right)\).
 
         \item  A measure of distance between all pseudojets in the embedding space is calculated.
             In the embedding space angular distances are most appropriate (see section~\ref{sec:embedding_distance}):
@@ -119,7 +116,6 @@ Rapidity and \(\phi\) form an orthogonal coordinate system.
 
         \item\label{step:stoppingcondition}
 
-            % where R is .....
             A stopping condition, based on the parameter \stoppingdeltar{}, is now checked.
             Provided the mean of the distances \(d'(t)_{i, j}\) is less than 
             the value of \stoppingdeltar{}, that is,
@@ -141,18 +137,15 @@ Rapidity and \(\phi\) form an orthogonal coordinate system.
     This illustrates how the embedding space highlights the clusters.
 
 \subsection{Tunable parameters}\label{sec:spectralmethodparam}
-Unlike most Machine Learning (ML) techniques, \spectral{} clustering does not have large arrays of learnt parameters.
-The parameters for the clustering are a small, interpretable  set.
+Unlike most deep learning methods currently used in particle physics, spectral clustering does not have large arrays of learnt parameters.
+The parameters for the clustering are a small, interpretable set.
 Appropriate values were chosen by performing scans and observing the influence of changes to the parameters on jets formed.
 
 In section~\ref{sec:spectralmethodalgo}, 6 parameters are named:
 \(\sigma_v\), \(\alpha\), \(k_\text{NN}\), \(\lambda_\text{limit}\), \(\beta\) and \stoppingdeltar{}.
-% make a comment here about this not being an issue
-% This is more parmeters than in ... howerver
-While this is more parameters than in \genkt{} for example,
+While these are more parameters than in \genkt{}, for example,
 we find that the parameters do not need to take precise values
 to obtain good performance.
-%These parameters have a range of values for which sensible results are obtained.
 The interpretation of these parameters is as follows.
 \begin{itemize}
     \item \(\sigma_v\): introduced in step~\ref{step:affinity}, this is a scale parameter in physical space.
@@ -160,33 +153,32 @@ The interpretation of these parameters is as follows.
                       or alternatively, the size of the neighbourhood of each particle.
                       It is closely tied to the stopping parameter for the \genkt{} algorithm,
                       \ktstoppingdeltar{},
-                      they both relate to the width of the jets formed.
-                      It should take values on the same order of magnitude as \ktstoppingdeltar{},
+                      and they both relate to the width of the jets formed.
+                      It should take values on the same order of magnitude as \ktstoppingdeltar{}.
     \item  \(\alpha\): also introduced in step~\ref{step:affinity},
            this changes the shape of the distribution used to describe the neighbourhood of a particle.
-           Higher values reduces the probability of joining particles outside \(\sigma_v\);
+           Higher values reduces the probability of joining particles outside \(\sigma_v\). 
            \(\alpha=2\) defines a Gaussian kernel.
-       \item \(k_\text{NN}\): introduced in step~\ref{step:KNN}, this dictates the minimum number of non-zero affinities around each point.
+       \item \(k_\text{NN}\): introduced in step~\ref{step:KNN}, it dictates the minimum number of non-zero affinities around each point.
            Lower values create a sparser affinity matrix, reducing noise at the potential cost of lost signal.
            Values above \(7\) are seen to have little impact.
-       \item  \(\lambda_\text{limit}\): introduced in step~\ref{step:eigenvectors}, is a means of limiting the number of eigenvectors used
+       \item  \(\lambda_\text{limit}\): introduced in step~\ref{step:eigenvectors}, it is a means of limiting the number of eigenvectors used
            to create dimensions in the embedding space.
            Only eigenvectors corresponding to eigenvalues less than \(\lambda_\text{limit}\) are used.
            Thus, the number of dimensions in the embedding space can be increased with a larger \(\lambda_\text{limit}\). 
            However, as the eigenvalues will be influenced by the number of clear clusters available, 
            there will not be the same number of dimensions in each event.
            Values of \(0.2 <\lambda_\text{limit} < 1\) are sensible choices,
-           see discussion in Sec~\ref{sec:eig_norm}.
+           see discussion in section~\ref{sec:eig_norm}.
        \item  \(\beta\): introduced in step~\ref{step:compression}, it 
           accounts for variable quality of information in the eigenvectors, as given by their eigenvalues,
         in such a way that the dimensions of the embedding spaces 
-        corresponding to higher eigenvalues are compressed.
-        in such a way that the dimensions of the embedding spaces with lower
-        quality information are compressed.
-        The larger the value of \(\beta\) the more dimensions with
-        lower quality information are compressed.
+        corresponding to higher eigenvalues are compressed,
+        as they contain lower quality information.
+        %The larger the value of \(\beta\) the more dimensions with
+        %lower quality information are compressed.
         (This is discussed in section~\ref{sec:eig_norm}.)
-    \item \stoppingdeltar{}: is introduced in step~\ref{step:stoppingcondition}, it
+    \item \stoppingdeltar{}:  introduced in step~\ref{step:stoppingcondition}, it
          determines the expected spacing between jets in the embedding space.
          As the number of dimensions in the embedding space grows with increasing 
          number of clear clusters, it will not result in the same or
@@ -217,7 +209,7 @@ So the descendants of a \(b\bar{b}\) pair should be captured in exactly 2 jets.
             \caption{The \genkt{} algorithm has 2 parameters that can be varied.
                 The stopping condition, \ktstoppingdeltar{}, and a multiple for the exponent of the \(p_T\) factor.
                 When the exponent of the \(p_T\) factor is \(-1\) the algorithm becomes the \antikt{} algorithm.
-                Here, the ``Loss'', as described in Eq.~(\ref{eqn:loss}), is shown as a colour gauge for a number of parameter combinations.
+                Here, the ``Loss'', as described in Eqn.~(\ref{eqn:loss}), is shown as a colour gauge for a number of parameter combinations.
              }\label{fig:scan_genkt}
         \end{minipage}
     \end{figure}    
@@ -226,22 +218,21 @@ There are two ways a jet finding algorithm can make mistakes in this task:
 the first is to omit some of the descendants of the objects being reconstructed, causing the jet to have less mass than it should;
 the second is to include particles that are not in the descendants of the objects being reconstructed, such as initial state radiation or particles from other objects,
 causing the jet to have more mass than it should.
-The effects of these mistakes will cancel in the jet mass,
+The effects of these mistakes might cancel in the jet mass,
 but they are both still individually undesirable,
 so separate metrics are made for each of them.
-The first is ``signal mass lost", the difference between the mass of the jets and the mass they would have had if all they contained all descendants of the object being reconstructed.
-The second is ``background contamination", the difference between the mass of jets and the mass they would have if they did not contain anything but descendants of the objects being reconstructed.
-A loss function is constructed as a weighted euclidean combination of these two;
+The first is ``Signal mass lost", the difference between the mass of the jets and the mass they would have had if all they contained were the descendants of the object being reconstructed.
+The second is ``Background contamination", the difference between the mass of jets and the mass they would have if they did not contain anything but descendants of the objects being reconstructed.
+A ``Loss'' function is then constructed as a weighted Euclidean combination of these two,
 \begin{equation}\label{eqn:loss}
-\text{Loss} = \sqrt{w\,(\text{Background contamination})^2 + (\text{Signal mass lost})^2}.
+\text{Loss} = \sqrt{w\,(\text{Background contamination})^2 + (\text{Signal mass lost})^2},
 \end{equation}
-Where \(w\) is a weighting used to alter the preference for suppressing signal mass lost verses reducing background contamination.
-When applying an \antikt{} algorithm, increasing \ktstoppingdeltar{} will result in lower signal mass loss, in exchange for a higher background contamination.
-%The standard choice for this process is \(\ktstoppingdeltar{}=0.8\).  << this is nt standard .4 is
-We have chosen to make a comparison to \(\ktstoppingdeltar{}=0.8\) as our sample sample dataset has well separated jets and low background.
-This value of \ktstoppingdeltar{} slightly prefers suppressing signal mass lost over background contamination,
+where \(w\) is a weight used to alter the preference for suppressing ``Signal mass lost'' versus reducing ``Background contamination''.
+When applying an \antikt{} algorithm, increasing \ktstoppingdeltar{} will result in lower ``Signal mass lost'', in exchange for a higher ``Background contamination''.
+We have chosen to make a comparison to \(\ktstoppingdeltar{}=0.8\) as our sample dataset has well separated jets and low background.
+This value of \ktstoppingdeltar{} slightly prefers suppressing ``Signal mass lost'' over ``Background contamination'',
 to create the clearest mass peaks.
-To make the loss reflect this we chose \(w = 0.73\).
+To make the ``Loss'' reflect this we choose \(w = 0.73\).
 
 An example of this scan for the \genkt{} algorithm is given in Fig.~\ref{fig:scan_genkt}. 
 It can be seen that, while good results are possible with many values of the \(p_T\) exponent,
@@ -250,25 +241,22 @@ It can be seen that, while good results are possible with many values of the \(p
 For \spectral{} clustering there are more than 2 variables to deal with, 
 so a set of two dimensional slices are extracted. 
 These slices have been chosen to include the best performing combination.
-%
     As can be seen in Fig.~\ref{fig:scan_spectral}, the parameters choices are not fine-tuned,
-    many values can be chosen to achieve good results.
-    %That is, unlike the \antikt{} algorithm, there is flexibility in all parameter choices.
-    % don't make comparison to akt - akt isn't used except at some standard values
+    as many values can be chosen to achieve good results.
     For example, it can be seen that some parameters, such as \(\alpha\), \(k_\text{NN}\), \(\beta\)
-    and \(\lambda_\text{limit}\) are relatively unconstrained,
-    yielding  good results for a wide range of values.
-    Even when \stoppingdeltar{} and, especially, \(\sigma_v\) yield some large signal losses,
-    say, for \(R=1.22\) or \(1.3\) and \(\sigma_v=0.05\), this happens is very narrow ranges. 
+    and \(\lambda_\text{limit}\), are relatively unconstrained,
+    yielding  good results for a wide range of numerical choices.
+    Even when \stoppingdeltar{} and, especially, \(\sigma_v\) yield some large signal ``Loss'',
+    say, for \(R=1.22\) or \(1.3\) and \(\sigma_v=0.05\), this happens in very narrow ranges. 
     For definiteness, the
     parameters used in the remainder of this work are \(\alpha=2.\), \(k_\text{NN}=5\), \(\stoppingdeltar{} = 1.26\), \(\beta = 1.4\), \(\sigma_v = 0.15\) and \(\lambda_\text{limit} = 0.4\).
-\clearpage
+
     \begin{figure}[!t]
             \includegraphics[width=1\textwidth]{graphics/trangle_scan_complete}
-            \caption{There are 6 free parameters in \spectral{} clustering.
-                Here, the ``Loss'', as described in Eq.~(\ref{eqn:loss}), is shown for reasonable  parameter ranges chosen
+            \caption{The spectral clustering algorithm has 6 parameters that can be varied (described in the text).
+                Here, the ``Loss'', as described in Eqn.~(\ref{eqn:loss}), is shown as a colour gauge for reasonable  parameter ranges chosen
                 either by convention (e.g., \(\alpha\) is typically \(1\) or \(2\))
-                or according to physical scales (e.g., $\sigma_v$ is of order \(0.1\)).
+                or according to physical scales (e.g., \(\sigma_v\) is of order \(0.1\)).
              }\label{fig:scan_spectral}
     \end{figure}    
 
@@ -279,40 +267,40 @@ To evaluate the behaviour of the spectral clustering method four datasets are us
 
     \begin{enumerate}
         \item 
-    \underbar{Light Higgs} A SM-like Higgs boson with a mass \(125\) GeV decays into two light Higgs states with mass  \(40\) GeV,
-    which in turn decay to \beau{}\bbar{} quark pairs.
+    \underbar{Light Higgs}: A SM-like Higgs boson with a mass \(125\) GeV decays into two light Higgs states with mass  \(40\) GeV,
+    which in turn decay into \beau{}\bbar{} quark pairs.
     That is, the process is \(p p \rightarrow H_{125\,\text{GeV}} \rightarrow h_{40\,\text{GeV}} h_{40\,\text{GeV}} \rightarrow \beau \bbar \beau \bbar\), simulated at Leading Order (LO).
 
-\item \underbar{Heavy Higgs}  A heavy Higgs boson with a mass \(500\) GeV decays into two SM-like Higgs states with mass  \(125\) GeV,
-    which in turn decay to \beau{}\bbar{} quark pairs.
+\item \underbar{Heavy Higgs}:  A heavy Higgs boson with a mass \(500\) GeV decays into two SM-like Higgs states with mass  \(125\) GeV,
+    which in turn decay into \beau{}\bbar{} quark pairs.
     That is, the process is \(p p \rightarrow H_{500\,\text{GeV}} \rightarrow h_{125\,\text{GeV}} h_{125\,\text{GeV}} \rightarrow \beau \bbar \beau \bbar\), simulated at LO.
 
-\item \underbar{Top}  A $t\bar t$ pair decays semileptonically, i.e., where one \(W^\pm\) decays to a pair of quark jets $jj$ and the other into a lepton-neutrino pair $\ell\nu_\ell$ ($\ell=e,\mu$).
+\item \underbar{Top}:  A $t\bar t$ pair decays semileptonically, i.e.,  one \(W^\pm\) decays into a pair of quark jets $jj$ and the other into a lepton-neutrino pair $\ell\nu_\ell$ ($\ell=e,\mu$).
         That is, the process is \( p p \rightarrow t \bar{t} \rightarrow b\bar b W^+  W^-\to b\bar b jj \ell\nu_\ell\), simulated at LO. (Note that, here, $m_t=172.6$ GeV and $m_{W}=80.4$ GeV.)
         
-    \item \underbar{3-jets}  For the purpose of checking {IR safety}, we have used three-jet events,         this being a rather simple configuration where IR singularities could be observed. 
+    \item \underbar{3-jets}:  For the purpose of checking {IR safety}, we have used 3-jet events,         this being a rather simple configuration where IR singularities could be observed. 
         That is, the process is $pp\to jjj$, simulated at both LO and Next-to-LO (NLO). 
 
 
 
     \end{enumerate}
 
-    Using MadGraph~\cite{Alwall:2011uj} to generate the partonic process and Pythia~\cite{Sjostrand:2014zea} to shower, ${\cal O}(10^5)$ of each of these processes are generated.
-    A full detector simulation is not used; instead, cuts on the particles are imposed to approximate detector resolution, as detailed below. 
+    Using MadGraph~\cite{Alwall:2011uj} to generate the partonic process and Pythia~\cite{Sjostrand:2014zea} to shower, ${\cal O}(10^5)$ events for each of these processes are generated.
+    A full detector simulation is not used, instead, cuts on the particles are imposed to approximate detector resolution, as detailed below. 
     
     The Center-of-Mass (CM) energy used is \(\sqrt{s}=13 \) TeV.
-
+%
     Each event also contains (hard) Initial State Radiation (ISR) and soft QCD dynamics from beam remnants, i.e., the Soft Underlying Event (SUE).
-    There is no pileup or multiparton interactions in the datasets.
+    There is no pileup nor multiparton interactions in the datasets.
 
     Each of these datasets requires different cuts, both at the particle level, to simulate detector coverage, and at the jet level, to select the best reconstructed events.
     The cuts on each dataset are as follows.
     \begin{enumerate}
         \item The reconstructed particles are required to have
-            rapidity \(|\eta|< 2.5\) and (transverse momentum \(p_T > 0.5\) GeV.
+            pseudorapidity \(|\eta|< 2.5\) and transverse momentum \(p_T > 0.5\) GeV.
             These cuts are likely to remove the majority of the radiation from beam remnants
             and reduce the radiation from ISR.
-            The $b$-jets are required to have \(p_T > 15\) GeV, which is possibly lower than is realistic \cite{Chakraborty:2020vwj},
+            The \bthing{jets} are required to have \(p_T > 15\) GeV, which is possibly lower than is realistic \cite{Chakraborty:2020vwj},
             but it leaves a larger number of events to compare the behaviour of jet clustering algorithms.
 
         \item  The reconstructed particles are required to have
@@ -323,7 +311,7 @@ To evaluate the behaviour of the spectral clustering method four datasets are us
         \item The reconstructed particles are required to have
              \(|\eta|< 2.5\) and \(p_T > 0.5\) GeV.
             The event is required to have  \(p_{T}^{\text{miss}} > 50\) GeV,
-            where \(p_{T, \text{miss}}\) is the missing transverse momentum due to 
+            where \(p_{T}^{\text{miss}}\) is the missing transverse momentum due to 
             the neutrino.
             The lepton in the event must have  \(|\eta|< 2.4\).
             If the lepton  is a muon then its \(p_T\) must be \(>  55\) GeV.
@@ -333,29 +321,30 @@ To evaluate the behaviour of the spectral clustering method four datasets are us
             \(\sqrt{\Delta\eta^2 + \Delta \phi^2} > 0.4\) or
             \(p_{T}^{\text{relative}} > 40\) GeV.
             These cuts are copied from~\cite{Sirunyan:2019rfa}.
-        \item The only restriction on the particles is that the rapidity must be \(< 2.5\).
+        \item The only restriction on the particles is that the pseudorapidity must be \(< 2.5\).
             There are no cuts on the jets. While unrealistic, since 
             issues of IR safety are emphasised at low \(p_T\),  to highlight this we abandon all \(p_T\) cuts.
 
     \end{enumerate}
 
 
-    The Higgs boson cascade datasets have the desirable property of creating \bthing{jets} with different kinematics: while in case 1 we may expect some slim  jets (as on average they are rather stationary, because of the small mass difference between $H_{125\,{\rm GeV}}$ and $H_{40\,{\rm GeV}}$)
-in case 2 we may see mainly fat jets (owing to the boost provided by the large mass difference between $H_{500\,{\rm GeV}}$ and $H_{125\,{\rm GeV}}$).
+    The Higgs boson cascade datasets have the desirable property of creating \bthing{jets} with different kinematics: while in case 1 we may expect some slim  jets (as on average they are rather stationary, because of the small mass difference between $H_{125\,{\rm GeV}}$ and $h_{40\,{\rm GeV}}$)
+in case 2 we may see mainly fat jets (owing to the boost provided by the large mass difference between $H_{500\,{\rm GeV}}$ and $h_{125\,{\rm GeV}}$).
 Mass reconstruction requirements for the \underbar{Light Higgs} and \underbar{Heavy Higgs} follow the same logic.
-In order to reconstruct a Higgs decaying directly to a pair of \bthing{quarks}, we require a separate jet tagged by each \bthing{quark}, that is, two jets are required, each tagged by a \bthing{quark} from that Higgs.
-To reconstruct a Higgs that decays to a pair of child Higgs particles,
-we require both child Higgs bosons have been reconstructed,
+In order to reconstruct a Higgs boson decaying directly to a pair of \bthing{quarks}, we require a separate jet tagged by each \bthing{quark}, that is, two jets are required, each tagged by a \bthing{quark} from that Higgs state.
+To reconstruct a Higgs boson that decays into a pair of (child) Higgs particles,
+we require both child Higgs boson to have been reconstructed,
 that is, all four \bthing{jets} are found.
 In the case of the \underbar{Top} events
 three masses can be reconstructed from jets, the hadronic \(W\),
 the hadronic top and the leptonic top.
-The hadronic \(W\) is reconstructed if both of the quarks it decayed to have tagged jets; they are permitted to tag the same jet, so the hadronic \(W\) can be reconstructed from one or two jets.
-The hadronic top is reconstructed if the hadronic top is reconstructed and the \bthing{quark} from the hadronic top has tagged a jet, so the correct \bthing{jet} is required in addition to the requirements on the \(W\).
-The leptonic top is reconstructed if the \bthing{quark} from the top decay tags a jet, and the missing momentum calculation which reconstructs the leptonic \(W\) yields a real mass.
-If the missing mass calculation for the mass of the leptonic \(W\) yields two real masses, the one closes to the \(W\) mass is selected.
+The hadronic \(W\) is reconstructed if both of the quarks it decayed to have tagged jets: they are permitted to tag the same jet, so the hadronic \(W\) can be reconstructed from one or two jets.
+The hadronic top is reconstructed if the \bthing{quark} from it has tagged a jet, so the correct \bthing{jet} is required in addition to the requirements on the \(W\).
+The leptonic top is reconstructed if the \bthing{quark} from the top decay tags a jet and the missing momentum calculation which reconstructs the leptonic \(W\) yields a real mass.
+If the mass calculation for  the leptonic \(W\) yields two real masses, the one closest to the true \(W\) mass is selected.
 
-We now proceed to compare spectral to anti-$k_T$ clustering and we start from testing IR safety of the former, while this is a well-known feature of the latter. We will then move on to study Higgs boson and top quark events.
+We now proceed to compare spectral to \antikt{} clustering and we start from testing IR safety of the former, while this is a well-known feature of the latter.
+We will then move on to study Higgs boson and top quark events.
 
 
 \subsection{Determining IR safety}\label{sec:IRmethod}
@@ -370,13 +359,13 @@ We now proceed to compare spectral to anti-$k_T$ clustering and we start from te
     that is, a particular selection of clustering parameters,
     would allow a comparison that would highlight any differences caused by IR sensitivity.
     This will be done for illustrative purposes,
-    however, even an IR unsafe algorithm, such as the iterative cone one~\cite{Cacciari:2008gp},
+    however, since even an IR unsafe algorithm, such as the iterative cone one~\cite{Cacciari:2008gp},
      has some configurations for which these singularities are avoided.
 
     To provide a more global view, a scan of parameter configurations must be compared.
     Thus, for an unsafe algorithm (such as the iterative cone) the unsafe configuration
     will be found.
-    It would be cumbersome to compare all these jet mass spectrum by eye, however.
+    It would be cumbersome to compare all these jet mass spectra by eye, however.
     Instead, we introduce a summary statistic representing the divergence between two distributions,
     the Jensen-Shannon score~\cite{Lin:1991zzm}.
 
@@ -391,7 +380,7 @@ We now proceed to compare spectral to anti-$k_T$ clustering and we start from te
     D_\text{JS}(p, q) = \frac{1}{2}D\left(p | \frac{1}{2}(p + q)\right) + \frac{1}{2}D\left(q | \frac{1}{2}(p + q)\right).
 \end{equation}
     Here, \(D_\text{JS}\) treats \(p\) and \(q\) symmetrically and will grow as they become more different.
-    The spectrum of Jensen-Shannon scores will be plotted for a known IR safe clustering algorithm, \antikt{},
+    The spectrum of Jensen-Shannon scores will be plotted for a known IR safe clustering algorithm, \genkt{},
     a known unsafe clustering algorithm, iterative cone, and the \spectral{} algorithm.
     If the Jensen-Shannon scores for \spectral{} are consistently small,
     then it is IR safe.
